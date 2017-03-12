@@ -54,6 +54,7 @@ class gfirem_fs {
 				'has_premium_version' => true,
 				'has_addons'          => false,
 				'has_paid_plans'      => true,
+				'is_org_compliant'    => false,
 				'menu'                => array(
 					'slug'       => 'gfirem',
 					'first-path' => 'admin.php?page=gfirem',
