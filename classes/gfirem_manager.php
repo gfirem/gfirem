@@ -35,6 +35,7 @@ class gfirem_manager {
 						'switch_button'   => '',
 						'user_list'       => '',
 						'signature'       => '',
+//						'autocomplete'    => '',
 					)
 				);
 				
