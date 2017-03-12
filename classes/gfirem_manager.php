@@ -17,9 +17,10 @@ class gfirem_manager {
 	
 	private static $plugin_slug = 'gfirem';
 	protected static $version;
+	private $fields = array();
 	
 	public function __construct() {
-		self::$version  = self::$version  = '1.0.0';
+		self::$version = self::$version = '1.0.0';
 		
 		require_once GFIREM_CLASSES_PATH . 'gfirem_log.php';
 		
@@ -28,25 +29,38 @@ class gfirem_manager {
 				include GFIREM_CLASSES_PATH . 'gfirem_admin.php';
 				new gfirem_admin();
 				
+				$this->fields = apply_filters( 'gfirem_fields_array',
+					array(
+						'date_time_field' => '',
+						'switch_button'   => '',
+						'user_list'       => '',
+						'signature'       => '',
+					)
+				);
+				
 				if ( gfirem_fs::getFreemius()->is_paying() ) {
-					require_once GFIREM_FIELDS_PATH.'gfirem_field_base.php';
+					require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
 					//Override the register action from formidable
-					if(self::is_formidable_registration_active()) {
-						require_once 'gfirem_formidable_register_action_override.php';
-						if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
-//						$register_action = new gfirem_formidable_register_action_override();
-							add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 10 );
+//					Esto es para el campo de la lista de roles y el campo de contraseña
+//					if(self::is_formidable_registration_active()) {
+//						require_once 'gfirem_formidable_register_action_override.php';
+//						if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
+////						$register_action = new gfirem_formidable_register_action_override();
+//							add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 10 );
+//						}
+//					}
+					
+					//load all teh fields
+					foreach ( $this->fields as $field_key => $field_path ) {
+						$path = GFIREM_FIELDS_PATH . $field_key . DIRECTORY_SEPARATOR . $field_key . '.php';
+						if ( ! empty( $field_path ) ) {
+							$path = $field_path;
+						}
+						if ( file_exists( $path ) ) {
+							require_once $path;
+							new $field_key();
 						}
 					}
-					
-					
-					
-					require_once GFIREM_FIELDS_PATH.'date_time_field/date_time_field.php';
-					new date_time_field();
-					require_once GFIREM_FIELDS_PATH.'switch_button/switch_button.php';
-					new switch_button();
-					require_once GFIREM_FIELDS_PATH.'user_list/user_list.php';
-					new user_list();
 				}
 			}
 		} catch ( Exception $ex ) {
