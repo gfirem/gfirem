@@ -28,18 +28,16 @@ class gfirem_manager {
 			if ( self::is_formidable_active() ) {
 				include GFIREM_CLASSES_PATH . 'gfirem_admin.php';
 				new gfirem_admin();
-				
-				$this->fields = apply_filters( 'gfirem_fields_array',
-					array(
-						'date_time_field' => '',
-						'switch_button'   => '',
-						'user_list'       => '',
-						'signature'       => '',
-//						'autocomplete'    => '',
-					)
-				);
-				
 				if ( gfirem_fs::getFreemius()->is_paying() ) {
+					$this->fields = apply_filters( 'gfirem_fields_array',
+						array(
+							'date_time_field' => '',
+							'switch_button'   => '',
+							'user_list'       => '',
+							'signature'       => '',
+							'autocomplete'    => '',
+						)
+					);
 					require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
 					//Override the register action from formidable
 //					Esto es para el campo de la lista de roles y el campo de contraseña
