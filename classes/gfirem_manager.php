@@ -36,6 +36,7 @@ class gfirem_manager {
 							'user_list'       => '',
 							'signature'       => '',
 							'autocomplete'    => '',
+							'select_image'    => '',
 						)
 					);
 					require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
