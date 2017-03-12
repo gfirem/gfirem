@@ -256,6 +256,7 @@
             if (this.options.checked) {
                 // Update the underlying checkbox state
                 this.element.prop("checked", true);
+                this.element.prop("value", true); //modified by @gfirem
                 this.element.change();
 
                 var dLeft = this.options.width - this.options.button_width;
@@ -279,6 +280,7 @@
             else {
                 // Update the underlying checkbox state
                 this.element.prop("checked", false);
+                this.element.prop("value", false);//modified by @gfirem
                 this.element.change();
                 newLeft = "-1px";
 

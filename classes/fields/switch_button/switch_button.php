@@ -23,7 +23,7 @@ class switch_button extends gfirem_field_base {
 	}
 	
 	protected function set_field_options( $fieldData ) {
-		$fieldData['default_value'] = '0';
+		$fieldData['default_value'] = 'false';
 		
 		return $fieldData;
 	}
