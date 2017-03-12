@@ -67,6 +67,27 @@ class switch_button extends gfirem_field_base {
 		wp_localize_script( 'gfirem_switch_button', 'gfirem_switch_button', $params );
 	}
 	
+	private function process_value( $value ) {
+		$str = 'OFF';
+		if ( $value == 'true' ) {
+			$str = 'ON';
+		}
+		
+		return $str;
+	}
+	
+	protected function field_admin_view( $value, $field, $attr ) {
+		return esc_html( $this->process_value( $value ) );
+	}
+	
+	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
+		if ( empty( $replace_with ) ) {
+			return $replace_with;
+		}
+		
+		return esc_html( $this->process_value( $replace_with ) );
+	}
+	
 	/**
 	 * Set display option for the field
 	 *
