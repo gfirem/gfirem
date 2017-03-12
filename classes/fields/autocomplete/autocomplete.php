@@ -90,8 +90,8 @@ class autocomplete extends gfirem_field_base {
 			"ajaxurl"          => admin_url( 'admin-ajax.php' ),
 			"ajaxnonce"        => wp_create_nonce( 'fac_load_suggestion' ),
 			"dependant_fields" => $dependant_fields,
+			"text_no_result" => _gfirem('No result'),
 		) );
-		
 		
 		include( $this->view_path . 'field.php' );
 	}

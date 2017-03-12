@@ -1,3 +1,13 @@
+/*
+ * @package WordPress
+ * @subpackage Formidable,
+ * @author GFireM
+ * @copyright 2017
+ * @link http://www.gfirem.com
+ * @license http://www.apache.org/licenses/
+ *
+ */
+
 jQuery(document).ready(function ($) {
     $(".fma_field").each(function () {
         var current = $(this),
@@ -12,7 +22,7 @@ jQuery(document).ready(function ($) {
                 serviceUrl: formidable_autocomplete_field.ajaxurl,
                 noCache: true,
                 showNoSuggestionNotice: true,
-                noSuggestionNotice: "No results",
+                noSuggestionNotice: formidable_autocomplete_field.text_no_result,
                 params: {'action': 'get_autocomplete_suggestions', '_ajax_nonce': formidable_autocomplete_field.ajaxnonce, 'target_form': target_form, 'target_field': target_field, 'target_field_type': target_field_type, 'target_field_data_target': target_field_data_target},
                 onSearchComplete: function (query, suggestions) {
                     loading.hide();
