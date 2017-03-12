@@ -36,7 +36,9 @@ function process_fields(item, index) {
 
 	signaturePad = new SignaturePad(canvas, {
 		onEnd: function (event) {
-			field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
+			if (!gfirem_signature.is_front) {
+				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
+			}
 		}
 	});
 
@@ -44,8 +46,13 @@ function process_fields(item, index) {
 		signaturePad.fromData(JSON.parse(data));
 	}
 
-	clearButton.addEventListener("click", function (event) {
-		signaturePad.clear();
-	});
+	if (gfirem_signature.is_front) {
+		signaturePad.off();
+	}
+	else {
+		clearButton.addEventListener("click", function (event) {
+			signaturePad.clear();
+		});
+	}
 }
 

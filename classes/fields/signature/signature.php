@@ -53,16 +53,37 @@ class signature extends gfirem_field_base {
 		include dirname( __FILE__ ) . '/view/field_signature.php';
 	}
 	
-	private function load_script( $print_value = "", $field_id = "" ) {
+	private function load_script( $print_value = "", $field_id = "", $front = false ) {
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
 		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
 		
-		$params[ $field_id ] = $print_value;
+		$params = array( 'is_front' => $front );
 		
 		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
 	}
+	
+	protected function field_admin_view( $value, $field, $attr ) {
+		return _gfirem( 'Signature' );
+	}
+	
+	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
+		if ( empty( $replace_with ) ) {
+			return $replace_with;
+		}
+		$field       = (array) $field;
+		$html_id     = $field['field_key'];
+		$print_value = $replace_with;
+		$field_name = 'item_meta[' . $field['id'] . ']';
+		$this->load_script( $print_value, $html_id, true );
+		ob_start();
+		include dirname( __FILE__ ) . '/view/field_signature.php';
+		$output = ob_get_clean();
+		
+		return $output;
+	}
+	
 	
 	/**
 	 * Set display option for the field
