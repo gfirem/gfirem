@@ -40,7 +40,7 @@ class gfirem_field_base {
 			add_action( 'frm_display_value', array( $this, 'display_formidable_field_admin_field' ), 10, 3 );
 			add_filter( 'frm_display_field_options', array( $this, 'add_formidable_field_display_options' ) );
 			add_filter( 'frmpro_fields_replace_shortcodes', array( $this, 'add_formidable_custom_short_code' ), 10, 4 );
-			add_filter( "frm_validate_field_entry", array( $this, "validate_frm_entry" ), 10, 3 );
+			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
 		} else {
 			//TODO show admin notice it need formidable pro
