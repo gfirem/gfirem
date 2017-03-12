@@ -1,7 +1,7 @@
 <?php
 /**
  * @package WordPress
- * @subpackage Formidable,
+ * @subpackage Formidable, gfirem
  * @author GFireM
  * @copyright 2017
  * @link http://www.gfirem.com
