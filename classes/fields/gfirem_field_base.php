@@ -19,17 +19,19 @@ class gfirem_field_base {
 	public $name;
 	public $description;
 	public $defaults = array();
+	public $global_options = array();
 	
-	public function __construct( $slug, $name, $defaults, $description = '' ) {
+	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array() ) {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
 			throw new InvalidArgumentException();
 		}
 		
 		if ( class_exists( "FrmProAppController" ) ) {
-			$this->slug        = $slug;
-			$this->name        = $name;
-			$this->description = $description;
-			$this->defaults    = $defaults;
+			$this->slug           = $slug;
+			$this->name           = $name;
+			$this->description    = $description;
+			$this->defaults       = $defaults;
+			$this->global_options = $global_options;
 			
 			add_action( 'frm_pro_available_fields', array( $this, 'add_formidable_field' ) );
 			add_action( 'frm_before_field_created', array( $this, 'set_formidable_field_options' ) );
@@ -42,9 +44,21 @@ class gfirem_field_base {
 			add_filter( 'frmpro_fields_replace_shortcodes', array( $this, 'add_formidable_custom_short_code' ), 10, 4 );
 			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
+			
+			if ( ! empty( $global_options ) ) {
+				add_filter( 'gfirem_add_setting_tabs', array( $this, 'process_handle_settings_tabs' ) );
+			}
 		} else {
 			//TODO show admin notice it need formidable pro
 		}
+	}
+	
+	public function process_handle_settings_tabs( $tabs ) {
+		if ( ! empty( $this->global_options ) ) {
+			$tabs[ $this->slug ] = $this->global_options;
+		}
+		
+		return $tabs;
 	}
 	
 	/**

@@ -18,8 +18,13 @@ class user_list extends gfirem_field_base {
 	public function __construct() {
 		parent::__construct( 'userlist', _gfirem( 'User List' ),
 			array( 'roles' => 'editor', ),
-			_gfirem( 'Show list of user from selected role in frontend' )
+			_gfirem( 'Show list of user from selected role in frontend' ),
+			array( 'name' => _gfirem( 'UserList' ), 'view' => array( $this, 'view_settings' ) )
 		);
+	}
+	
+	public function view_settings() {
+		echo 'test';
 	}
 	
 	protected function inside_field_options( $field, $display, $values ) {

@@ -11,9 +11,11 @@
  */
 class gfirem_admin {
 	
+	private $global_settings_tabs;
+	
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		
+//		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
 //		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_js' ) );
 //		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 	}
@@ -34,9 +36,23 @@ class gfirem_admin {
 	}
 	
 	public function screen() {
-		gfirem_fs::getFreemius()->get_logger()->entrance();
-		gfirem_fs::getFreemius()->_account_page_load();
-		gfirem_fs::getFreemius()->_account_page_render();
+		$this->global_settings_tabs = apply_filters( 'gfirem_add_setting_tabs', array() );
+		$active_tab           = 'generic';
+		if ( ! empty( $_GET['tab'] ) ) {
+			$active_tab = $_GET['tab'];
+		}
+		switch ( $active_tab ) {
+			case 'generic';
+				include_once( GFIREM_VIEW_PATH . 'html_admin.php' );
+				break;
+		}
+	}
+	
+	public function register_admin_settings() {
+		foreach ( $this->global_settings_tabs as $global_settings_tab_key => $global_settings_tab_data ) {
+			register_setting( $global_settings_tab_key, $global_settings_tab_key );
+			add_settings_section( $global_settings_tab_key, '', '', $global_settings_tab_key );
+		}
 	}
 	
 	/**
