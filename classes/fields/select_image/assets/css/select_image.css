@@ -14,13 +14,11 @@
     font-size: 14px;
 }
 
-.file-upload-button {
+.select-image-btn {
     cursor: pointer;
     display: inline-block;
     color: #fff !important;
     background: #008ec2 !important;
     border-color: #006799 !important;
     text-transform: uppercase;
-    border: none;
-    width: 15% !important;
 }

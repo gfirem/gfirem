@@ -6,7 +6,7 @@
             <div class="dz-filename"><span data-dz-name=""><a id="image_link_<?= $field_name ?>" target="_blank" href="<?= $imageFullUrl ?>"><?= $attachment_title ?></a></span></div>
         </div>
         <div style="margin-top: 10px;">
-            <input field_id="<?= $field_name ?>" id="upload_button_<?= $field['field_key'] ?>" name="<?= $field_name ?>" type="button" class="btn btn-default" value="<?php _e_gfirem( "Select Image" ) ?>" style="width: auto !important;"/>
+            <input field_id="<?= $field_name ?>" id="upload_button_<?= $field['field_key'] ?>" name="<?= $field_name ?>" type="button" class="select-image-btn btn btn-default" value="<?php _e_gfirem( "Select Image" ) ?>"/>
         </div>
     </div>
 </div>

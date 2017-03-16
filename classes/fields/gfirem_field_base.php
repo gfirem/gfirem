@@ -33,6 +33,11 @@ class gfirem_field_base {
 			$this->defaults       = $defaults;
 			$this->global_options = $global_options;
 			
+			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
+			
+			if ( ! $this->is_enabled( $this->slug ) ) {
+				return;
+			}
 			add_action( 'frm_pro_available_fields', array( $this, 'add_formidable_field' ) );
 			add_action( 'frm_before_field_created', array( $this, 'set_formidable_field_options' ) );
 			add_action( 'frm_display_added_fields', array( $this, 'show_formidable_field_admin_field' ) );
@@ -44,21 +49,23 @@ class gfirem_field_base {
 			add_filter( 'frmpro_fields_replace_shortcodes', array( $this, 'add_formidable_custom_short_code' ), 10, 4 );
 			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
-			
-			if ( ! empty( $global_options ) ) {
-				add_filter( 'gfirem_add_setting_tabs', array( $this, 'process_handle_settings_tabs' ) );
-			}
 		} else {
 			//TODO show admin notice it need formidable pro
 		}
 	}
 	
-	public function process_handle_settings_tabs( $tabs ) {
-		if ( ! empty( $this->global_options ) ) {
-			$tabs[ $this->slug ] = $this->global_options;
+	private function is_enabled( $slug ) {
+		$options = get_option( 'gfirem_options' );
+		$key     = 'enabled_' . $slug;
+		if (! empty( $options[ $key ] ) ) {
+			return true;
 		}
 		
-		return $tabs;
+		return false;
+	}
+	
+	public function gfirem_register( $fields ) {
+		return array_merge( $fields, array( $this->slug => $this ) );
 	}
 	
 	/**
