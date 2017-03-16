@@ -26,7 +26,6 @@ class select_image extends gfirem_field_base {
 		
 	}
 	
-	
 	/**
 	 * Add the HTML for the field on the front end
 	 *
