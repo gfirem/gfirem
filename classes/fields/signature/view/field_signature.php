@@ -15,6 +15,6 @@
 		<canvas class="gfirem-signature-canvas"></canvas>
 	</div>
 	<div class="gfirem-signature-pad--footer">
-		<a href="#" data-action="clear" class="gfirem-signature-clear"></a>
+		<a href="#" data-action="clear" class="gfirem-signature-clear "><span class="dashicons dashicons-image-rotate"></span> </a>
 	</div>
 </div>

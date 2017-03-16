@@ -52,6 +52,8 @@ function process_fields(item, index) {
 	else {
 		clearButton.addEventListener("click", function (event) {
 			signaturePad.clear();
+			event.preventDefault();
+			return false;
 		});
 	}
 }

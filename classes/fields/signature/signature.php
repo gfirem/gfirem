@@ -16,10 +16,13 @@ class signature extends gfirem_field_base {
 	function __construct() {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
-				'signature' => ''
+				'signature' => '',
+				'backgroundcolor'=>''
 			),
 			_gfirem( 'Show a Signature Pad.' )
 		);
+		 
+      
 	}
 
 //	protected function set_field_options( $fieldData ) {
@@ -29,7 +32,11 @@ class signature extends gfirem_field_base {
 //	}
 	
 	protected function inside_field_options( $field, $display, $values ) {
-		
+		 wp_enqueue_style( 'wp-color-picker');
+       	 wp_enqueue_script( 'wp-color-picker');
+         $base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+         wp_enqueue_script( 'cpa_custom_js', $base_url . 'js/jquery.custom.js' , array( 'jquery', 'wp-color-picker' ), $this->version, true  );
+		 include dirname( __FILE__ ) . '/view/field_option.php';
 	}
 	
 	
@@ -56,8 +63,14 @@ class signature extends gfirem_field_base {
 	private function load_script( $print_value = "", $field_id = "", $front = false ) {
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
+		wp_enqueue_style( 'dashicons' );
+		
+      
 		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
+		
+
+
 		
 		$params = array( 'is_front' => $front );
 		
