@@ -17,31 +17,29 @@ class signature extends gfirem_field_base {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
 				'signature' => '',
-				'backgroundcolor'=>''
+				'backgroundcolor'=>''//Color of the canvas
 			),
 			_gfirem( 'Show a Signature Pad.' )
 		);
-		 
-      
 	}
-
-//	protected function set_field_options( $fieldData ) {
-//		$fieldData['default_value'] = '0';
-//
-//		return $fieldData;
-//	}
 	
+	/**
+	 * Options to set inside the field
+	 *
+	 * @param $field
+	 * @param $display
+	 * @param $values
+	 */
 	protected function inside_field_options( $field, $display, $values ) {
 		 wp_enqueue_style( 'wp-color-picker');
        	 wp_enqueue_script( 'wp-color-picker');
          $base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-         wp_enqueue_script( 'cpa_custom_js', $base_url . 'js/jquery.custom.js' , array( 'jquery', 'wp-color-picker' ), $this->version, true  );
+         wp_enqueue_script( 'signature_field_options', $base_url . 'js/signature_field_options.js' , array( 'jquery', 'wp-color-picker' ), $this->version, true  );
 		 include dirname( __FILE__ ) . '/view/field_option.php';
 	}
 	
-	
 	/**
-	 * Add the HTML for the field on the front end
+	 * Add the HTML for the field when edit or create the entry
 	 *
 	 * @param $field
 	 * @param $field_name
@@ -64,23 +62,35 @@ class signature extends gfirem_field_base {
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
 		wp_enqueue_style( 'dashicons' );
-		
-      
 		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
-		
-
-
-		
 		$params = array( 'is_front' => $front );
-		
 		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
 	}
 	
+	/**
+	 * Value to show in the admin table
+	 *
+	 * @param $value
+	 * @param $field
+	 * @param $attr
+	 *
+	 * @return string
+	 */
 	protected function field_admin_view( $value, $field, $attr ) {
 		return _gfirem( 'Signature' );
 	}
 	
+	/**
+	 * Process shortcode for view.
+	 *
+	 * @param $replace_with
+	 * @param $tag
+	 * @param $attr
+	 * @param $field
+	 *
+	 * @return string
+	 */
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
 		if ( empty( $replace_with ) ) {
 			return $replace_with;
