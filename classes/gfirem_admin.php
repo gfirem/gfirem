@@ -15,7 +15,7 @@ class gfirem_admin {
 	
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-//		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
+		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
 //		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_js' ) );
 //		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 	}
@@ -37,21 +37,47 @@ class gfirem_admin {
 	
 	public function screen() {
 		$this->global_settings_tabs = apply_filters( 'gfirem_add_setting_tabs', array() );
-		$active_tab           = 'generic';
+		$active_tab                 = 'generic';
+		$option                     = 'gfirem_options';
 		if ( ! empty( $_GET['tab'] ) ) {
 			$active_tab = $_GET['tab'];
 		}
-		switch ( $active_tab ) {
-			case 'generic';
-				include_once( GFIREM_VIEW_PATH . 'html_admin.php' );
+		$this->global_settings_tabs = apply_filters( 'gfirem_add_setting_tabs', array() );
+		foreach ( $this->global_settings_tabs as $global_settings_tab_key => $global_settings_tab_data ) {
+			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab ) {
+				$option = $global_settings_tab_key;
 				break;
+			}
 		}
+		include_once( GFIREM_VIEW_PATH . 'html_admin.php' );
 	}
 	
 	public function register_admin_settings() {
+		register_setting( 'gfirem_options', 'gfirem_options' );
+		add_settings_section( 'section_general', '', array( $this, 'general_tab' ), 'gfirem_options' );
+		
+		$this->global_settings_tabs = apply_filters( 'gfirem_add_setting_tabs', array() );
 		foreach ( $this->global_settings_tabs as $global_settings_tab_key => $global_settings_tab_data ) {
 			register_setting( $global_settings_tab_key, $global_settings_tab_key );
-			add_settings_section( $global_settings_tab_key, '', '', $global_settings_tab_key );
+			add_settings_section( 'section_' . $global_settings_tab_key, '', array( $this, 'tab_content' ), $global_settings_tab_key );
+		}
+	}
+	
+	public function general_tab() {
+		add_settings_field( 'tabs_shop', __( '<b>Shop Settings</b>', 'wc4bp' ), array( $this, 'wc4bp_shop_tabs' ), 'gfirem_options', 'section_general' );
+	}
+	
+	public function wc4bp_shop_tabs(){
+		echo 'Generixx';
+	}
+	
+	public function tab_content() {
+		$this->global_settings_tabs = apply_filters( 'gfirem_add_setting_tabs', array() );
+		foreach ( $this->global_settings_tabs as $global_settings_tab_key => $global_settings_tab_data ) {
+			$active_tab = esc_attr( $_GET['tab'] );
+			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab ) {
+				$global_settings_tab_data['view'][0]->$global_settings_tab_data['view'][1]();
+			}
 		}
 	}
 	

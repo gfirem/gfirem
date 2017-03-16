@@ -23,8 +23,15 @@ class user_list extends gfirem_field_base {
 		);
 	}
 	
+	/**
+	 * Add the setting inside the global settings page
+	 */
 	public function view_settings() {
-		echo 'test';
+		add_settings_field( 'multi_select', _gfirem( '<b>MultiSelect</b>' ), array( $this, 'global_multi_select' ), $this->slug, 'section_'.$this->slug );
+	}
+	
+	public function global_multi_select(){
+		echo 'enabled multiselect en el plugins';
 	}
 	
 	protected function inside_field_options( $field, $display, $values ) {

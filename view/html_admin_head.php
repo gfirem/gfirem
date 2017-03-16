@@ -19,6 +19,5 @@
     <a href="?page=<?php echo gfirem_manager::get_slug(); ?>&tab=generic" class="nav-tab <?php echo $active_tab == 'generic' ? 'nav-tab-active' : ''; ?>"><?php _e_gfirem( 'Settings' ) ?></a>
 	<?php foreach ( $this->global_settings_tabs as $global_settings_tab_key => $global_settings_tab_data ) : ?>
         <a href="?page=<?php echo gfirem_manager::get_slug(); ?>&tab=<?php echo "$global_settings_tab_key"; ?>" class="nav-tab <?php echo $active_tab == $global_settings_tab_key ? 'nav-tab-active' : ''; ?>"><?php echo $global_settings_tab_data['name'] ?></a>
-	
 	<?php endforeach; ?>
 </h2>
