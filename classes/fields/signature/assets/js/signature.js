@@ -39,7 +39,8 @@ function process_fields(item, index) {
 			if (!gfirem_signature.is_front) {
 				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
 			}
-		}
+		},
+		backgroundColor:gfirem_signature.background
 	});
 
 	if (data) {
