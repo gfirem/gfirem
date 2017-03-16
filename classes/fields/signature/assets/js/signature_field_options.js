@@ -7,4 +7,8 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	$('.pen-color-field').wpColorPicker({
+		
+	});
+
 });

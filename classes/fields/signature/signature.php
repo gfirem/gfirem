@@ -17,7 +17,8 @@ class signature extends gfirem_field_base {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
 				'signature' => '',
-				'backgroundcolor'=>''//Color of the canvas
+				'backgroundcolor'=>'',//Color of the canvas
+				'pencolor'=>''
 			),
 			_gfirem( 'Show a Signature Pad.' )
 		);
@@ -69,6 +70,7 @@ class signature extends gfirem_field_base {
 		$params = array( 
 			'is_front' => $front 
 			,'background'=>$field['backgroundcolor']
+			,'pencolor'=>$field['pencolor']
 			);
 
 		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );

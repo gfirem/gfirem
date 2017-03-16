@@ -40,7 +40,8 @@ function process_fields(item, index) {
 				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
 			}
 		},
-		backgroundColor:gfirem_signature.background
+		backgroundColor:gfirem_signature.background,
+		penColor:gfirem_signature.pencolor
 	});
 
 	if (data) {
