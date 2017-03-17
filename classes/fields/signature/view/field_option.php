@@ -9,6 +9,25 @@
  *
  */
 ?>
+
+<tr>
+	<td><label><?php _e_gfirem( "Height" ) ?></label></td>
+	  <td>
+        <label for="label1_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( _gfirem( "Height of the signature pad, by default '150'. " ) ) ?></label> 
+
+        <input type="number" name="field_options[height_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr($field['height'])?>"  id="height_<?php echo esc_attr( $field['id'] ) ?>">
+    </td>
+
+</tr>
+<tr>
+<td><label><?php _e_gfirem( "Width" ) ?></label></td>
+	  <td>
+        <label for="label1_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( _gfirem( "Width of the signature pad, by default '300'. " ) ) ?></label> 
+
+        <input type="number" name="field_options[width_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr($field['width'])?>"  id="width_<?php echo esc_attr( $field['id'] ) ?>">
+    </td>
+
+</tr>
 <tr>
 	  <td><label><?php _e_gfirem( "penColor" ) ?></label></td>
 	  <td>

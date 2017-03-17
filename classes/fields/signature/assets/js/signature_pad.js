@@ -85,7 +85,8 @@ function SignaturePad(canvas, options) {
   this.backgroundColor = opts.backgroundColor || 'rgba(0,0,0,0)';
   this.onBegin = opts.onBegin;
   this.onEnd = opts.onEnd;
-
+  canvas.width = gfirem_signature.width;
+  canvas.height = gfirem_signature.height;
   this._canvas = canvas;
   this._ctx = canvas.getContext('2d');
   this.clear();

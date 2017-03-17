@@ -30,7 +30,7 @@ function process_fields(item, index) {
 		canvas.height = canvas.offsetHeight * ratio;
 		canvas.getContext("2d").scale(ratio, ratio);
 	}
-
+    
 	window.onresize = resizeCanvas;
 	resizeCanvas();
 
