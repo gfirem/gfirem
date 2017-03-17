@@ -45,16 +45,16 @@ class gfirem_manager {
 					'autocomplete'    => '',
 				) );
 				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
-					self::$fields_loaded[ gfirem_fs::$starter ] = array(
+					self::$fields_loaded[ gfirem_fs::$starter ] = array_merge( self::$fields_loaded['free'], array(
 						'select_image'  => '',
 						'switch_button' => '',
-					);
+					) );
 				}
 				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-					self::$fields_loaded[ gfirem_fs::$professional ] = array(
+					self::$fields_loaded[ gfirem_fs::$professional ] = array_merge( self::$fields_loaded[ gfirem_fs::$starter ], array(
 						'date_time_field' => '',
 						'autocomplete'    => '',
-					);
+					) );
 				}
 				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
 				//Override the register action from formidable

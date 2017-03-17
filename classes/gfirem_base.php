@@ -12,6 +12,8 @@
 class gfirem_base {
 	private $debug;
 	public $is_paying;
+	public $license;
+	public $site;
 	public $is_free;
 	public $is_start;
 	public $is_professional;
@@ -19,7 +21,6 @@ class gfirem_base {
 	
 	static $starter_plan_id = 'starter';
 	static $professional_plan_id = 'professional';
-	private $license;
 	private $plan;
 	
 	public function __construct( $debug = false ) {
@@ -32,12 +33,9 @@ class gfirem_base {
 			$this->is_start        = gfirem_fs::getFreemius()->is_plan( self::$starter_plan_id );
 			$this->is_professional = gfirem_fs::getFreemius()->is_plan( self::$professional_plan_id );
 			$this->is_premium_only = gfirem_fs::getFreemius()->is__premium_only();
-			$this->license         = gfirem_fs::getFreemius()->get_plan();
-			if ( ! empty( $this->license ) ) {
-				$this->plan = $this->license->name;
-			} else {
-				$this->plan = 0;
-			}
+			$this->site            = gfirem_fs::getFreemius()->get_site();
+			$this->plan            = gfirem_fs::get_current_plan();
+			
 			
 			return;
 		} else if ( ! is_array( $debug ) ) {
