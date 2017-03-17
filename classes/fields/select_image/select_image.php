@@ -18,7 +18,8 @@ class select_image extends gfirem_field_base {
 			array(
 				'select_image_option1' => '0',
 			),
-			_gfirem( 'Show a field to select image from WP Media library' )
+			_gfirem( 'Show a field to select image from WP Media library' ),
+			array(), gfirem_fs::$starter
 		);
 	}
 	

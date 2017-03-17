@@ -9,16 +9,18 @@
  * @license http://www.apache.org/licenses/
  *
  */
-class gfirem_admin {
-	
+class gfirem_admin extends gfirem_base {
+	private $loaded_fields = array();
 	private $global_settings_tabs;
 	private $fields = array();
 	
-	public function __construct() {
+	public function __construct( $fields ) {
+		parent::__construct();
+		$this->loaded_fields = $fields[ $this->get_plan() ];
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
 //		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_js' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
 	}
 	
 	public function handle_sub_menu( $is_visible, $menu_id ) {
@@ -44,7 +46,9 @@ class gfirem_admin {
 			$active_tab = $_GET['tab'];
 		}
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
-			if ( ! empty( $active_tab ) && $active_tab != 'generic' && !empty( $global_settings_tab_data->global_options ) && $global_settings_tab_key == $active_tab ) {
+			if ( ! empty( $active_tab ) && $active_tab != 'generic' && ! empty( $global_settings_tab_data->global_options )
+			     && $global_settings_tab_key == $active_tab && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
+			) {
 				$option = $global_settings_tab_key;
 				break;
 			}
@@ -60,7 +64,7 @@ class gfirem_admin {
 		add_settings_section( 'save_data', '', array( $this, "save_data" ), 'gfirem_options' );
 		
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
-			if ( ! empty( $global_settings_tab_data->global_options ) ) {
+			if ( ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields ) ) {
 				register_setting( $global_settings_tab_key, $global_settings_tab_key );
 				add_settings_section( 'section_' . $global_settings_tab_key, '', array( $this, 'tab_content' ), $global_settings_tab_key );
 			}
@@ -73,22 +77,34 @@ class gfirem_admin {
 			add_settings_field( 'enabled_field' . $global_settings_tab_key, $global_settings_tab_data->name, function () use ( $global_settings_tab_data ) {
 				$this->enabled_field( $global_settings_tab_data );
 			}, 'gfirem_options', 'section_general' );
+			
 		}
 	}
 	
 	public function enabled_field( $field ) {
-		$this->get_view_for( 'enabled_' . $field->slug, 'checkbox' );
+		echo '<p ' . $this->disable_class_tag( 'p', $field->plan ) . '>';
+		$this->get_view_for( 'enabled_' . $field->slug, 'checkbox', 'gfirem_options', array(), $field->plan );
+		echo $field->description;
+		echo '</p>';
+		
 	}
 	
 	public function save_data() {
 		submit_button( null, "primary", "gfirem_submit", false );
 	}
 	
-	private function get_view_for( $setting, $type = "text", $domain = 'gfirem_options' ) {
+	private function get_view_for( $setting, $type = "text", $domain = 'gfirem_options', $args = array(), $plan = 'free' ) {
 		$general_option = get_option( $domain );
 		$data           = '';
 		if ( ! empty( $general_option[ $setting ] ) ) {
 			$data = $general_option[ $setting ];
+		}
+		
+		$disable_for_plan = '';
+		foreach ( gfirem_manager::$fields_loaded[ $this->get_plan() ] as $loaded_key => $loaded_field ) {
+			if ( $setting != 'enabled_' . $loaded_key ) {
+				$disable_for_plan = $this->disable_input_tag( $type, $plan );
+			}
 		}
 		
 		switch ( $type ) {
@@ -98,13 +114,21 @@ class gfirem_admin {
 			default:
 				$value = "value='" . $data . "'";
 		}
-		echo "<input name='" . $domain . "[" . $setting . "]' id='gfirem_" . $setting . "' type='" . $type . "' " . $value . " />";
+		$args_txt = '';
+		if ( ! empty( $args ) ) {
+			foreach ( $args as $arg_key => $arg_val ) {
+				$args_txt .= $arg_key . '="' . $arg_val . '"';
+			}
+		}
+		echo "<input $disable_for_plan name='" . $domain . "[" . $setting . "]' id='gfirem_" . $setting . "' type='" . $type . "' " . $value . " " . $args_txt . " />";
 	}
 	
 	public function tab_content() {
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
 			$active_tab = esc_attr( $_GET['tab'] );
-			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab &&  ! empty( $global_settings_tab_data->global_options) ){
+			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab
+			     && ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
+			) {
 				$view_fnc = $global_settings_tab_data->global_options['view'][1];
 				$global_settings_tab_data->$view_fnc();
 			}

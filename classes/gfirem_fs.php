@@ -21,12 +21,13 @@ class gfirem_fs {
 	 * @var object
 	 */
 	protected static $instance = null;
+	public static $free = 0;
+	public static $starter = 'starter';
+	public static $professional = 'professional';
 	
 	public function __construct() {
 		$this->gfirem_fs();
 	}
-	
-
 	
 	/**
 	 * @return Freemius
@@ -65,7 +66,7 @@ class gfirem_fs {
 				'secret_key'          => 'sk_r~jmr--.4&!Q@<Neu>y1>UV)PB.?n',
 			) );
 		}
-
+		
 		return $gfirem_fs;
 	}
 	

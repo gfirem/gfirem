@@ -18,11 +18,12 @@ class date_time_field extends gfirem_field_base {
 	public $version = '1.0.0';
 	
 	function __construct() {
-		parent::__construct( 'mailjet_date_time', _gfirem( 'DateTimePicker' ),
+		parent::__construct( 'date_time_field', _gfirem( 'DateTimePicker' ),
 			array(
 				'datetimepicker_format' => ''
 			),
-			_gfirem( 'Show the Date and Time with a DateTimePicker.' )
+			_gfirem( 'Show the Date and Time with a DateTimePicker.' ),
+			array(), gfirem_fs::$professional
 		);
 	}
 	

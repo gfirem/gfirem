@@ -63,7 +63,7 @@ if ( ! class_exists( 'gfirem' ) ) {
 		private function constants() {
 			define( 'GFIREM_BASE_NAME', plugin_basename( __FILE__ ) );
 			define( 'GFIREM_BASE_FILE', trailingslashit( wp_normalize_path( plugin_dir_path( __FILE__ ) ) ) . 'gfirem.php' );
-			define( 'GFIREM_URL_PATH', trailingslashit( wp_normalize_path( plugin_dir_url( __FILE__ ) ) ) );
+			define( 'GFIREM_URL_PATH',  plugin_dir_url( __FILE__ ) );
 			define( 'GFIREM_CSS_PATH', GFIREM_URL_PATH . 'assets/css/' );
 			define( 'GFIREM_JS_PATH', GFIREM_URL_PATH . 'assets/js/' );
 			define( 'GFIREM_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );

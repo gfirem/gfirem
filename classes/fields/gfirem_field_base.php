@@ -20,8 +20,9 @@ class gfirem_field_base {
 	public $description;
 	public $defaults = array();
 	public $global_options = array();
+	public $plan = 'free';
 	
-	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array() ) {
+	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array(), $plan = 'free' ) {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
 			throw new InvalidArgumentException();
 		}
@@ -32,6 +33,7 @@ class gfirem_field_base {
 			$this->description    = $description;
 			$this->defaults       = $defaults;
 			$this->global_options = $global_options;
+			$this->plan           = $plan;
 			
 			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
 			
@@ -57,7 +59,7 @@ class gfirem_field_base {
 	private function is_enabled( $slug ) {
 		$options = get_option( 'gfirem_options' );
 		$key     = 'enabled_' . $slug;
-		if (! empty( $options[ $key ] ) ) {
+		if ( ! empty( $options[ $key ] ) ) {
 			return true;
 		}
 		

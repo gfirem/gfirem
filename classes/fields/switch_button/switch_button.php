@@ -18,7 +18,7 @@ class switch_button extends gfirem_field_base {
 			array(
 				'switch_button_show_labels' => ''
 			),
-			_gfirem( 'Show a Switch Button.' )
+			_gfirem( 'Show a Switch Button.' ), array(), gfirem_fs::$starter
 		);
 	}
 	

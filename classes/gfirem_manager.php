@@ -18,6 +18,7 @@ class gfirem_manager {
 	private static $plugin_slug = 'gfirem';
 	protected static $version;
 	private $fields = array();
+	public static $fields_loaded = array();
 	
 	public function __construct() {
 		self::$version = self::$version = '1.0.0';
@@ -26,21 +27,37 @@ class gfirem_manager {
 		
 		try {
 			if ( self::is_formidable_active() ) {
+				include GFIREM_CLASSES_PATH . 'gfirem_base.php';
 				include GFIREM_CLASSES_PATH . 'gfirem_admin.php';
-				new gfirem_admin();
-				if ( gfirem_fs::getFreemius()->is_paying() ) {
-					$this->fields = apply_filters( 'gfirem_fields_array',
-						array(
-							'date_time_field' => '',
-							'switch_button'   => '',
-							'user_list'       => '',
-							'signature'       => '',
-							'autocomplete'    => '',
-							'select_image'    => '',
-						)
+				
+				$this->fields                = apply_filters( 'gfirem_fields_array',
+					array(
+						'user_list' => '',//The empty value is to load from the default place
+						'signature' => '',
+					
+					)
+				);
+				self::$fields_loaded['free'] = $this->fields;
+				$this->fields                = array_merge( $this->fields, array(
+					'select_image'    => '',
+					'switch_button'   => '',
+					'date_time_field' => '',
+					'autocomplete'    => '',
+				) );
+				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+					self::$fields_loaded[ gfirem_fs::$starter ] = array(
+						'select_image'  => '',
+						'switch_button' => '',
 					);
-					require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
-					//Override the register action from formidable
+				}
+				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+					self::$fields_loaded[ gfirem_fs::$professional ] = array(
+						'date_time_field' => '',
+						'autocomplete'    => '',
+					);
+				}
+				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
+				//Override the register action from formidable
 //					Esto es para el campo de la lista de roles y el campo de contraseña
 //					if(self::is_formidable_registration_active()) {
 //						require_once 'gfirem_formidable_register_action_override.php';
@@ -49,19 +66,19 @@ class gfirem_manager {
 //							add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 10 );
 //						}
 //					}
-					
-					//load all teh fields
-					foreach ( $this->fields as $field_key => $field_path ) {
-						$path = GFIREM_FIELDS_PATH . $field_key . DIRECTORY_SEPARATOR . $field_key . '.php';
-						if ( ! empty( $field_path ) ) {
-							$path = $field_path;
-						}
-						if ( file_exists( $path ) ) {
-							require_once $path;
-							new $field_key();
-						}
+				
+				//load all teh fields
+				foreach ( $this->fields as $field_key => $field_path ) {
+					$path = GFIREM_FIELDS_PATH . $field_key . DIRECTORY_SEPARATOR . $field_key . '.php';
+					if ( ! empty( $field_path ) ) {
+						$path = $field_path;
+					}
+					if ( file_exists( $path ) ) {
+						require_once $path;
+						new $field_key();
 					}
 				}
+				new gfirem_admin( self::$fields_loaded );
 			}
 		} catch ( Exception $ex ) {
 			gfirem_log::log( array(
