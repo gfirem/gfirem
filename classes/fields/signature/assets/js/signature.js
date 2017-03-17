@@ -16,6 +16,7 @@ function process_fields(item, index) {
 		clearButton = item.querySelector("[data-action=clear]"),
 		canvas = item.querySelector("canvas"),
 		data = field_container.getAttribute('value'),
+		id = field_container.getAttribute('id'),
 		signaturePad;
 
 	// Adjust canvas coordinate space taking into account pixel ratio,
@@ -40,8 +41,8 @@ function process_fields(item, index) {
 				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
 			}
 		},
-		backgroundColor:gfirem_signature.background,
-		penColor:gfirem_signature.pencolor
+		backgroundColor:gfirem_signature.config[id].background,
+		penColor:gfirem_signature.config[id].pencolor
 	});
 
 	if (data) {
