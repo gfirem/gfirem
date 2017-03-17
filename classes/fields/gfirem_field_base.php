@@ -51,7 +51,6 @@ class gfirem_field_base {
 			add_filter( 'frmpro_fields_replace_shortcodes', array( $this, 'add_formidable_custom_short_code' ), 10, 4 );
 			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
-			add_filter('frm_pre_create_entry', array( $this, 'process_pre_create_entry' ));
 		} else {
 			//TODO show admin notice it need formidable pro
 		}
@@ -71,12 +70,6 @@ class gfirem_field_base {
 	
 	public function gfirem_register( $fields ) {
 		return array_merge( $fields, array( $this->slug => $this ) );
-	}
-	
-	public function process_pre_create_entry($values){
-		$t = $values;
-		
-		return $values;
 	}
 	
 	/**

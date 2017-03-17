@@ -29,6 +29,25 @@ class signature extends gfirem_field_base {
 		);
 		add_action( 'admin_footer', array( $this, 'add_script_in_front' ) );
 		add_action( 'wp_footer', array( $this, 'add_script_in_front' ) );
+		/*
+		 * Filtros a implementar para procesar las entradas y establecer la imagen que se quiere salvar. Hay que iterar sobre todos los id en item
+		 * meta para determinar cuales son del tipo correspondiente, igual se pueden obtener todos los id de este tipo y agarrar sus valores para procesarlos
+		 * despues asignarlos de nuevo. Victor esto lo ib a implementar en el padre pero no tiene mucho sentido estar procesandolo en cada campo aunque no sea necesario
+		 */
+		add_filter('frm_pre_create_entry', array( $this, 'process_pre_create_entry' ), 10, 2);
+		add_filter('frm_pre_update_entry', array( $this, 'process_pre_update_entry' ), 10, 2);
+	}
+	
+	public function process_pre_create_entry($values, $id){
+		$t = $values;
+		
+		return $values;
+	}
+	
+	public function process_pre_update_entry($values, $id){
+		$t = $values;
+		
+		return $values;
 	}
 	
 	public function add_script_in_front( $hook ) {
