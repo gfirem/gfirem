@@ -17,7 +17,10 @@ class signature extends gfirem_field_base {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
 				'signature' => '',
-				'backgroundcolor'=>''//Color of the canvas
+				'backgroundcolor'=>'',//Color of the canvas
+				'pencolor'=>'',
+				'width'=>'300',
+				'height'=>'150'
 			),
 			_gfirem( 'Show a Signature Pad.' )
 		);
@@ -46,6 +49,7 @@ class signature extends gfirem_field_base {
 	 *
 	 */
 	protected function field_front_view( $field, $field_name, $html_id ) {
+
 		$field['value'] = stripslashes_deep( $field['value'] );
 		$html_id        = $field['field_key'];
 		$print_value    = $field['default_value'];
@@ -53,18 +57,26 @@ class signature extends gfirem_field_base {
 			$print_value = $field['value'];
 		}
 		
-		$this->load_script( $print_value, $html_id );
+		$this->load_script( $print_value, $html_id ,false,$field);
 		
 		include dirname( __FILE__ ) . '/view/field_signature.php';
 	}
 	
-	private function load_script( $print_value = "", $field_id = "", $front = false ) {
+	private function load_script( $print_value = "", $field_id = "", $front = false,$field ) {
+		
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
 		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
-		$params = array( 'is_front' => $front );
+		$params = array( 
+			'is_front' => $front 
+			,'background'=>$field['backgroundcolor']
+			,'pencolor'=>$field['pencolor']
+			,'width'=>$field['width']
+			,'height'=>$field['height']
+			);
+
 		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
 	}
 	

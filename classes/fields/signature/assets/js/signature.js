@@ -30,7 +30,7 @@ function process_fields(item, index) {
 		canvas.height = canvas.offsetHeight * ratio;
 		canvas.getContext("2d").scale(ratio, ratio);
 	}
-
+    
 	window.onresize = resizeCanvas;
 	resizeCanvas();
 
@@ -39,7 +39,9 @@ function process_fields(item, index) {
 			if (!gfirem_signature.is_front) {
 				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
 			}
-		}
+		},
+		backgroundColor:gfirem_signature.background,
+		penColor:gfirem_signature.pencolor
 	});
 
 	if (data) {
