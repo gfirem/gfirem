@@ -83,4 +83,19 @@ class gfirem_fs {
 		
 		return self::$instance;
 	}
+	
+	public static function get_current_plan() {
+		$site = gfirem_fs::getFreemius()->get_site();
+		if ( ! empty( $site ) ) {
+			if ( ! empty( $site->plan ) ) {
+				if ( ! empty( $site->plan ) ) {
+					return $site->plan->name;
+				} else {
+					return 'free';
+				}
+			}
+		}
+		
+		return 'free';
+	}
 }

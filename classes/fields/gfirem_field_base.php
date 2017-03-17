@@ -59,7 +59,9 @@ class gfirem_field_base {
 	private function is_enabled( $slug ) {
 		$options = get_option( 'gfirem_options' );
 		$key     = 'enabled_' . $slug;
-		if ( ! empty( $options[ $key ] ) ) {
+		$plan    = gfirem_fs::get_current_plan();
+		$loaded  = gfirem_manager::$fields_loaded;
+		if ( ! empty( $options[ $key ] ) && array_key_exists( $slug, $loaded[ $plan ] ) ) {
 			return true;
 		}
 		
