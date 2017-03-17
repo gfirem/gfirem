@@ -42,7 +42,9 @@ function process_fields(item, index) {
 			}
 		},
 		backgroundColor:gfirem_signature.config[id].background,
-		penColor:gfirem_signature.config[id].pencolor
+		penColor:gfirem_signature.config[id].pencolor,
+		width:gfirem_signature.config[id].width,
+		height:gfirem_signature.config[id].height
 	});
 
 	if (data) {

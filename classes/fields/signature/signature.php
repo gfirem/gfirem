@@ -12,7 +12,7 @@
 class signature extends gfirem_field_base {
 	
 	public $version = '1.0.0';
-	
+	public $areAllSignatureFieldVisited=false;
 	function __construct() {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
@@ -56,31 +56,36 @@ class signature extends gfirem_field_base {
 		if ( ! empty( $field['value'] ) ) {
 			$print_value = $field['value'];
 		}
-		
-		$this->load_script( $print_value, $html_id, false, $field );
-		
+	    $this->load_script( $print_value, $html_id, false, $field );		
 		include dirname( __FILE__ ) . '/view/field_signature.php';
 	}
 	
 	private function load_script( $print_value = "", $field_id = "", $front = false, $field ) {
+
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
 		wp_enqueue_style( 'dashicons' );
 		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
-		$params                                   = array(
+		$params = array(
 			'is_front' => $front,
 		);
-		$params['config'][ 'field_' . $field_id ][] = array(
-			'background' => $field['backgroundcolor'],
-			'pencolor'   => $field['pencolor'],
-			'width'      => $field['width'],
-			'height'     => $field['height']
-		);
+		$signatureFields = FrmField::get_all_types_in_form($field['form_id'], $this->slug);
+		foreach ($signatureFields as $key => $value) {
+		    	$backgroundcolor   = FrmField::get_option( $value, "backgroundcolor" );
+		    	$pencolor          = FrmField::get_option( $value, "pencolor" );
+		    	$width             = FrmField::get_option( $value, "width" );
+		    	$height            = FrmField::get_option( $value, "height" );		    	
+			    $params['config'][ 'field_' . $value->field_key] = array(
+				'background' => $backgroundcolor,
+				'pencolor'   => $pencolor,
+				'width'      => $width,
+				'height'     => $height
+				);			 
+		}		
 		
-		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
+		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );	
 		
-		$fields = FrmField::get_all_types_in_form($field['form_id'], $this->slug);
 	}
 	
 	/**
