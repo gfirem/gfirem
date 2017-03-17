@@ -12,7 +12,10 @@
 class signature extends gfirem_field_base {
 	
 	public $version = '1.0.0';
-	public $areAllSignatureFieldVisited=false;
+	public $areAllSignatureFieldVisited = false;
+	public $form_id;
+	public $is_front = false;
+	
 	function __construct() {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
@@ -24,6 +27,40 @@ class signature extends gfirem_field_base {
 			),
 			_gfirem( 'Show a Signature Pad.' )
 		);
+		add_action( 'admin_footer', array( $this, 'add_script_in_front' ) );
+		add_action( 'wp_footer', array( $this, 'add_script_in_front' ) );
+	}
+	
+	public function add_script_in_front( $hook ) {
+		if ( $this->areAllSignatureFieldVisited ) {
+			$this->load_script();
+		}
+	}
+	
+	private function load_script( $front = false ) {
+		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
+		wp_enqueue_style( 'dashicons' );
+		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
+		$params = array(
+			'is_front' => $this->is_front,
+		);
+		$signatureFields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
+		foreach ( $signatureFields as $key => $value ) {
+			$backgroundcolor                                  = FrmField::get_option( $value, "backgroundcolor" );
+			$pencolor                                         = FrmField::get_option( $value, "pencolor" );
+			$width                                            = FrmField::get_option( $value, "width" );
+			$height                                           = FrmField::get_option( $value, "height" );
+			$params['config'][ 'field_' . $value->field_key ] = array(
+				'background' => $backgroundcolor,
+				'pencolor'   => $pencolor,
+				'width'      => $width,
+				'height'     => $height
+			);
+		}
+		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
+		
 	}
 	
 	/**
@@ -49,43 +86,15 @@ class signature extends gfirem_field_base {
 	 *
 	 */
 	protected function field_front_view( $field, $field_name, $html_id ) {
-		
 		$field['value'] = stripslashes_deep( $field['value'] );
 		$html_id        = $field['field_key'];
 		$print_value    = $field['default_value'];
 		if ( ! empty( $field['value'] ) ) {
 			$print_value = $field['value'];
 		}
-	    $this->load_script( $print_value, $html_id, false, $field );		
+		$this->form_id                     = $field['form_id'];
+		$this->areAllSignatureFieldVisited = true;
 		include dirname( __FILE__ ) . '/view/field_signature.php';
-	}
-	
-	private function load_script( $print_value = "", $field_id = "", $front = false, $field ) {
-
-		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_style( 'signature_pad', $base_url . 'css/signature_pad.css', array(), $this->version );
-		wp_enqueue_style( 'dashicons' );
-		wp_enqueue_script( 'signature_pad', $base_url . 'js/signature_pad.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
-		$params = array(
-			'is_front' => $front,
-		);
-		$signatureFields = FrmField::get_all_types_in_form($field['form_id'], $this->slug);
-		foreach ($signatureFields as $key => $value) {
-		    	$backgroundcolor   = FrmField::get_option( $value, "backgroundcolor" );
-		    	$pencolor          = FrmField::get_option( $value, "pencolor" );
-		    	$width             = FrmField::get_option( $value, "width" );
-		    	$height            = FrmField::get_option( $value, "height" );		    	
-			    $params['config'][ 'field_' . $value->field_key] = array(
-				'background' => $backgroundcolor,
-				'pencolor'   => $pencolor,
-				'width'      => $width,
-				'height'     => $height
-				);			 
-		}		
-		
-		wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );	
-		
 	}
 	
 	/**
@@ -119,7 +128,7 @@ class signature extends gfirem_field_base {
 		$html_id     = $field['field_key'];
 		$print_value = $replace_with;
 		$field_name  = 'item_meta[' . $field['id'] . ']';
-		$this->load_script( $print_value, $html_id, true );
+		$this->is_front = true;
 		ob_start();
 		include dirname( __FILE__ ) . '/view/field_signature.php';
 		$output = ob_get_clean();
