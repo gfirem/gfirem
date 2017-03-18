@@ -13,6 +13,7 @@ var wrappers = document.getElementsByClassName("gfirem-signature-pad");
 
 function process_fields(item, index) {
 	var field_container = item.querySelector("[data-action=store-sign]"),
+		image_container = item.querySelector("[data-action=image-sign]"),
 		clearButton = item.querySelector("[data-action=clear]"),
 		canvas = item.querySelector("canvas"),
 		data = field_container.getAttribute('value'),
@@ -38,7 +39,18 @@ function process_fields(item, index) {
 	signaturePad = new SignaturePad(canvas, {
 		onEnd: function (event) {
 			if (!gfirem_signature.is_front) {
-				field_container.setAttribute('value', JSON.stringify(signaturePad.toData()));
+				 var dotCollection={};
+				 var merge = {};
+				 var dataCollection = signaturePad.toData();
+				if (data) {		
+		         var dotCollection =JSON.parse(data);
+		         merge = dataCollection.concat(dotCollection);
+	            }
+	             else{
+	          	  merge = dataCollection;
+	            }	  
+				field_container.setAttribute('value', JSON.stringify(merge));
+				image_container.setAttribute('value', JSON.stringify(signaturePad.toDataURL("image/jpeg")));
 			}
 		},
 		backgroundColor:gfirem_signature.config[id].background,
@@ -48,6 +60,7 @@ function process_fields(item, index) {
 	});
 
 	if (data) {
+
 		signaturePad.fromData(JSON.parse(data));
 	}
 
@@ -56,6 +69,12 @@ function process_fields(item, index) {
 	}
 	else {
 		clearButton.addEventListener("click", function (event) {
+			/*var signatureImage =signaturePad.toDataURL("image/jpeg"); 
+			var image = new Image();
+        image.src = signatureImage;
+
+        var w = window.open("");
+        w.document.write(image.outerHTML);*/
 			signaturePad.clear();
 			event.preventDefault();
 			return false;

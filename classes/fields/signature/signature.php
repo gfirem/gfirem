@@ -39,8 +39,40 @@ class signature extends gfirem_field_base {
 	}
 	
 	public function process_pre_create_entry($values, $id){
-		$t = $values;
-		
+		$t = $values;		
+		$item_meta_collection =$values['image_item_meta'];
+
+		foreach ($item_meta_collection as $key => $value) {
+			     $field_type =FrmField::get_type($key);
+			   	 if ($field_type=='signature') {
+			   	 	$preparedData=stripslashes_deep( $value );			   	 	
+			   	 	$data_uri = $preparedData;			   	 	
+					$encoded_image = explode(",", $data_uri)[1];
+					$decoded_image = base64_decode($encoded_image);				
+					$path=	wp_normalize_path(wp_upload_dir()['path']); 					
+					file_put_contents($path."/".$key."signature.png", $decoded_image);		
+					$filename = $path."/".$key."signature.png";
+					$filetype = wp_check_filetype( basename( $filename ), null ); 	
+					$wp_upload_dir = wp_upload_dir();
+					// Prepare an array of post data for the attachment.
+					$attachment = array(
+						'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
+						'post_mime_type' => $filetype['type'],
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+						'post_content'   => '',
+						'post_status'    => 'inherit'
+					); 	
+					$attach_id = wp_insert_attachment( $attachment, $filename);	
+					// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+					require_once( ABSPATH . 'wp-admin/includes/image.php' );
+					// Generate the metadata for the attachment, and update the database record.
+					$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
+					wp_update_attachment_metadata( $attach_id, $attach_data );
+
+					set_post_thumbnail( $parent_post_id, $attach_id );
+			   	 }
+		}
+
 		return $values;
 	}
 	

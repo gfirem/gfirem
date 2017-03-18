@@ -11,6 +11,7 @@
 ?>
 <div id="signature-pad" class="gfirem-signature-pad" <?php do_action( 'frm_field_input_html', $field ) ?>>
 	<input data-action="store-sign" type="hidden" id="field_<?php echo esc_attr( $html_id ) ?>" name="<?php echo esc_attr( $field_name ) ?>" value="<?php echo esc_attr( $print_value ); ?>" >
+	<input data-action="image-sign" type="hidden" id="field_<?php echo esc_attr( $html_id ) ?>" name="image_<?php echo esc_attr( $field_name ) ?>" value="<?php echo esc_attr( $print_value ); ?>" >
 	<div class="gfirem-signature-pad-body">
 		<canvas class="gfirem-signature-canvas"></canvas>
 	</div>
