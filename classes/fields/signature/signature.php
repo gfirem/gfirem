@@ -126,8 +126,7 @@ class signature extends gfirem_field_base {
 				    $value = json_encode($decoded_value);
 				    $values['item_meta'][$key]=$value;					
 			   	 }
-		}			
-		
+		}
 		return $values;
 	}
 	
