@@ -21,6 +21,7 @@ class gfirem_field_base {
 	public $defaults = array();
 	public $global_options = array();
 	public $plan = 'free';
+	public $form_id;
 	
 	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array(), $plan = 'free' ) {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
@@ -190,7 +191,7 @@ class gfirem_field_base {
 		}
 		$field['value'] = stripslashes_deep( $field['value'] );
 		$html_id        = $field['field_key'];
-		
+		$this->form_id                     = $field['form_id'];
 		$this->field_front_view( $field, $field_name, $html_id );
 	}
 	
