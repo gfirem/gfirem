@@ -12,26 +12,87 @@
 class switch_button extends gfirem_field_base {
 	
 	public $version = '1.0.0';
+	private $load_script;
 	
 	function __construct() {
 		parent::__construct( 'switch_button', _gfirem( 'SwitchButton' ),
 			array(
-				'switch_button_show_labels' => ''
+				'labels_placement' => 'both',
+				'on_label'         => _gfirem( 'ON' ),
+				'off_label'        => _gfirem( 'OFF' ),
+				'button_width'     => 25,
+				'width'            => 50,
+				'height'           => 20,
+			
 			),
 			_gfirem( 'Show a Switch Button.' ), array(), gfirem_fs::$starter
 		);
+		add_action( 'admin_footer', array( $this, 'add_script' ) );
+		add_action( 'wp_footer', array( $this, 'add_script' ) );
 	}
 	
+	/**
+	 * Load the scripts when needed in front or backend
+	 *
+	 * @param $hook
+	 */
+	public function add_script( $hook ) {
+		if ( $this->load_script ) {
+			$this->load_script();
+		}
+	}
+	
+	/**
+	 * Load the scripts for all existing fields
+	 *
+	 * @param string $print_value
+	 * @param string $field_id
+	 */
+	private function load_script( $print_value = "", $field_id = "" ) {
+		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+		wp_enqueue_style( 'jquery.switchButton', $base_url . 'css/jquery.switchButton.css', array(), $this->version );
+		wp_enqueue_script( 'jquery.switchButton', $base_url . 'js/jquery.switchButton.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-effects-core' ), $this->version, true );
+		wp_enqueue_script( 'gfirem_switch_button', $base_url . 'js/switch_button.js', array( "jquery" ), $this->version, true );
+		
+		$params = array();
+		$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
+		foreach ( $fields as $key => $field ) {
+			foreach ( $this->defaults as $def_key => $def_val ) {
+				$opt                                                          = FrmField::get_option( $field, $def_key );
+				$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+			}
+		}
+		wp_localize_script( 'gfirem_switch_button', 'gfirem_switch_button', $params );
+	}
+	
+	/**
+	 * Set the default value to the field
+	 *
+	 * @param $fieldData
+	 *
+	 * @return mixed
+	 */
 	protected function set_field_options( $fieldData ) {
-		$fieldData['default_value'] = 'false';
+		$fieldData['default_value'] = _gfirem( 'OFF' );
 		
 		return $fieldData;
 	}
 	
+	/**
+	 * Options inside the form
+	 *
+	 * @param $field
+	 * @param $display
+	 * @param $values
+	 */
 	protected function inside_field_options( $field, $display, $values ) {
-		
+		$label_placement_option = array(
+			'both'  => _gfirem( 'Both' ),
+			'left'  => _gfirem( 'Left' ),
+			'right' => _gfirem( 'Right' ),
+		);
+		include dirname( __FILE__ ) . '/view/field_option.php';
 	}
-	
 	
 	/**
 	 * Add the HTML for the field on the front end
@@ -47,45 +108,9 @@ class switch_button extends gfirem_field_base {
 		if ( ! empty( $field['value'] ) ) {
 			$print_value = $field['value'];
 		}
-		
-		$this->load_script( $print_value, $html_id );
+		$this->load_script = true;
 		
 		include dirname( __FILE__ ) . '/view/field_switch_button.php';
-	}
-	
-	private function load_script( $print_value = "", $field_id = "" ) {
-		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_style( 'jquery.switchButton', $base_url . 'css/jquery.switchButton.css', array(), $this->version );
-		wp_enqueue_script( 'jquery.switchButton', $base_url . 'js/jquery.switchButton.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-effects-core' ), $this->version, true );
-		wp_enqueue_script( 'gfirem_switch_button', $base_url . 'js/switch_button.js', array( "jquery" ), $this->version, true );
-		$params = array(
-			'field_id' => $field_id
-		);
-		if ( ! empty( $print_value ) ) {
-			$params["print_value"] = $print_value;
-		}
-		wp_localize_script( 'gfirem_switch_button', 'gfirem_switch_button', $params );
-	}
-	
-	private function process_value( $value ) {
-		$str = 'OFF';
-		if ( $value == 'true' ) {
-			$str = 'ON';
-		}
-		
-		return $str;
-	}
-	
-	protected function field_admin_view( $value, $field, $attr ) {
-		return esc_html( $this->process_value( $value ) );
-	}
-	
-	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
-		if ( empty( $replace_with ) ) {
-			return $replace_with;
-		}
-		
-		return esc_html( $this->process_value( $replace_with ) );
 	}
 	
 	/**

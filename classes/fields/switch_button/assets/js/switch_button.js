@@ -8,20 +8,26 @@
  *
  */
 jQuery(document).ready(function ($) {
-	var checked = false;
-	if (gfirem_switch_button.print_value) {
-		checked = true;
-	}
+	$(".gfirem_switch_button").each(function () {
+		var current = $(this),
+			id = current.attr('id'),
+			checked = false;
 
-	var switch_options = {
-		checked: checked,
-		width: 50,
-		height: 20,
-		button_width: 25,
-		show_labels: true,
-		labels_placement: "both",
-		on_label: "ON",
-		off_label: "OFF"
-	};
-	$(".gfirem_switch_button").switchButton(switch_options);
+		if (current.val() && current.val() == gfirem_switch_button.config[id].on_label) {
+			checked = true;
+		}
+
+		var switch_options = {
+			checked: checked,
+			width: gfirem_switch_button.config[id].width,
+			height: gfirem_switch_button.config[id].height,
+			button_width: gfirem_switch_button.config[id].button_width,
+			show_labels: gfirem_switch_button.config[id].width,
+			labels_placement: gfirem_switch_button.config[id].labels_placement,
+			on_label: gfirem_switch_button.config[id].on_label,
+			off_label: gfirem_switch_button.config[id].off_label
+		};
+
+		current.switchButton(switch_options);
+	});
 });
