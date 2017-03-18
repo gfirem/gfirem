@@ -39,19 +39,20 @@ class signature extends gfirem_field_base {
 	}
 	
 	public function process_pre_create_entry($values, $id){
-		$t = $values;		
-		$item_meta_collection =$values['image_item_meta'];
-
+		$t = $values;			
+		$item_meta_collection =$values['item_meta'];	
 		foreach ($item_meta_collection as $key => $value) {
 			     $field_type =FrmField::get_type($key);
-			   	 if ($field_type=='signature') {
-			   	 	$preparedData=stripslashes_deep( $value );			   	 	
+			   	 if ($field_type=='signature') {			   	 
+			   	 	$decoded_value = json_decode($value,true);			   	  
+			   	 	$preparedData=stripslashes_deep( $decoded_value['uri'] );			   	 	
 			   	 	$data_uri = $preparedData;			   	 	
 					$encoded_image = explode(",", $data_uri)[1];
 					$decoded_image = base64_decode($encoded_image);				
-					$path=	wp_normalize_path(wp_upload_dir()['path']); 					
-					file_put_contents($path."/".$key."signature.png", $decoded_image);		
-					$filename = $path."/".$key."signature.png";
+					$path=	wp_normalize_path(wp_upload_dir()['path']); 
+					$guid_image_name = $this->GUID();	
+					$filename = $path."/".$guid_image_name.".png";				
+					file_put_contents($filename, $decoded_image);
 					$filetype = wp_check_filetype( basename( $filename ), null ); 	
 					$wp_upload_dir = wp_upload_dir();
 					// Prepare an array of post data for the attachment.
@@ -68,16 +69,64 @@ class signature extends gfirem_field_base {
 					// Generate the metadata for the attachment, and update the database record.
 					$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
 					wp_update_attachment_metadata( $attach_id, $attach_data );
-
-					set_post_thumbnail( $parent_post_id, $attach_id );
+				    $decoded_value['uri']=$attach_id;
+				    $decoded_value['id']=$attach_id;
+				    $value = json_encode($decoded_value);
+				    $values['item_meta'][$key]=$value;					
 			   	 }
-		}
-
+		}			
 		return $values;
-	}
+	}	
+
+	/**
+  	* Generate GUID
+  	* * @return string
+  	*/
+ 	private function GUID() {
+  		if ( function_exists( 'com_create_guid' ) === true ) {
+   			return trim( com_create_guid(), '{}' );
+  			}
+  		return sprintf( '%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand( 0, 65535 ), mt_rand( 0, 65535 ), mt_rand( 0, 65535 ), mt_rand( 16384, 20479 ), mt_rand( 32768, 49151 ), mt_rand( 0, 65535 ), mt_rand( 0, 65535 ), mt_rand( 0, 65535 ) );
+ 	}
 	
 	public function process_pre_update_entry($values, $id){
 		$t = $values;
+		$item_meta_collection =$values['item_meta'];	
+		foreach ($item_meta_collection as $key => $value) {
+			     $field_type =FrmField::get_type($key);
+			   	 if ($field_type=='signature') {			   	 
+			   	 	$decoded_value = json_decode($value,true);	
+			   	 	wp_delete_attachment( $decoded_value['id'] );		   	  
+			   	 	$preparedData=stripslashes_deep( $decoded_value['uri'] );			   	 	
+			   	 	$data_uri = $preparedData;			   	 	
+					$encoded_image = explode(",", $data_uri)[1];
+					$decoded_image = base64_decode($encoded_image);				
+					$path=	wp_normalize_path(wp_upload_dir()['path']); 
+					$guid_image_name = $this->GUID();	
+					$filename = $path."/".$guid_image_name.".png";				
+					file_put_contents($filename, $decoded_image);
+					$filetype = wp_check_filetype( basename( $filename ), null ); 	
+					$wp_upload_dir = wp_upload_dir();
+					// Prepare an array of post data for the attachment.
+					$attachment = array(
+						'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
+						'post_mime_type' => $filetype['type'],
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+						'post_content'   => '',
+						'post_status'    => 'inherit'
+					); 	
+					$attach_id = wp_insert_attachment( $attachment, $filename);	
+					// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+					require_once( ABSPATH . 'wp-admin/includes/image.php' );
+					// Generate the metadata for the attachment, and update the database record.
+					$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
+					wp_update_attachment_metadata( $attach_id, $attach_data );
+				    $decoded_value['uri']=$attach_id;
+				    $decoded_value['id']=$attach_id;
+				    $value = json_encode($decoded_value);
+				    $values['item_meta'][$key]=$value;					
+			   	 }
+		}			
 		
 		return $values;
 	}

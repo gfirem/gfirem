@@ -12,11 +12,10 @@ var wrappers = document.getElementsByClassName("gfirem-signature-pad");
 [].forEach.call(wrappers, process_fields);
 
 function process_fields(item, index) {
-	var field_container = item.querySelector("[data-action=store-sign]"),
-		image_container = item.querySelector("[data-action=image-sign]"),
+	var field_container = item.querySelector("[data-action=store-sign]"),		
 		clearButton = item.querySelector("[data-action=clear]"),
 		canvas = item.querySelector("canvas"),
-		data = field_container.getAttribute('value'),
+		data = field_container.getAttribute('value'),		
 		id = field_container.getAttribute('id'),
 		signaturePad;
 
@@ -33,24 +32,29 @@ function process_fields(item, index) {
 		canvas.getContext("2d").scale(ratio, ratio);
 	}
     
-	window.onresize = resizeCanvas;
-	resizeCanvas();
+	//window.onresize = resizeCanvas;
+	//resizeCanvas();
 
 	signaturePad = new SignaturePad(canvas, {
 		onEnd: function (event) {
 			if (!gfirem_signature.is_front) {
 				 var dotCollection={};
 				 var merge = {};
+				
+				 merge['uri']=signaturePad.toDataURL("image/jpeg");				 
 				 var dataCollection = signaturePad.toData();
-				if (data) {		
+				 merge['point'] =dataCollection;
+				 if (data) {		
 		         var dotCollection =JSON.parse(data);
-		         merge = dataCollection.concat(dotCollection);
-	            }
+		         merge['point'] = dataCollection.concat(dotCollection.point);
+		         merge['id']=dotCollection.id;
+	             }
 	             else{
-	          	  merge = dataCollection;
-	            }	  
+	          	  merge['point'] = dataCollection;
+	          	  merge['id']="";
+	             }	  
 				field_container.setAttribute('value', JSON.stringify(merge));
-				image_container.setAttribute('value', JSON.stringify(signaturePad.toDataURL("image/jpeg")));
+				
 			}
 		},
 		backgroundColor:gfirem_signature.config[id].background,
@@ -60,8 +64,8 @@ function process_fields(item, index) {
 	});
 
 	if (data) {
-
-		signaturePad.fromData(JSON.parse(data));
+		var pointData = JSON.parse(data);
+		signaturePad.fromData(pointData.point);
 	}
 
 	if (gfirem_signature.is_front) {
