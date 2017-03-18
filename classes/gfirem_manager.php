@@ -145,4 +145,23 @@ class gfirem_manager {
 			return $template;
 		}
 	}
+	
+	/**
+	 * Check if a plugins is active it take in count the actual plan to
+	 *
+	 * @param $slug
+	 *
+	 * @return bool
+	 */
+	public static function is_enabled( $slug ) {
+		$options = get_option( 'gfirem_options' );
+		$key     = 'enabled_' . $slug;
+		$plan    = gfirem_fs::get_current_plan();
+		$loaded  = gfirem_manager::$fields_loaded;
+		if ( ! empty( $options[ $key ] ) && array_key_exists( $slug, $loaded[ $plan ] ) ) {
+			return true;
+		}
+		
+		return false;
+	}
 }

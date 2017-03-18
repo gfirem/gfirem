@@ -18,7 +18,7 @@
 <h2 class="nav-tab-wrapper">
     <a href="?page=<?php echo gfirem_manager::get_slug(); ?>&tab=generic" class="nav-tab <?php echo $active_tab == 'generic' ? 'nav-tab-active' : ''; ?>"><?php _e_gfirem( 'Settings' ) ?></a>
 	<?php foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) : ?>
-		<?php if ( ! empty( $global_settings_tab_data->global_options ) && array_key_exists($global_settings_tab_key, $this->loaded_fields) ) : ?>
+		<?php if ( ! empty( $global_settings_tab_data->global_options ) && array_key_exists($global_settings_tab_key, $this->loaded_fields) && gfirem_manager::is_enabled($global_settings_tab_key) ) : ?>
             <a href="?page=<?php echo gfirem_manager::get_slug(); ?>&tab=<?php echo "$global_settings_tab_key"; ?>" class="nav-tab <?php echo $active_tab == $global_settings_tab_key ? 'nav-tab-active' : ''; ?>"><?php echo $global_settings_tab_data->global_options['name'] ?></a>
 		<?php endif; ?>
 	<?php endforeach; ?>
