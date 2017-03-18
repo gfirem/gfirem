@@ -37,7 +37,7 @@ class gfirem_field_base {
 			
 			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
 			
-			if ( ! $this->is_enabled( $this->slug ) ) {
+			if ( ! gfirem_manager::is_enabled( $this->slug ) ) {
 				return;
 			}
 			add_action( 'frm_pro_available_fields', array( $this, 'add_formidable_field' ) );
@@ -54,18 +54,6 @@ class gfirem_field_base {
 		} else {
 			//TODO show admin notice it need formidable pro
 		}
-	}
-	
-	private function is_enabled( $slug ) {
-		$options = get_option( 'gfirem_options' );
-		$key     = 'enabled_' . $slug;
-		$plan    = gfirem_fs::get_current_plan();
-		$loaded  = gfirem_manager::$fields_loaded;
-		if ( ! empty( $options[ $key ] ) && array_key_exists( $slug, $loaded[ $plan ] ) ) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 	public function gfirem_register( $fields ) {

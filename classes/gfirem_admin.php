@@ -11,7 +11,6 @@
  */
 class gfirem_admin extends gfirem_base {
 	private $loaded_fields = array();
-	private $global_settings_tabs;
 	private $fields = array();
 	
 	public function __construct( $fields ) {
@@ -19,16 +18,7 @@ class gfirem_admin extends gfirem_base {
 		$this->loaded_fields = $fields[ $this->get_plan() ];
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_admin_settings' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_js' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
-	}
-	
-	public function handle_sub_menu( $is_visible, $menu_id ) {
-		if ( $menu_id == 'account' ) {
-			$is_visible = false;
-		}
-		
-		return $is_visible;
 	}
 	
 	/**
@@ -38,6 +28,9 @@ class gfirem_admin extends gfirem_base {
 		add_menu_page( _gfirem( 'GFireM Fields' ), _gfirem( 'GFireM Fields' ), 'manage_options', gfirem_manager::get_slug(), array( $this, 'screen' ), 'dashicons-smiley' );
 	}
 	
+	/**
+	 * Handle menu callback. Here i load the form view with the header
+	 */
 	public function screen() {
 		$this->fields = apply_filters( 'gfirem_register_field', array() );
 		$active_tab   = 'generic';
@@ -56,6 +49,9 @@ class gfirem_admin extends gfirem_base {
 		include_once( GFIREM_VIEW_PATH . 'html_admin.php' );
 	}
 	
+	/**
+	 * Register all setting to the main plugins and register all modules
+	 */
 	public function register_admin_settings() {
 		$this->fields = apply_filters( 'gfirem_register_field', array() );
 		//Options for the general tab
@@ -71,6 +67,9 @@ class gfirem_admin extends gfirem_base {
 		}
 	}
 	
+	/**
+	 * Handle the main tab for the plugins where the user enabled and disable all the fields
+	 */
 	public function general_tab() {
 		_e_gfirem( '<i>Select witch field will be active in your system.</i>' );
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
@@ -81,6 +80,11 @@ class gfirem_admin extends gfirem_base {
 		}
 	}
 	
+	/**
+	 * The function to print each field enabled/disabled checkbox
+	 *
+	 * @param $field
+	 */
 	public function enabled_field( $field ) {
 		echo '<p ' . $this->disable_class_tag( 'p', $field->plan ) . '>';
 		$this->get_view_for( 'enabled_' . $field->slug, 'checkbox', 'gfirem_options', array(), $field->plan );
@@ -89,10 +93,22 @@ class gfirem_admin extends gfirem_base {
 		
 	}
 	
+	/**
+	 * Show the save button
+	 */
 	public function save_data() {
 		submit_button( null, "primary", "gfirem_submit", false );
 	}
 	
+	/**
+	 * Echo the correct input, take in count extra tags and plan
+	 *
+	 * @param $setting
+	 * @param string $type
+	 * @param string $domain
+	 * @param array $args
+	 * @param string $plan
+	 */
 	private function get_view_for( $setting, $type = "text", $domain = 'gfirem_options', $args = array(), $plan = 'free' ) {
 		$general_option = get_option( $domain );
 		$data           = '';
@@ -123,11 +139,15 @@ class gfirem_admin extends gfirem_base {
 		echo "<input $disable_for_plan name='" . $domain . "[" . $setting . "]' id='gfirem_" . $setting . "' type='" . $type . "' " . $value . " " . $args_txt . " />";
 	}
 	
+	/**
+	 * Show the content inside the tab of field when it need a globals options
+	 */
 	public function tab_content() {
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
 			$active_tab = esc_attr( $_GET['tab'] );
 			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab
 			     && ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
+			     && gfirem_manager::is_enabled( $global_settings_tab_key )
 			) {
 				$view_fnc = $global_settings_tab_data->global_options['view'][1];
 				$global_settings_tab_data->$view_fnc();
@@ -137,19 +157,13 @@ class gfirem_admin extends gfirem_base {
 	
 	/**
 	 * Include styles in admin
+	 *
+	 * @param $hook
 	 */
-	public function enqueue_style() {
-		//TODO si esto no es necesario solo incluirlo en donde corresponda
-		wp_enqueue_style( 'jquery' );
-		wp_enqueue_style( 'gfirem', GFIREM_CSS_PATH . 'gfirem.css', array(), gfirem_manager::get_version() );
-	}
-	
-	/**
-	 * Include script
-	 */
-	public function enqueue_js() {
-		//TODO si esto no es necesario solo incluirlo en donde corresponda
-		wp_register_script( 'gfirem', GFIREM_JS_PATH . 'gfirem.js', array( "jquery" ), true );
-		wp_enqueue_script( 'gfirem' );
+	public function enqueue_style($hook) {
+		if($hook == 'toplevel_page_gfirem') {
+			wp_enqueue_style( 'jquery' );
+			wp_enqueue_style( 'gfirem', GFIREM_CSS_PATH . 'gfirem.css', array(), gfirem_manager::get_version() );
+		}
 	}
 }
