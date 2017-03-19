@@ -281,4 +281,23 @@ class signature extends gfirem_field_base {
 		return $display;
 	}
 	
+	/**
+	 * Set the url for the signature to use the email notification
+	 *
+	 * @param $value
+	 * @param $meta
+	 * @param $entry
+	 *
+	 * @return false|string
+	 */
+	public function replace_value_in_mail( $value, $meta, $entry ) {
+		if ( ! empty( $value ) ) {
+			$signature = json_decode( $value, true );
+			$value     = wp_get_attachment_image_url( $signature['id'], 'full' );
+		}
+		
+		return $value;
+	}
+	
+	
 }
