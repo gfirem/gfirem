@@ -19,6 +19,22 @@ function process_fields(item, index) {
 		id = field_container.getAttribute('id'),
 		signaturePad;
 
+	// Adjust canvas coordinate space taking into account pixel ratio,
+	// to make it look crisp on mobile devices.
+	// This also causes canvas to be cleared.
+	function resizeCanvas() {
+		// When zoomed out to less than 100%, for some very strange reason,
+		// some browsers report devicePixelRatio as less than 1
+		// and only part of the canvas is cleared then.
+		var ratio = Math.max(window.devicePixelRatio || 1, 1);
+		canvas.width = canvas.offsetWidth * ratio;
+		canvas.height = canvas.offsetHeight * ratio;
+		canvas.getContext("2d").scale(ratio, ratio);
+	}
+
+	window.onresize = resizeCanvas;
+	resizeCanvas();
+
 	signaturePad = new SignaturePad(canvas, {
 		onEnd: function (event) {
 			var dotCollection = {};
@@ -37,7 +53,7 @@ function process_fields(item, index) {
 			}
 			field_container.setAttribute('value', JSON.stringify(merge));
 		},
-		backgroundColor: gfirem_signature.config[id].background,
+		backgroundColor: gfirem_signature.config[id].backgroundcolor,
 		penColor: gfirem_signature.config[id].pencolor,
 		width: gfirem_signature.config[id].width,
 		height: gfirem_signature.config[id].height
@@ -45,7 +61,7 @@ function process_fields(item, index) {
 
 	if (data) {
 		var pointData = JSON.parse(data);
-		console.log(pointData);
+		console.log(data);
 		signaturePad.fromData(pointData.point);
 	}
 
