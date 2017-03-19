@@ -21,8 +21,8 @@ class signature extends gfirem_field_base {
 		parent::__construct( 'signature', _gfirem( 'Signature' ),
 			array(
 				'signature'       => '',
-				'backgroundcolor' => '',//Color of the canvas
-				'pencolor'        => '',
+				'backgroundcolor' => '#fff',//Color of the canvas
+				'pencolor'        => '#000',
 				'width'           => '300',
 				'height'          => '150'
 			),
@@ -206,7 +206,12 @@ class signature extends gfirem_field_base {
 	 * @return string
 	 */
 	protected function field_admin_view( $value, $field, $attr ) {
-		return _gfirem( 'Signature' );
+		if ( ! empty( $value ) ) {
+			$signature = json_decode( $value, true );
+			$value     = $this->getMicroImage( $signature['id'] );
+		}
+		
+		return $value;
 	}
 	
 	/**
@@ -233,6 +238,22 @@ class signature extends gfirem_field_base {
 		$output = ob_get_clean();
 		
 		return $output;
+	}
+	
+	/**
+	 * Return html of image with micro size 50px
+	 *
+	 * @param $id
+	 *
+	 * @return string
+	 */
+	private function getMicroImage( $id ) {
+		$result = '';
+		if ( isset( $id ) && ! empty( $id ) ) {
+			$result = " <a style='vertical-align: top;' target='_blank' href='" . wp_get_attachment_image_url( $id, 'full' ) . "'>" . wp_get_attachment_image( $id, array( 50, 25 ), true ) . "</a>";
+		}
+		
+		return $result;
 	}
 	
 	
