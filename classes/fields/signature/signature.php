@@ -152,17 +152,11 @@ class signature extends gfirem_field_base {
 			wp_enqueue_script( 'gfirem_signature', $base_url . 'js/signature.js', array( "jquery" ), $this->version, true );
 			$params          = array();
 			$signatureFields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
-			foreach ( $signatureFields as $key => $value ) {
-				$backgroundcolor                                  = FrmField::get_option( $value, "backgroundcolor" );
-				$pencolor                                         = FrmField::get_option( $value, "pencolor" );
-				$width                                            = FrmField::get_option( $value, "width" );
-				$height                                           = FrmField::get_option( $value, "height" );
-				$params['config'][ 'field_' . $value->field_key ] = array(
-					'background' => $backgroundcolor,
-					'pencolor'   => $pencolor,
-					'width'      => $width,
-					'height'     => $height
-				);
+			foreach ( $signatureFields as $key => $field ) {
+				foreach ( $this->defaults as $def_key => $def_val ) {
+					$opt                                                          = FrmField::get_option( $field, $def_key );
+					$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+				}
 			}
 			wp_localize_script( 'gfirem_signature', 'gfirem_signature', $params );
 		}
