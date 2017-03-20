@@ -10,7 +10,8 @@ License URI: http://www.apache.org/licenses/
 Add a set of extra fields to formidable to improve your work
 
 == Description ==
-Add a group of formidable fields, in there you can find so far autocomplete field, datetime picker field, switch button field, select image field, user list field.
+Add a group of formidable fields, in there you can find so far autocomplete field, datetime picker field, switch button field, select image field, user list field and signature field.
+Also is possible to extend and include more formidable fields more easy!
 
 == Changelog ==
 
