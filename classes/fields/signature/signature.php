@@ -77,7 +77,7 @@ class signature extends gfirem_field_base {
 	 *
 	 * @return mixed
 	 */
-	public function process_pre_update_entry( $values, $id ) {
+	public function process_pre_update_entry( $values) {
 		$values['item_meta'] = $this->save_signature( $values['item_meta'], $values['form_id'], true );
 		
 		return $values;
