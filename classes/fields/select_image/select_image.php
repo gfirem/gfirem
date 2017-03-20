@@ -76,7 +76,7 @@ class select_image extends gfirem_field_base {
 		$attachment_title = basename( get_attached_file( $field['value'] ) );
 		
 		$this->load_script = true;
-		$this->add_script('');
+		$this->add_script( '' );
 		
 		include dirname( __FILE__ ) . '/view/field_select_image.php';
 	}
@@ -97,12 +97,31 @@ class select_image extends gfirem_field_base {
 		return $result;
 	}
 	
+	/**
+	 * Value to show in the admin table
+	 *
+	 * @param $value
+	 * @param $field
+	 * @param $attr
+	 *
+	 * @return string
+	 */
 	protected function field_admin_view( $value, $field, $attr ) {
 		$value = $this->getMicroImage( $value );
 		
 		return $value;
 	}
 	
+	/**
+	 * Process shortcode for view.
+	 *
+	 * @param $replace_with
+	 * @param $tag
+	 * @param $attr
+	 * @param $field
+	 *
+	 * @return string
+	 */
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
 		$internal_attr = shortcode_atts( array(
 			'output' => 'url',
@@ -122,5 +141,44 @@ class select_image extends gfirem_field_base {
 		return $result;
 	}
 	
+	/**
+	 * Set the url for the signature to use the email notification
+	 *
+	 * @param $value
+	 * @param $meta
+	 * @param $entry
+	 *
+	 * @return false|string
+	 */
+	public function replace_value_in_mail( $value, $meta, $entry ) {
+		if ( ! empty( $value ) ) {
+			$value = wp_get_attachment_image_url( $value, 'full' );
+		}
+		
+		return $value;
+	}
 	
+	/**
+	 * Set display option for the field
+	 *
+	 * @param $display
+	 *
+	 * @return mixed
+	 */
+	protected function display_options( $display ) {
+		$display['unique']         = true;
+		$display['required']       = true;
+		$display['read_only']      = true;
+		$display['description']    = true;
+		$display['options']        = true;
+		$display['label_position'] = true;
+		$display['css']            = true;
+		$display['conf_field']     = false;
+		$display['invalid']        = true;
+		$display['default_value']  = false;
+		$display['visibility']     = true;
+		$display['size']           = false;
+		
+		return $display;
+	}
 }
