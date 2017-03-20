@@ -225,32 +225,29 @@ class signature extends gfirem_field_base {
 	 * @return string
 	 */
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
-		if ( empty( $replace_with ) ) {
-			return $replace_with;
+		if ( ! empty( $replace_with ) ) {
+			$signature    = json_decode( $replace_with, true );
+			$width        = FrmField::get_option( $field, 'width' );
+			$height       = FrmField::get_option( $field, 'height' );
+			$replace_with = $this->getMicroImage( $signature['id'], $height, $width );
 		}
-		$field          = (array) $field;
-		$html_id        = $field['field_key'];
-		$print_value    = $replace_with;
-		$field_name     = 'item_meta[' . $field['id'] . ']';
-		$this->is_front = true;
-		ob_start();
-		include dirname( __FILE__ ) . '/view/field_signature.php';
-		$output = ob_get_clean();
 		
-		return $output;
+		return $replace_with;
 	}
 	
 	/**
 	 * Return html of image with micro size 50px
 	 *
 	 * @param $id
+	 * @param int $height
+	 * @param int $width
 	 *
 	 * @return string
 	 */
-	private function getMicroImage( $id ) {
+	private function getMicroImage( $id, $height = 25, $width = 50 ) {
 		$result = '';
 		if ( isset( $id ) && ! empty( $id ) ) {
-			$result = " <a style='vertical-align: top;' target='_blank' href='" . wp_get_attachment_image_url( $id, 'full' ) . "'>" . wp_get_attachment_image( $id, array( 50, 25 ), true ) . "</a>";
+			$result = " <a style='vertical-align: top;' target='_blank' href='" . wp_get_attachment_image_url( $id, 'full' ) . "'>" . wp_get_attachment_image( $id, array( $width, $height ), true ) . "</a>";
 		}
 		
 		return $result;
