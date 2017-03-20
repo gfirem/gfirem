@@ -12,19 +12,54 @@
 class select_image extends gfirem_field_base {
 	
 	public $version = '1.0.0';
+	private $load_script = false;
+	private $base_url;
 	
 	public function __construct() {
 		parent::__construct( 'select_image', _gfirem( 'Select Image' ),
 			array(
-				'select_image_option1' => '0',
+				'library_title'        => _gfirem( 'Choose Image' ),
+				'library_button_title' => _gfirem( 'Choose Image' ),
+				'button_title'         => _gfirem( 'Select Image' ),
+				'button_css'           => '',
 			),
 			_gfirem( 'Show a field to select image from WP Media library.' ),
 			array(), gfirem_fs::$starter
 		);
+		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 	}
 	
+	/**
+	 * Options inside the form
+	 *
+	 * @param $field
+	 * @param $display
+	 * @param $values
+	 */
 	protected function inside_field_options( $field, $display, $values ) {
-		
+		include dirname( __FILE__ ) . '/view/field_option.php';
+	}
+	
+	/**
+	 * Load the scripts when needed in front or backend
+	 *
+	 * @param $hook
+	 */
+	public function add_script( $hook ) {
+		if ( $this->load_script ) {
+			wp_enqueue_style( 'select_image', $this->base_url . 'css/select_image.css', array(), $this->version );
+			wp_enqueue_media();
+			wp_enqueue_script( 'gfirem_select_image', $this->base_url . 'js/select_image.js', array( "jquery" ), $this->version, true );
+			$params = array();
+			$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
+			foreach ( $fields as $key => $field ) {
+				foreach ( $this->defaults as $def_key => $def_val ) {
+					$opt                                                             = FrmField::get_option( $field, $def_key );
+					$params['config'][ 'item_meta[' . $field->id . ']' ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+				}
+			}
+			wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
+		}
 	}
 	
 	/**
@@ -50,24 +85,13 @@ class select_image extends gfirem_field_base {
 		$imageFullUrl     = wp_get_attachment_url( $field['value'] );
 		$attachment_title = basename( get_attached_file( $field['value'] ) );
 		
-		$this->load_script( $print_value, $field_name );
+		$button_name    = FrmField::get_option( $field, 'button_title' );
+		$button_classes = FrmField::get_option( $field, 'button_css' );
+		
+		$this->load_script = true;
+		$this->add_script( '' );
 		
 		include dirname( __FILE__ ) . '/view/field_select_image.php';
-	}
-	
-	
-	private function load_script( $print_value = "", $field_id = "" ) {
-		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_style( 'select_image', $base_url . 'css/select_image.css', array(), $this->version );
-		wp_enqueue_media();
-		wp_enqueue_script( 'gfirem_select_image', $base_url . 'js/select_image.js', array( "jquery" ), $this->version, true );
-		$params = array(
-			'field_id' => $field_id
-		);
-		if ( ! empty( $print_value ) ) {
-			$params["print_value"] = $print_value;
-		}
-		wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
 	}
 	
 	/**
@@ -86,12 +110,31 @@ class select_image extends gfirem_field_base {
 		return $result;
 	}
 	
+	/**
+	 * Value to show in the admin table
+	 *
+	 * @param $value
+	 * @param $field
+	 * @param $attr
+	 *
+	 * @return string
+	 */
 	protected function field_admin_view( $value, $field, $attr ) {
 		$value = $this->getMicroImage( $value );
 		
 		return $value;
 	}
 	
+	/**
+	 * Process shortcode for view.
+	 *
+	 * @param $replace_with
+	 * @param $tag
+	 * @param $attr
+	 * @param $field
+	 *
+	 * @return string
+	 */
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
 		$internal_attr = shortcode_atts( array(
 			'output' => 'url',
@@ -111,5 +154,44 @@ class select_image extends gfirem_field_base {
 		return $result;
 	}
 	
+	/**
+	 * Set the url for the signature to use the email notification
+	 *
+	 * @param $value
+	 * @param $meta
+	 * @param $entry
+	 *
+	 * @return false|string
+	 */
+	public function replace_value_in_mail( $value, $meta, $entry ) {
+		if ( ! empty( $value ) ) {
+			$value = wp_get_attachment_image_url( $value, 'full' );
+		}
+		
+		return $value;
+	}
 	
+	/**
+	 * Set display option for the field
+	 *
+	 * @param $display
+	 *
+	 * @return mixed
+	 */
+	protected function display_options( $display ) {
+		$display['unique']         = true;
+		$display['required']       = true;
+		$display['read_only']      = true;
+		$display['description']    = true;
+		$display['options']        = true;
+		$display['label_position'] = true;
+		$display['css']            = true;
+		$display['conf_field']     = false;
+		$display['invalid']        = true;
+		$display['default_value']  = false;
+		$display['visibility']     = true;
+		$display['size']           = false;
+		
+		return $display;
+	}
 }
