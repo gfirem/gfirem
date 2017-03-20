@@ -20,8 +20,6 @@ jQuery(document).ready(function ($) {
 				return;
 			}
 
-			//TODO improve this code example. attachment.url show only the minimum size
-
 			// Extend the wp.media object
 			mediaUploader = wp.media.frames.file_frame = wp.media({
 				title: 'Choose Image',
