@@ -97,12 +97,16 @@ class signature extends gfirem_field_base {
 			$field_type = FrmField::get_type( $key );
 			if ( $field_type == 'signature' && ! empty( $value ) ) {
 				$decoded_value = json_decode( $value, true );
+                $prepared_data = stripslashes_deep( $decoded_value['uri'] );
+                $exploded_data = explode( ",", $prepared_data );
+                if(!isset($exploded_data[1])){
+                    //En caso de que no se edite el campo signature @Victor
+                    continue;
+                }
 				if ( is_array( $decoded_value ) ) {
 					if ( $delete_before && ! empty( $decoded_value['id'] ) ) {
 						wp_delete_attachment( $decoded_value['id'], true );
 					}
-					$prepared_data = stripslashes_deep( $decoded_value['uri'] );
-					$exploded_data = explode( ",", $prepared_data );
 					$decoded_image = base64_decode( $exploded_data[1] );
 					$upload_dir    = wp_upload_dir();
 					$file_id       = $this->slug . '_' . $form_id . '_' . $key . '_' . time();
