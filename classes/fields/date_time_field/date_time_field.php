@@ -20,7 +20,9 @@ class date_time_field extends gfirem_field_base {
 	function __construct() {
 		parent::__construct( 'date_time_field', _gfirem( 'DateTimePicker' ),
 			array(
-				'datetimepicker_format' => ''
+				'datetimepicker_format' => 'Y/m/d H:i',
+				'datetimepicker_timepicker' => 'true',
+				'datetimepicker_inline' => 'true',
 			),
 			_gfirem( 'Show the Date and Time with a DateTimePicker.' ),
 			array(), gfirem_fs::$professional
