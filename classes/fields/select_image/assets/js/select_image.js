@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
 
 			// When a file is selected, grab the URL and set it as the text field's value
 			mediaUploader.on('select', function () {
-				attachment = mediaUploader.state().get('selection').first().toJSON();
+				var attachment = mediaUploader.state().get('selection').first().toJSON();
 				$('input[name="' + id + '"][type="hidden"]').val(attachment.id);
 				$('[id="image_thumbnail_' + id + '"]').attr('src', attachment.url);
 				$('[id="image_thumbnail_' + id + '"]').attr('alt', attachment.filename);

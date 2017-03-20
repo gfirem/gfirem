@@ -12,6 +12,8 @@
 class select_image extends gfirem_field_base {
 	
 	public $version = '1.0.0';
+	private $load_script = false;
+	private $base_url;
 	
 	public function __construct() {
 		parent::__construct( 'select_image', _gfirem( 'Select Image' ),
@@ -21,10 +23,33 @@ class select_image extends gfirem_field_base {
 			_gfirem( 'Show a field to select image from WP Media library.' ),
 			array(), gfirem_fs::$starter
 		);
+		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 	}
 	
 	protected function inside_field_options( $field, $display, $values ) {
 		
+	}
+	
+	/**
+	 * Load the scripts when needed in front or backend
+	 *
+	 * @param $hook
+	 */
+	public function add_script( $hook ) {
+		if ( $this->load_script ) {
+			wp_enqueue_style( 'select_image', $this->base_url . 'css/select_image.css', array(), $this->version );
+			wp_enqueue_media();
+			wp_enqueue_script( 'gfirem_select_image', $this->base_url . 'js/select_image.js', array( "jquery" ), $this->version, true );
+			$params = array();
+			$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
+			foreach ( $fields as $key => $field ) {
+				foreach ( $this->defaults as $def_key => $def_val ) {
+					$opt                                                          = FrmField::get_option( $field, $def_key );
+					$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+				}
+			}
+			wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
+		}
 	}
 	
 	/**
@@ -50,24 +75,10 @@ class select_image extends gfirem_field_base {
 		$imageFullUrl     = wp_get_attachment_url( $field['value'] );
 		$attachment_title = basename( get_attached_file( $field['value'] ) );
 		
-		$this->load_script( $print_value, $field_name );
+		$this->load_script = true;
+		$this->add_script('');
 		
 		include dirname( __FILE__ ) . '/view/field_select_image.php';
-	}
-	
-	
-	private function load_script( $print_value = "", $field_id = "" ) {
-		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_style( 'select_image', $base_url . 'css/select_image.css', array(), $this->version );
-		wp_enqueue_media();
-		wp_enqueue_script( 'gfirem_select_image', $base_url . 'js/select_image.js', array( "jquery" ), $this->version, true );
-		$params = array(
-			'field_id' => $field_id
-		);
-		if ( ! empty( $print_value ) ) {
-			$params["print_value"] = $print_value;
-		}
-		wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
 	}
 	
 	/**
