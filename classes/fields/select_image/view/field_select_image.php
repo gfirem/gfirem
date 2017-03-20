@@ -6,7 +6,7 @@
             <div class="dz-filename"><span data-dz-name=""><a id="image_link_<?php echo esc_attr( $field_name ) ?>" target="_blank" href="<?php echo esc_attr( $imageFullUrl ) ?>"><?php echo esc_attr( $attachment_title ) ?></a></span></div>
         </div>
         <div style="margin-top: 10px;">
-            <input field_id="<?php echo esc_attr( $field_name ) ?>" id="upload_button_<?php echo esc_attr( $field['field_key'] ) ?>" name="<?php echo esc_attr( $field_name ) ?>" type="button" class="<?php echo esc_attr( $button_classes ) ?> select-image-btn btn btn-default" value="<?php esc_html( $button_name ) ?>"/>
+            <input field_id="<?php echo esc_attr( $field_name ) ?>" id="upload_button_<?php echo esc_attr( $field['field_key'] ) ?>" name="<?php echo esc_attr( $field_name ) ?>" type="button" class="<?php echo esc_attr( $button_classes ) ?> select-image-btn btn btn-default" value="<?php echo esc_html( $button_name ) ?>"/>
         </div>
     </div>
 </div>

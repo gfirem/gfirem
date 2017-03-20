@@ -22,9 +22,9 @@ jQuery(document).ready(function ($) {
 
 			// Extend the wp.media object
 			mediaUploader = wp.media.frames.file_frame = wp.media({
-				title: 'Choose Image',
+				title: gfirem_select_image.config['field_' + id].library_title,
 				button: {
-					text: 'Choose Image'
+					text: gfirem_select_image.config['field_' + id].library_button_title
 				}, multiple: false
 			});
 			mediaUploader._listenId = 'select_image_' + id;
@@ -33,18 +33,18 @@ jQuery(document).ready(function ($) {
 			mediaUploader.on('select', function () {
 				var attachment = mediaUploader.state().get('selection').first().toJSON(),
 					url;
-				if(attachment.sizes.thumbnail){
+				if (attachment.sizes.thumbnail) {
 					url = attachment.sizes.thumbnail.url;
 				}
-				else{
-					if(attachment.sizes.medium){
+				else {
+					if (attachment.sizes.medium) {
 						url = attachment.sizes.medium.url;
 					}
-					else{
-						if(attachment.sizes.full){
+					else {
+						if (attachment.sizes.full) {
 							url = attachment.sizes.full.url;
 						}
-						else{
+						else {
 							url = attachment.url;
 						}
 					}
