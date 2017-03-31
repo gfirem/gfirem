@@ -25,7 +25,7 @@ class gfirem_admin extends gfirem_base {
 	 * Adding the Admin Page
 	 */
 	public function admin_menu() {
-		add_menu_page( _gfirem( 'GFireM Fields' ), _gfirem( 'GFireM Fields' ), 'manage_options', gfirem_manager::get_slug(), array( $this, 'screen' ), 'dashicons-smiley' );
+		add_menu_page( gfirem_manager::translate( 'GFireM Fields' ), gfirem_manager::translate( 'GFireM Fields' ), 'manage_options', gfirem_manager::get_slug(), array( $this, 'screen' ), 'dashicons-smiley' );
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class gfirem_admin extends gfirem_base {
 		$this->fields = apply_filters( 'gfirem_register_field', array() );
 		//Options for the general tab
 		register_setting( 'gfirem_options', 'gfirem_options' );
-		add_settings_section( 'section_general', _gfirem( 'Enabled Fields' ), array( $this, 'general_tab' ), 'gfirem_options' );
+		add_settings_section( 'section_general', gfirem_manager::translate( 'Enabled Fields' ), array( $this, 'general_tab' ), 'gfirem_options' );
 		add_settings_section( 'save_data', '', array( $this, "save_data" ), 'gfirem_options' );
 		
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
@@ -71,7 +71,7 @@ class gfirem_admin extends gfirem_base {
 	 * Handle the main tab for the plugins where the user enabled and disable all the fields
 	 */
 	public function general_tab() {
-		_e_gfirem( '<i>Select witch field will be active in your system.</i>' );
+		gfirem_manager::echo_translated( '<i>Select witch field will be active in your system.</i>' );
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
 			add_settings_field( 'enabled_field' . $global_settings_tab_key, $global_settings_tab_data->name, function () use ( $global_settings_tab_data ) {
 				$this->enabled_field( $global_settings_tab_data );

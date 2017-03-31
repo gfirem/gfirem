@@ -15,17 +15,17 @@ class switch_button extends gfirem_field_base {
 	private $load_script;
 	
 	function __construct() {
-		parent::__construct( 'switch_button', _gfirem( 'SwitchButton' ),
+		parent::__construct( 'switch_button', gfirem_manager::translate( 'SwitchButton' ),
 			array(
 				'labels_placement' => 'both',
-				'on_label'         => _gfirem( 'ON' ),
-				'off_label'        => _gfirem( 'OFF' ),
+				'on_label'         => gfirem_manager::translate( 'ON' ),
+				'off_label'        => gfirem_manager::translate( 'OFF' ),
 				'button_width'     => 25,
 				'width'            => 50,
 				'height'           => 20,
 			
 			),
-			_gfirem( 'Show a Switch Button.' ), array(), gfirem_fs::$starter
+			gfirem_manager::translate( 'Show a Switch Button.' ), array(), gfirem_fs::$starter
 		);
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
 		add_action( 'wp_footer', array( $this, 'add_script' ) );
@@ -73,7 +73,7 @@ class switch_button extends gfirem_field_base {
 	 * @return mixed
 	 */
 	protected function set_field_options( $fieldData ) {
-		$fieldData['default_value'] = _gfirem( 'OFF' );
+		$fieldData['default_value'] = gfirem_manager::translate( 'OFF' );
 		
 		return $fieldData;
 	}
@@ -87,9 +87,9 @@ class switch_button extends gfirem_field_base {
 	 */
 	protected function inside_field_options( $field, $display, $values ) {
 		$label_placement_option = array(
-			'both'  => _gfirem( 'Both' ),
-			'left'  => _gfirem( 'Left' ),
-			'right' => _gfirem( 'Right' ),
+			'both'  => gfirem_manager::translate( 'Both' ),
+			'left'  => gfirem_manager::translate( 'Left' ),
+			'right' => gfirem_manager::translate( 'Right' ),
 		);
 		include dirname( __FILE__ ) . '/view/field_option.php';
 	}

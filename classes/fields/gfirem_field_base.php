@@ -111,7 +111,7 @@ class gfirem_field_base {
 		if ( $field['type'] != $this->slug ) {
 			return;
 		}
-		$description = ( ! empty( $this->description ) ) ? $this->description : _gfirem( "Default placeholder to show into the admin." );
+		$description = ( ! empty( $this->description ) ) ? $this->description : gfirem_manager::translate( "Default placeholder to show into the admin." );
 		$this->placeholder_admin_field( $field, $description );
 	}
 	

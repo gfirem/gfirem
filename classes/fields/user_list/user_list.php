@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class user_list extends gfirem_field_base {
 	
 	public function __construct() {
-		parent::__construct( 'user_list', _gfirem( 'User List' ),
+		parent::__construct( 'user_list', gfirem_manager::translate( 'User List' ),
 			array( 'roles' => 'editor', ),
-			_gfirem( 'Show list of user from selected role in frontend' )
+			gfirem_manager::translate( 'Show list of user from selected role in frontend' )
 		);
 	}
 	

@@ -1,15 +1,5 @@
 <?php
 /**
- * @package WordPress
- * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
- *
- */
-
-/**
  *
  * @since             1.0.0
  * @package           gfirem
@@ -21,6 +11,21 @@
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/
+ *
+ *
+ * Copyright 2017 Guillermo Figueroa Mesa (email: gfirem@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 if ( ! defined( 'WPINC' ) ) {
@@ -47,7 +52,6 @@ if ( ! class_exists( 'gfirem' ) ) {
 		private function __construct() {
 			$this->constants();
 			$this->load_plugin_textdomain();
-			require_once GFIREM_CLASSES_PATH . 'gfirem_override.php';
 			require_once GFIREM_CLASSES_PATH . '/include/WP_Requirements.php';
 			require_once GFIREM_CLASSES_PATH . 'gfirem_requirements.php';
 			$this->requirements = new gfirem_requirements( 'gfirem-locale' );
@@ -55,21 +59,27 @@ if ( ! class_exists( 'gfirem' ) ) {
 				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
 				new gfirem_manager();
 			} else {
-				$fauxPlugin = new WP_Faux_Plugin( _gfirem( 'GFireM Fields' ), $this->requirements->getResults() );
-				$fauxPlugin->show_result( GFIREM_BASE_NAME );
+				$fauxPlugin = new WP_Faux_Plugin( gfirem_manager::translate( 'GFireM Fields' ), $this->requirements->getResults() );
+				$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
 			}
+			
+			$user = wp_get_current_user();
+			update_user_meta( $user->ID, 'Company', 'AAAAAAAAAAA' );
+			
+			add_shortcode('get_company', array($this, 'flir_get_current_user_company'));
+		}
+		
+		function flir_get_current_user_company() {
+			$user = wp_get_current_user();
+			return  json_encode(get_user_meta( $user->ID ));
 		}
 		
 		private function constants() {
-			define( 'GFIREM_BASE_NAME', plugin_basename( __FILE__ ) );
-			define( 'GFIREM_BASE_FILE', trailingslashit( wp_normalize_path( plugin_dir_path( __FILE__ ) ) ) . 'gfirem.php' );
-			define( 'GFIREM_URL_PATH',  plugin_dir_url( __FILE__ ) );
-			define( 'GFIREM_CSS_PATH', GFIREM_URL_PATH . 'assets/css/' );
-			define( 'GFIREM_JS_PATH', GFIREM_URL_PATH . 'assets/js/' );
+			define( 'GFIREM_CSS_PATH', plugin_dir_url( __FILE__ ) . 'assets/css/' );
 			define( 'GFIREM_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );
 			define( 'GFIREM_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
 			define( 'GFIREM_FIELDS_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR );
-			define( 'GFIREM_TEMPLATES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR  );
+			define( 'GFIREM_TEMPLATES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR );
 		}
 		
 		/**

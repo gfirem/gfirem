@@ -1,11 +1,11 @@
 <?php
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 
@@ -163,5 +163,17 @@ class gfirem_manager {
 		}
 		
 		return false;
+	}
+	
+	public static function translate( $str ) {
+		return __( $str, 'gfirem-locale' );
+	}
+	
+	public static function echo_translated( $str ) {
+		_e( $str, 'gfirem-locale' );
+	}
+	
+	public static function esc_echo_translated( $str ) {
+		echo esc_html( self::translate( $str ) );
 	}
 }

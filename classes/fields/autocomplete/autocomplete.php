@@ -20,14 +20,14 @@ class autocomplete extends gfirem_field_base {
 		require_once dirname( __FILE__ ) . '/classes/autocomplete_admin.php';
 		new autocomplete_admin( $this->base_url );
 		
-		parent::__construct( 'autocomplete', _gfirem( 'Autocomplete' ),
+		parent::__construct( 'autocomplete', gfirem_manager::translate( 'Autocomplete' ),
 			array(
 				'autocomplete_target_form'         => '0',
 				'autocomplete_target_field'        => '0',
 				'autocomplete_target_filter'       => '0',
 				'autocomplete_target_filter_group' => '0',
 			),
-			_gfirem( 'Show a text field with autocomplete.' ),
+			gfirem_manager::translate( 'Show a text field with autocomplete.' ),
 			array(), gfirem_fs::$professional
 		);
 		require_once dirname( __FILE__ ) . '/classes/autocomplete_option.php';
@@ -91,7 +91,7 @@ class autocomplete extends gfirem_field_base {
 			"ajaxurl"          => admin_url( 'admin-ajax.php' ),
 			"ajaxnonce"        => wp_create_nonce( 'fac_load_suggestion' ),
 			"dependant_fields" => $dependant_fields,
-			"text_no_result"   => _gfirem( 'No result' ),
+			"text_no_result"   => gfirem_manager::translate( 'No result' ),
 		) );
 		
 		include( $this->view_path . 'field.php' );

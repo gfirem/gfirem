@@ -18,7 +18,7 @@ class signature extends gfirem_field_base {
 	private $last_saved = array();
 	
 	function __construct() {
-		parent::__construct( 'signature', _gfirem( 'Signature' ),
+		parent::__construct( 'signature', gfirem_manager::translate( 'Signature' ),
 			array(
 				'signature'       => '',
 				'backgroundcolor' => '#fff',//Color of the canvas
@@ -26,7 +26,7 @@ class signature extends gfirem_field_base {
 				'width'           => '300',
 				'height'          => '150'
 			),
-			_gfirem( 'Show a Signature Pad.' )
+			gfirem_manager::translate( 'Show a Signature Pad.' )
 		);
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
 		add_action( 'wp_footer', array( $this, 'add_script' ) );
@@ -97,7 +97,7 @@ class signature extends gfirem_field_base {
 			$field_type = FrmField::get_type( $key );
 			if ( $field_type == 'signature' && ! empty( $value ) ) {
 				$decoded_value = json_decode( $value, true );
-				if ( is_array( $decoded_value ) ) {
+				if ( is_array( $decoded_value ) && is_string( $decoded_value['uri'] ) ) {
 					if ( $delete_before && ! empty( $decoded_value['id'] ) ) {
 						wp_delete_attachment( $decoded_value['id'], true );
 					}

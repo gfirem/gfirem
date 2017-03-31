@@ -16,14 +16,14 @@ class select_image extends gfirem_field_base {
 	private $base_url;
 	
 	public function __construct() {
-		parent::__construct( 'select_image', _gfirem( 'Select Image' ),
+		parent::__construct( 'select_image', gfirem_manager::translate( 'Select Image' ),
 			array(
-				'library_title'        => _gfirem( 'Choose Image' ),
-				'library_button_title' => _gfirem( 'Choose Image' ),
-				'button_title'         => _gfirem( 'Select Image' ),
+				'library_title'        => gfirem_manager::translate( 'Choose Image' ),
+				'library_button_title' => gfirem_manager::translate( 'Choose Image' ),
+				'button_title'         => gfirem_manager::translate( 'Select Image' ),
 				'button_css'           => '',
 			),
-			_gfirem( 'Show a field to select image from WP Media library.' ),
+			gfirem_manager::translate( 'Show a field to select image from WP Media library.' ),
 			array(), gfirem_fs::$starter
 		);
 		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
@@ -104,7 +104,7 @@ class select_image extends gfirem_field_base {
 	private function getMicroImage( $src ) {
 		$result = '';
 		if ( isset( $src ) && ! empty( $src ) ) {
-			$result = wp_get_attachment_image( $src, array( 50, 50 ), true ) . " <a style='vertical-align: top;' target='_blank' href='" . $src . "'>" . _gfirem( "Full Image" ) . "</a>";
+			$result = wp_get_attachment_image( $src, array( 50, 50 ), true ) . " <a style='vertical-align: top;' target='_blank' href='" . $src . "'>" . gfirem_manager::translate( "Full Image" ) . "</a>";
 		}
 		
 		return $result;
