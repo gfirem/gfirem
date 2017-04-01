@@ -1,0 +1,314 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GFireM Fields\n"
+"POT-Creation-Date: 2017-03-31 21:07-0400\n"
+"PO-Revision-Date: 2017-03-31 21:07-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: gfirem.php\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _t;translate;echo_translated;esc_echo_translated\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: classes/fields/autocomplete/autocomplete.php:23
+msgid "Autocomplete"
+msgstr ""
+
+#: classes/fields/autocomplete/autocomplete.php:30
+msgid "Show a text field with autocomplete."
+msgstr ""
+
+#: classes/fields/autocomplete/autocomplete.php:94
+msgid "No result"
+msgstr ""
+
+#: classes/fields/autocomplete/view/autopopulate-values.php:2
+msgid "Autocomplete value"
+msgstr ""
+
+#: classes/fields/autocomplete/view/autopopulate-values.php:6
+msgid "Dynamically retrieve the value from an Autocomplete field"
+msgstr ""
+
+#: classes/fields/autocomplete/view/autopopulate-values.php:12
+msgid "Get value from"
+msgstr ""
+
+#: classes/fields/autocomplete/view/autopopulate-values.php:19
+#: classes/fields/autocomplete/view/autopopulate-values.php:22
+msgid "Watch Autocomplete fields"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:4
+msgid "Autocomplete options"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:10
+msgid "Get option from"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:14
+msgid "Select Form"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:28
+msgid "Select the filter field"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:32
+msgid "Select a Field to use as filter"
+msgstr ""
+
+#: classes/fields/autocomplete/view/options.php:45
+msgid "Group filtered result"
+msgstr ""
+
+#: classes/fields/date_time_field/date_time_field.php:21
+msgid "DateTimePicker"
+msgstr ""
+
+#: classes/fields/date_time_field/date_time_field.php:27
+msgid "Show the Date and Time with a DateTimePicker."
+msgstr ""
+
+#: classes/fields/gfirem_field_base.php:114
+msgid "Default placeholder to show into the admin."
+msgstr ""
+
+#: classes/fields/select_image/select_image.php:19
+#: classes/fields/select_image/select_image.php:23
+msgid "Select Image"
+msgstr ""
+
+#: classes/fields/select_image/select_image.php:21
+#: classes/fields/select_image/select_image.php:22
+msgid "Choose Image"
+msgstr ""
+
+#: classes/fields/select_image/select_image.php:26
+msgid "Show a field to select image from WP Media library."
+msgstr ""
+
+#: classes/fields/select_image/select_image.php:107
+msgid "Full Image"
+msgstr ""
+
+#: classes/fields/select_image/view/field_option.php:15
+msgid "Library Title"
+msgstr ""
+
+#: classes/fields/select_image/view/field_option.php:22
+msgid "Chose image text"
+msgstr ""
+
+#: classes/fields/select_image/view/field_option.php:29
+msgid "Button text"
+msgstr ""
+
+#: classes/fields/select_image/view/field_option.php:36
+msgid "Button Class"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:14
+#: classes/fields/switch_button/view/field_option.php:15
+msgid "Height"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:16
+msgid "Height of the signature pad, by default '150'. "
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:23
+#: classes/fields/switch_button/view/field_option.php:22
+msgid "Width"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:25
+msgid "Width of the signature pad, by default '300'. "
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:32
+msgid "penColor"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:34
+msgid ""
+"Color used to draw the lines. Can be any color format accepted by context."
+"fillStyle. Defaults to 'black'"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:40
+msgid "Background color"
+msgstr ""
+
+#: classes/fields/signature/view/field_option.php:42
+msgid "Select background color, by default White"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:18
+msgid "SwitchButton"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:21
+msgid "ON"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:22
+#: classes/fields/switch_button/switch_button.php:76
+msgid "OFF"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:28
+msgid "Show a Switch Button."
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:90
+msgid "Both"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:91
+msgid "Left"
+msgstr ""
+
+#: classes/fields/switch_button/switch_button.php:92
+msgid "Right"
+msgstr ""
+
+#: classes/fields/switch_button/view/field_option.php:29
+msgid "Button Width"
+msgstr ""
+
+#: classes/fields/switch_button/view/field_option.php:36
+msgid "On Text"
+msgstr ""
+
+#: classes/fields/switch_button/view/field_option.php:43
+msgid "Off Text"
+msgstr ""
+
+#: classes/fields/switch_button/view/field_option.php:50
+msgid "Text Placement"
+msgstr ""
+
+#: classes/fields/switch_button/view/field_option.php:52
+msgid "Where the text will be shown, by default 'both'. "
+msgstr ""
+
+#: classes/fields/user_list/user_list.php:19
+msgid "User List"
+msgstr ""
+
+#: classes/fields/user_list/user_list.php:21
+msgid "Show list of user from selected role in frontend"
+msgstr ""
+
+#: classes/fields/user_list/view/field_option.php:13
+msgid "Roles"
+msgstr ""
+
+#: classes/fields/user_list/view/field_option.php:15
+msgid "Select user rol, by default Editor"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: classes/gfirem_admin.php:28 view/html_admin_head.php:13
+msgid "GFireM Fields"
+msgstr ""
+
+#: classes/gfirem_admin.php:59
+msgid "Enabled Fields"
+msgstr ""
+
+#: classes/gfirem_admin.php:74
+msgid "<i>Select witch field will be active in your system.</i>"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:118
+#, php-format
+msgid "PHP %s+ Required, Detected %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:140
+#, php-format
+msgid "WordPress %s+ Required, Detected %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:152
+msgid "This plugins is "
+msgstr ""
+
+#: classes/include/WP_Requirements.php:154
+msgid "not "
+msgstr ""
+
+#: classes/include/WP_Requirements.php:156
+msgid "for multisite installation."
+msgstr ""
+
+#: classes/include/WP_Requirements.php:203
+#, php-format
+msgid "%s %s minimum require %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:215
+msgid "Requirements Plugins."
+msgstr ""
+
+#: classes/include/WP_Requirements.php:219
+#, php-format
+msgid " Not Found: %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:224
+#, php-format
+msgid " Requirement Version Fail: %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:251
+#, php-format
+msgid "PHP Extensions Not Found: %s"
+msgstr ""
+
+#: classes/include/WP_Requirements.php:319
+msgid "<p>Minimum System Requirements not satisfied for: "
+msgstr ""
+
+#: classes/include/WP_Requirements.php:321
+msgid " The plugins wont be activated.</p>"
+msgstr ""
+
+#: templates/field_option.php:14
+msgid "Example option"
+msgstr ""
+
+#: templates/field_option.php:15
+msgid "This is a formidable tooltip example"
+msgstr ""
+
+#: view/html_admin_head.php:15
+msgid "By "
+msgstr ""
+
+#: view/html_admin_head.php:19
+msgid "Settings"
+msgstr ""
+
+#: view/html_admin_head.php:26
+msgid "Go Pro!!!"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Add a set of extra fields to formidable to improve your work"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "gfirem"
+msgstr ""
