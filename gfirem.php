@@ -59,19 +59,9 @@ if ( ! class_exists( 'gfirem' ) ) {
 				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
 				new gfirem_manager();
 			} else {
-				$fauxPlugin = new WP_Faux_Plugin( gfirem_manager::translate( 'GFireM Fields' ), $this->requirements->getResults() );
+				$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $this->requirements->getResults() );
 				$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
 			}
-			
-			$user = wp_get_current_user();
-			update_user_meta( $user->ID, 'Company', 'AAAAAAAAAAA' );
-			
-			add_shortcode('get_company', array($this, 'flir_get_current_user_company'));
-		}
-		
-		function flir_get_current_user_company() {
-			$user = wp_get_current_user();
-			return  json_encode(get_user_meta( $user->ID ));
 		}
 		
 		private function constants() {
