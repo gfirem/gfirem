@@ -18,7 +18,7 @@ class signature extends gfirem_field_base {
 	private $last_saved = array();
 	
 	function __construct() {
-		parent::__construct( 'signature', _gfirem( 'Signature' ),
+		parent::__construct( 'signature', gfirem_manager::translate( 'Signature' ),
 			array(
 				'signature'       => '',
 				'backgroundcolor' => '#fff',//Color of the canvas
@@ -26,7 +26,7 @@ class signature extends gfirem_field_base {
 				'width'           => '300',
 				'height'          => '150'
 			),
-			_gfirem( 'Show a Signature Pad.' )
+			gfirem_manager::translate( 'Show a Signature Pad.' )
 		);
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
 		add_action( 'wp_footer', array( $this, 'add_script' ) );
