@@ -32,7 +32,7 @@ class gfirem_manager {
 				
 				$this->fields                = apply_filters( 'gfirem_fields_array',
 					array(
-						'user_list' => '',//The empty value is to load from the default place
+						'role_list' => '',//The empty value is to load from the default place
 						'signature' => '',
 					
 					)
@@ -54,18 +54,19 @@ class gfirem_manager {
 					self::$fields_loaded[ gfirem_fs::$professional ] = array_merge( self::$fields_loaded[ gfirem_fs::$starter ], array(
 						'date_time_field' => '',
 						'autocomplete'    => '',
+						'role_list'       => '',
 					) );
 				}
 				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
 				//Override the register action from formidable
 //					Esto es para el campo de la lista de roles y el campo de contraseña
-//					if(self::is_formidable_registration_active()) {
-//						require_once 'gfirem_formidable_register_action_override.php';
-//						if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
-////						$register_action = new gfirem_formidable_register_action_override();
-//							add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 10 );
-//						}
-//					}
+				if ( self::is_formidable_registration_active() ) {
+					require_once 'gfirem_formidable_register_action_override.php';
+					if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
+//						$register_action = new gfirem_formidable_register_action_override();
+						add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 9999 );
+					}
+				}
 				
 				//load all teh fields
 				foreach ( $this->fields as $field_key => $field_path ) {
