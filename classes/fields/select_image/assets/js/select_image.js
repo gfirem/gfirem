@@ -22,9 +22,9 @@ jQuery(document).ready(function ($) {
 
 			// Extend the wp.media object
 			mediaUploader = wp.media.frames.file_frame = wp.media({
-				title: gfirem_select_image.config['field_' + id].library_title,
+				title: gfirem_select_image.config[id].library_title,
 				button: {
-					text: gfirem_select_image.config['field_' + id].library_button_title
+					text: gfirem_select_image.config[id].library_button_title
 				}, multiple: false
 			});
 			mediaUploader._listenId = 'select_image_' + id;
