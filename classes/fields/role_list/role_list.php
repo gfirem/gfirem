@@ -54,24 +54,4 @@ class role_list extends gfirem_field_base {
 		
 		return $replace_with;
 	}
-	
-	/**
-	 * Get user list for given role.
-	 *
-	 * @param $roles
-	 *
-	 * @return array
-	 */
-	private function getUserList( $roles ) {
-		global $wpdb;
-		$users   = get_users( array( 'fields' => array( 'ID', 'user_login', 'display_name' ), 'role__in' => array( $roles ), 'blog_id' => $GLOBALS['blog_id'], 'orderby' => 'display_name' ) );
-		$options = array( '' => '' );
-		foreach ( $users as $user ) {
-			$options[ $user->ID ] = ( ! empty( $user->display_name ) ) ? $user->display_name : $user->user_login;
-		}
-		
-		return $options;
-	}
-	
-	
 }

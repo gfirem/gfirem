@@ -32,7 +32,7 @@ class gfirem_manager {
 				
 				$this->fields                = apply_filters( 'gfirem_fields_array',
 					array(
-						'role_list' => '',//The empty value is to load from the default place
+						'user_list' => '',//The empty value is to load from the default place
 						'signature' => '',
 					
 					)
@@ -43,6 +43,7 @@ class gfirem_manager {
 					'switch_button'   => '',
 					'date_time_field' => '',
 					'autocomplete'    => '',
+					'role_list'       => '',
 				) );
 				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 					self::$fields_loaded[ gfirem_fs::$starter ] = array_merge( self::$fields_loaded['free'], array(
@@ -59,11 +60,9 @@ class gfirem_manager {
 				}
 				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
 				//Override the register action from formidable
-//					Esto es para el campo de la lista de roles y el campo de contraseña
 				if ( self::is_formidable_registration_active() ) {
 					require_once 'gfirem_formidable_register_action_override.php';
 					if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
-//						$register_action = new gfirem_formidable_register_action_override();
 						add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 9999 );
 					}
 				}
