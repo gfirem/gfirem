@@ -18,7 +18,7 @@ class role_list extends gfirem_field_base {
 	public function __construct() {
 		parent::__construct( 'role_list', gfirem_manager::translate( 'Role List' ),
 			array( 'default_role' => 'subscriber', ),
-			gfirem_manager::translate( 'Show list of roles to selected in the frontend, very handy to integrate with the register user action' ),
+			gfirem_manager::translate( 'Show list of roles to selected in the frontend. It integrate with Formidable Registration' ),
 			array(), gfirem_fs::$professional
 		);
 	}
