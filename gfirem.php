@@ -53,8 +53,8 @@ if ( ! class_exists( 'gfirem' ) ) {
 			$this->constants();
 			$this->load_plugin_textdomain();
 			require_once GFIREM_CLASSES_PATH . '/include/WP_Requirements.php';
-			require_once GFIREM_CLASSES_PATH . 'gfirem_requirements.php';
-			$this->requirements = new gfirem_requirements( 'gfirem-locale' );
+			require_once GFIREM_CLASSES_PATH . 'gfirem_check_requirements.php';
+			$this->requirements = new gfirem_check_requirements( 'gfirem-locale' );
 			if ( $this->requirements->satisfied() ) {
 				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
 				new gfirem_manager();
