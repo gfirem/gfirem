@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 class switch_button extends gfirem_field_base {
@@ -49,20 +49,22 @@ class switch_button extends gfirem_field_base {
 	 * @param string $field_id
 	 */
 	private function load_script( $print_value = "", $field_id = "" ) {
-		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_style( 'jquery.switchButton', $base_url . 'css/jquery.switchButton.css', array(), $this->version );
-		wp_enqueue_script( 'jquery.switchButton', $base_url . 'js/jquery.switchButton.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-effects-core' ), $this->version, true );
-		wp_enqueue_script( 'gfirem_switch_button', $base_url . 'js/switch_button.js', array( "jquery" ), $this->version, true );
-		
-		$params = array();
-		$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
-		foreach ( $fields as $key => $field ) {
-			foreach ( $this->defaults as $def_key => $def_val ) {
-				$opt                                                          = FrmField::get_option( $field, $def_key );
-				$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+			wp_enqueue_style( 'jquery.switchButton', $base_url . 'css/jquery.switchButton.css', array(), $this->version );
+			wp_enqueue_script( 'jquery.switchButton', $base_url . 'js/jquery.switchButton.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-dialog', 'jquery-effects-core' ), $this->version, true );
+			wp_enqueue_script( 'gfirem_switch_button', $base_url . 'js/switch_button.js', array( "jquery" ), $this->version, true );
+			
+			$params = array();
+			$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
+			foreach ( $fields as $key => $field ) {
+				foreach ( $this->defaults as $def_key => $def_val ) {
+					$opt                                                          = FrmField::get_option( $field, $def_key );
+					$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+				}
 			}
+			wp_localize_script( 'gfirem_switch_button', 'gfirem_switch_button', $params );
 		}
-		wp_localize_script( 'gfirem_switch_button', 'gfirem_switch_button', $params );
 	}
 	
 	/**
@@ -102,15 +104,17 @@ class switch_button extends gfirem_field_base {
 	 *
 	 */
 	protected function field_front_view( $field, $field_name, $html_id ) {
-		$field['value'] = stripslashes_deep( $field['value'] );
-		$html_id        = $field['field_key'];
-		$print_value    = $field['default_value'];
-		if ( ! empty( $field['value'] ) ) {
-			$print_value = $field['value'];
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			$field['value'] = stripslashes_deep( $field['value'] );
+			$html_id        = $field['field_key'];
+			$print_value    = $field['default_value'];
+			if ( ! empty( $field['value'] ) ) {
+				$print_value = $field['value'];
+			}
+			$this->load_script = true;
+			
+			include dirname( __FILE__ ) . '/view/field_switch_button.php';
 		}
-		$this->load_script = true;
-		
-		include dirname( __FILE__ ) . '/view/field_switch_button.php';
 	}
 	
 	/**

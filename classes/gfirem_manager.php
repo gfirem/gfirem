@@ -59,11 +59,13 @@ class gfirem_manager {
 					) );
 				}
 				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
-				//Override the register action from formidable
-				if ( self::is_formidable_registration_active() ) {
-					require_once 'gfirem_formidable_register_action_override.php';
-					if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
-						add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 9999 );
+				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+					//Override the register action from formidable
+					if ( self::is_formidable_registration_active() ) {
+						require_once 'gfirem_formidable_register_action_override.php';
+						if ( class_exists( 'gfirem_formidable_register_action_override' ) && class_exists( 'FrmRegAction' ) ) {
+							add_action( 'frm_registered_form_actions', array( $this, 'override_register_actions' ), 9999 );
+						}
 					}
 				}
 				

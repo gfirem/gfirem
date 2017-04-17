@@ -17,8 +17,10 @@ class autocomplete extends gfirem_field_base {
 	function __construct() {
 		$this->base_url  = plugin_dir_url( __FILE__ ) . 'assets/';
 		$this->view_path = dirname( __FILE__ ) . '/view/';
-		require_once dirname( __FILE__ ) . '/classes/autocomplete_admin.php';
-		new autocomplete_admin( $this->base_url );
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			require_once dirname( __FILE__ ) . '/classes/autocomplete_admin.php';
+			new autocomplete_admin( $this->base_url );
+		}
 		
 		parent::__construct( 'autocomplete', gfirem_manager::translate( 'Autocomplete' ),
 			array(
@@ -30,71 +32,80 @@ class autocomplete extends gfirem_field_base {
 			gfirem_manager::translate( 'Show a text field with autocomplete.' ),
 			array(), gfirem_fs::$professional
 		);
-		require_once dirname( __FILE__ ) . '/classes/autocomplete_option.php';
-		new autocomplete_option( $this->view_path );
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			require_once dirname( __FILE__ ) . '/classes/autocomplete_option.php';
+			new autocomplete_option( $this->view_path );
+		}
 	}
 	
 	protected function inside_field_options( $field, $display, $values ) {
-		$lookup_args = array();
-		
-		// Get all forms for the -select form- option
-		$lookup_args['form_list'] = FrmForm::get_published_forms();
-		
-		if ( is_numeric( $field['autocomplete_target_form'] ) ) {
-			$lookup_args['form_fields'] = FrmField::get_all_for_form( $field['autocomplete_target_form'] );
-		} else {
-			$lookup_args['form_fields'] = array();
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$lookup_args = array();
+			
+			// Get all forms for the -select form- option
+			$lookup_args['form_list'] = FrmForm::get_published_forms();
+			
+			if ( is_numeric( $field['autocomplete_target_form'] ) ) {
+				$lookup_args['form_fields'] = FrmField::get_all_for_form( $field['autocomplete_target_form'] );
+			} else {
+				$lookup_args['form_fields'] = array();
+			}
+			
+			$fields_for_filter = FrmField::get_all_types_in_form( $field["form_id"], "autocomplete" );
+			
+			$field_target = array();
+			if ( ! empty( $field['autocomplete_target_field'] ) && is_numeric( $field['autocomplete_target_field'] ) ) {
+				$field_target = FrmField::getOne( $field['autocomplete_target_field'] );
+			}
+			
+			$show_filter_group = "";
+			if ( $field['autocomplete_target_filter_group'] == "1" ) {
+				$show_filter_group = "checked='checked'";
+			}
+			
+			include( $this->view_path . 'options.php' );
 		}
-		
-		$fields_for_filter = FrmField::get_all_types_in_form( $field["form_id"], "autocomplete" );
-		
-		$field_target = array();
-		if ( ! empty( $field['autocomplete_target_field'] ) && is_numeric( $field['autocomplete_target_field'] ) ) {
-			$field_target = FrmField::getOne( $field['autocomplete_target_field'] );
-		}
-		
-		$show_filter_group = "";
-		if ( $field['autocomplete_target_filter_group'] == "1" ) {
-			$show_filter_group = "checked='checked'";
-		}
-		
-		include( $this->view_path . 'options.php' );
 	}
 	
 	protected function field_front_view( $field, $field_name, $html_id ) {
-		$dependant_fields = autocomplete_admin::get_dependant_fields( $field );
-		$base_url         = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_script( 'jquery.autocomplete', $base_url . 'js/jquery.autocomplete.min.js', array( "jquery" ), true );
-		
-		$field['value'] = stripslashes_deep( $field['value'] );
-		
-		$value = ( empty( $field['value'] ) ) ? $field['default_value'] : $field['value'];
-		
-		$html_id                  = $field['field_key'];
-		$file_name                = str_replace( 'item_meta[' . $field['id'] . ']', 'file' . $field['id'], $field_name );
-		$target_form              = $field['autocomplete_target_form'];
-		$target_field             = $field['autocomplete_target_field'];
-		$target_field_obj         = FrmField::getOne( $target_field );
-		$target_field_type        = $target_field_obj->type;
-		$target_field_data_target = FrmField::get_option( $target_field_obj, "form_select" );
-		if ( empty( $target_field_data_target ) ) {
-			$target_field_data_target = "false";
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$dependant_fields = autocomplete_admin::get_dependant_fields( $field );
+			$base_url         = plugin_dir_url( __FILE__ ) . 'assets/';
+			wp_enqueue_script( 'jquery.autocomplete', $base_url . 'js/jquery.autocomplete.min.js', array( "jquery" ), true );
+			
+			$field['value'] = stripslashes_deep( $field['value'] );
+			
+			$value = ( empty( $field['value'] ) ) ? $field['default_value'] : $field['value'];
+			
+			$html_id           = $field['field_key'];
+			$file_name         = str_replace( 'item_meta[' . $field['id'] . ']', 'file' . $field['id'], $field_name );
+			$target_form       = $field['autocomplete_target_form'];
+			$target_field      = $field['autocomplete_target_field'];
+			$target_field_type = '';
+			if ( ! empty( $target_field ) ) {
+				$target_field_obj         = FrmField::getOne( $target_field );
+				$target_field_type        = $target_field_obj->type;
+				$target_field_data_target = FrmField::get_option( $target_field_obj, "form_select" );
+			}
+			if ( empty( $target_field_data_target ) ) {
+				$target_field_data_target = "false";
+			}
+			$field_filter_str   = $field['autocomplete_target_filter'];
+			$field_filter_group = "false";
+			if ( $field['autocomplete_target_filter_group'] == "1" ) {
+				$field_filter_group = $field['autocomplete_target_filter_group'];
+			}
+			
+			wp_enqueue_script( 'formidable_autocomplete_field', $base_url . 'js/formidable_autocomplete_field.js', array( "jquery.autocomplete" ), true );
+			wp_localize_script( "formidable_autocomplete_field", "formidable_autocomplete_field", array(
+				"ajaxurl"          => admin_url( 'admin-ajax.php' ),
+				"ajaxnonce"        => wp_create_nonce( 'fac_load_suggestion' ),
+				"dependant_fields" => $dependant_fields,
+				"text_no_result"   => gfirem_manager::translate( 'No result' ),
+			) );
+			
+			include( $this->view_path . 'field.php' );
 		}
-		$field_filter_str   = $field['autocomplete_target_filter'];
-		$field_filter_group = "false";
-		if ( $field['autocomplete_target_filter_group'] == "1" ) {
-			$field_filter_group = $field['autocomplete_target_filter_group'];
-		}
-		
-		wp_enqueue_script( 'formidable_autocomplete_field', $base_url . 'js/formidable_autocomplete_field.js', array( "jquery.autocomplete" ), true );
-		wp_localize_script( "formidable_autocomplete_field", "formidable_autocomplete_field", array(
-			"ajaxurl"          => admin_url( 'admin-ajax.php' ),
-			"ajaxnonce"        => wp_create_nonce( 'fac_load_suggestion' ),
-			"dependant_fields" => $dependant_fields,
-			"text_no_result"   => gfirem_manager::translate( 'No result' ),
-		) );
-		
-		include( $this->view_path . 'field.php' );
 	}
 	
 	protected function display_options( $display ) {
@@ -115,18 +126,20 @@ class autocomplete extends gfirem_field_base {
 	}
 	
 	private function exist_meta( $search, $field, $type ) {
-		global $wpdb;
-		$search_query = " it.meta_value = '" . $search . "' ";
-		if ( $type == "data" ) {
-			$search_query = "(SELECT (SELECT g.meta_value FROM " . $wpdb->prefix . "frm_item_metas g WHERE g.item_id = i.meta_value LIMIT 1) AS meta_value FROM " . $wpdb->prefix . "frm_item_metas i WHERE i.item_id = it.item_id LIMIT 1) = '" . $search . "' ";
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			global $wpdb;
+			$search_query = " it.meta_value = '" . $search . "' ";
+			if ( $type == "data" ) {
+				$search_query = "(SELECT (SELECT g.meta_value FROM " . $wpdb->prefix . "frm_item_metas g WHERE g.item_id = i.meta_value LIMIT 1) AS meta_value FROM " . $wpdb->prefix . "frm_item_metas i WHERE i.item_id = it.item_id LIMIT 1) = '" . $search . "' ";
+			}
+			$sql = "SELECT count(it.id) FROM " . $wpdb->prefix . "frm_item_metas it LEFT OUTER JOIN " . $wpdb->prefix . "frm_fields fi ON (it.field_id = fi.id)" .
+			       "WHERE it.field_id = " . $field . " AND " . $search_query .
+			       "ORDER BY fi.field_order";
+			
+			$count = $wpdb->get_var( $sql );
+			
+			return $count > 0;
 		}
-		$sql = "SELECT count(it.id) FROM " . $wpdb->prefix . "frm_item_metas it LEFT OUTER JOIN " . $wpdb->prefix . "frm_fields fi ON (it.field_id = fi.id)" .
-		       "WHERE it.field_id = " . $field . " AND " . $search_query .
-		       "ORDER BY fi.field_order";
-		
-		$count = $wpdb->get_var( $sql );
-		
-		return $count > 0;
 	}
 	
 	/**
@@ -153,17 +166,18 @@ class autocomplete extends gfirem_field_base {
 	 * @return mixed
 	 */
 	protected function validate_frm_entry( $errors, $posted_field, $posted_value ) {
-		if ( ! empty( $_POST["item_meta"][ $posted_field->id ] ) ) {
-			$autocomplete_target_field = FrmField::get_option( $posted_field, "autocomplete_target_field" );
-			if ( ! empty( $autocomplete_target_field ) ) {
-				$target_field = FrmField::getOne( $autocomplete_target_field );
-				if ( ! $this->exist_meta( $posted_value, $autocomplete_target_field, $target_field->type ) ) {
-					$msj    = FrmFieldsHelper::get_error_msg( $posted_field, 'invalid' );
-					$errors = array_merge( $errors, array( 'field' . $posted_field->id => $msj ) );
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			if ( ! empty( $_POST["item_meta"][ $posted_field->id ] ) ) {
+				$autocomplete_target_field = FrmField::get_option( $posted_field, "autocomplete_target_field" );
+				if ( ! empty( $autocomplete_target_field ) ) {
+					$target_field = FrmField::getOne( $autocomplete_target_field );
+					if ( ! $this->exist_meta( $posted_value, $autocomplete_target_field, $target_field->type ) ) {
+						$msj    = FrmFieldsHelper::get_error_msg( $posted_field, 'invalid' );
+						$errors = array_merge( $errors, array( 'field' . $posted_field->id => $msj ) );
+					}
 				}
 			}
 		}
-		
 		return $errors;
 	}
 	

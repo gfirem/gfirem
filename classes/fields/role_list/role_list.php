@@ -24,7 +24,9 @@ class role_list extends gfirem_field_base {
 	}
 	
 	protected function inside_field_options( $field, $display, $values ) {
-		include dirname( __FILE__ ) . '/view/field_option.php';
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			include dirname( __FILE__ ) . '/view/field_option.php';
+		}
 	}
 	
 	protected function field_front_view( $field, $field_name, $html_id ) {

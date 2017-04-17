@@ -1,11 +1,11 @@
 <?php
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 
@@ -18,8 +18,10 @@ class autocomplete_option {
 	
 	function __construct( $view_path ) {
 		$this->view_path = $view_path;
-		add_action( 'frm_field_options_form', array( $this, 'field_field_option_form' ), 10, 3 );
-		add_action( 'frm_update_field_options', array( $this, 'update_field_options' ), 10, 3 );
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			add_action( 'frm_field_options_form', array( $this, 'field_field_option_form' ), 10, 3 );
+			add_action( 'frm_update_field_options', array( $this, 'update_field_options' ), 10, 3 );
+		}
 	}
 	
 	/**
@@ -30,15 +32,17 @@ class autocomplete_option {
 	 * @param $values
 	 */
 	public function field_field_option_form( $field, $display, $values ) {
-		$autopopulate_field_types = FrmProLookupFieldsController::get_autopopulate_field_types();
-		if ( ! in_array( $field['type'], $autopopulate_field_types ) ) {
-			return;
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$autopopulate_field_types = FrmProLookupFieldsController::get_autopopulate_field_types();
+			if ( ! in_array( $field['type'], $autopopulate_field_types ) ) {
+				return;
+			}
+			
+			$lookup_args   = autocomplete_admin::get_args_for_get_options_from_setting( $field );
+			$lookup_fields = autocomplete_admin::get_lookup_fields_for_watch_row( $field );
+			
+			require( $this->view_path . 'autopopulate-values.php' );
 		}
-		
-		$lookup_args   = autocomplete_admin::get_args_for_get_options_from_setting( $field );
-		$lookup_fields = autocomplete_admin::get_lookup_fields_for_watch_row( $field );
-		
-		require( $this->view_path . 'autopopulate-values.php' );
 	}
 	
 	/**
@@ -50,22 +54,24 @@ class autocomplete_option {
 	 * @param array $field ($field is not empty on page load)
 	 */
 	private static function show_options_for_get_values_field( $form_fields, $field = array() ) {
-		$select_field_text = __( '&mdash; Select Field &mdash;', 'formidable' );
-		echo '<option value="">' . esc_html( $select_field_text ) . '</option>';
-		
-		foreach ( $form_fields as $field_option ) {
-			if ( FrmField::is_no_save_field( $field_option->type ) ) {
-				continue;
-			}
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$select_field_text = __( '&mdash; Select Field &mdash;', 'formidable' );
+			echo '<option value="">' . esc_html( $select_field_text ) . '</option>';
 			
-			if ( ! empty( $field ) && $field_option->id == $field['fac_get_values_field'] ) {
-				$selected = ' selected="selected"';
-			} else {
-				$selected = '';
+			foreach ( $form_fields as $field_option ) {
+				if ( FrmField::is_no_save_field( $field_option->type ) ) {
+					continue;
+				}
+				
+				if ( ! empty( $field ) && $field_option->id == $field['fac_get_values_field'] ) {
+					$selected = ' selected="selected"';
+				} else {
+					$selected = '';
+				}
+				
+				$field_name = FrmAppHelper::truncate( $field_option->name, 30 );
+				echo '<option value="' . esc_attr( $field_option->id ) . '"' . esc_attr( $selected ) . '>' . esc_html( $field_name ) . '</option>';
 			}
-			
-			$field_name = FrmAppHelper::truncate( $field_option->name, 30 );
-			echo '<option value="' . esc_attr( $field_option->id ) . '"' . esc_attr( $selected ) . '>' . esc_html( $field_name ) . '</option>';
 		}
 	}
 	
@@ -79,21 +85,22 @@ class autocomplete_option {
 	 * @return mixed
 	 */
 	public function update_field_options( $field_options, $field, $values ) {
-		
-		$autopopulate_field_types = FrmProLookupFieldsController::get_autopopulate_field_types();
-		if ( ! in_array( $field->type, $autopopulate_field_types ) ) {
-			return $field_options;
-		}
-		
-		$defaults = array(
-			'fac_get_values_field'   => '0',
-			'fac_get_values_form'    => '0',
-			'fac_autopopulate_value' => '0',
-			'fac_watch_lookup'       => '0',
-		);
-		
-		foreach ( $defaults as $opt => $default ) {
-			$field_options[ $opt ] = isset( $values['field_options'][ $opt . '_' . $field->id ] ) ? $values['field_options'][ $opt . '_' . $field->id ] : $default;
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$autopopulate_field_types = FrmProLookupFieldsController::get_autopopulate_field_types();
+			if ( ! in_array( $field->type, $autopopulate_field_types ) ) {
+				return $field_options;
+			}
+			
+			$defaults = array(
+				'fac_get_values_field'   => '0',
+				'fac_get_values_form'    => '0',
+				'fac_autopopulate_value' => '0',
+				'fac_watch_lookup'       => '0',
+			);
+			
+			foreach ( $defaults as $opt => $default ) {
+				$field_options[ $opt ] = isset( $values['field_options'][ $opt . '_' . $field->id ] ) ? $values['field_options'][ $opt . '_' . $field->id ] : $default;
+			}
 		}
 		
 		return $field_options;
