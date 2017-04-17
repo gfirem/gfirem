@@ -272,7 +272,7 @@ class autocomplete_admin{
 		$current_field  = FrmField::getOne( $field_id );// Maybe (for efficiency) change this to a specific database call
 		$lookup_fields  = self::get_limited_lookup_fields_in_form( $form_id, $current_field->form_id );
 		
-		require(  dirname( __FILE__ ) . '../view/watch-row.php' );
+		include(  dirname( __FILE__ ) . '../view/watch-row.php' );
 		wp_die();
 	}
 	
