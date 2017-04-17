@@ -1,17 +1,17 @@
 <?php
 
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 class select_image extends gfirem_field_base {
 	
-	public $version = '1.0.0';
+	public $version = '2.0.0';
 	private $load_script = false;
 	private $base_url;
 	
@@ -22,6 +22,8 @@ class select_image extends gfirem_field_base {
 				'library_button_title' => gfirem_manager::translate( 'Choose Image' ),
 				'button_title'         => gfirem_manager::translate( 'Select Image' ),
 				'button_css'           => '',
+				'activate_zoom'        => 'true',
+				'scroll_zoom'          => 'false',
 			),
 			gfirem_manager::translate( 'Show a field to select image from WP Media library.' ),
 			array(), gfirem_fs::$starter
@@ -43,12 +45,14 @@ class select_image extends gfirem_field_base {
 	/**
 	 * Load the scripts when needed in front or backend
 	 *
-	 * @param $hook
+	 * @param string $hook
+	 * @param string $image_url
 	 */
-	public function add_script( $hook ) {
+	public function add_script( $hook = '', $image_url = '' ) {
 		if ( $this->load_script ) {
 			wp_enqueue_style( 'select_image', $this->base_url . 'css/select_image.css', array(), $this->version );
 			wp_enqueue_media();
+			wp_enqueue_script( 'jquery.elevateZoom', $this->base_url . 'js/jquery.elevateZoom-3.0.8.min.js', array( "jquery" ), $this->version, true );
 			wp_enqueue_script( 'gfirem_select_image', $this->base_url . 'js/select_image.js', array( "jquery" ), $this->version, true );
 			$params = array();
 			$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
@@ -57,6 +61,12 @@ class select_image extends gfirem_field_base {
 					$opt                                                             = FrmField::get_option( $field, $def_key );
 					$params['config'][ 'item_meta[' . $field->id . ']' ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
 				}
+				if ( ! empty( $image_url ) ) {
+					$params['config'][ 'item_meta[' . $field->id . ']' ][ 'image_url' ] = $image_url;
+				}
+			}
+			if ( ! empty( $_GET['frm_action'] ) ) {
+				$params['action'] = FrmAppHelper::get_param( 'frm_action' );
 			}
 			wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
 		}
@@ -82,6 +92,7 @@ class select_image extends gfirem_field_base {
 			$showContainer = 'style = "display:none;"';
 		}
 		$imageUrl         = wp_get_attachment_image_url( $field['value'] );
+		$full_image_url   = wp_get_attachment_image_src( $field['value'], 'full' );
 		$imageFullUrl     = wp_get_attachment_url( $field['value'] );
 		$attachment_title = basename( get_attached_file( $field['value'] ) );
 		
@@ -89,7 +100,7 @@ class select_image extends gfirem_field_base {
 		$button_classes = FrmField::get_option( $field, 'button_css' );
 		
 		$this->load_script = true;
-		$this->add_script( '' );
+		$this->add_script( '', $imageUrl );
 		
 		include dirname( __FILE__ ) . '/view/field_select_image.php';
 	}
