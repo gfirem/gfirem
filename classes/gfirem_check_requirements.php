@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class gfirem_check_requirements extends gfirem_requirements {
 	
-	public function __construct( $text_domain = 'WP_Requirements' ) {
+	public function __construct( $text_domain = 'gfirem_requirements' ) {
 		parent::__construct( $text_domain );
 	}
 	

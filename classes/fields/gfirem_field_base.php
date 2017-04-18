@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class gfirem_field_base {
+class gfirem_field_base extends gfirem_base {
 	
 	public $slug;
 	public $name;
@@ -27,6 +27,8 @@ class gfirem_field_base {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
 			throw new InvalidArgumentException();
 		}
+		
+		parent::__construct();
 		
 		if ( class_exists( "FrmProAppController" ) ) {
 			$this->slug           = $slug;

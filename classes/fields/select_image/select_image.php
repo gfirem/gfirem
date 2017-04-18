@@ -26,9 +26,34 @@ class select_image extends gfirem_field_base {
 				'scroll_zoom'          => 'false',
 			),
 			gfirem_manager::translate( 'Show a field to select image from WP Media library.' ),
-			array(), gfirem_fs::$starter
+			array( 'name' => 'Select Image Tweaks', 'view' => array( $this, 'global_tab' ) ), gfirem_fs::$starter
 		);
 		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+		add_filter( 'ajax_query_attachments_args', array( $this, 'show_current_user_attachments' ) );
+	}
+	
+	public function show_current_user_attachments( $query ) {
+		$is_active = get_option( $this->slug );
+		if ( ! empty( $is_active[ 'enabled_' . $this->slug . '_tweak_belong_image' ] ) && $is_active[ 'enabled_' . $this->slug . '_tweak_belong_image' ] == '1' ) {
+			$user_id = get_current_user_id(); // get current user ID
+			if ( $user_id && ! current_user_can( 'manage_options' ) ) {  // if we have a current user ID (they're logged in) and the current user is not an administrator
+				$query['author'] = $user_id; // add author filter, ensures only the current users images are displayed
+			}
+		}
+		
+		return $query;
+	}
+	
+	public function global_tab() {
+		global $wp_settings_sections;
+		add_settings_field( 'section_select_image', __( 'Owner Image', 'gfirem-locale' ), array( $this, 'owner_image' ), 'select_image', 'section_select_image' );
+	}
+	
+	public function owner_image() {
+		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$starter ) . '>';
+		$this->get_view_for( 'enabled_' . $this->slug . '_tweak_belong_image', 'checkbox', 'select_image', array(), gfirem_fs::$starter );
+		_e( ' This option enforce media library to only show the image to the owners.', 'gfirem-locale' );
+		echo '</p>';
 	}
 	
 	/**
@@ -145,6 +170,7 @@ class select_image extends gfirem_field_base {
 		
 		return $value;
 	}
+	
 	
 	/**
 	 * Process shortcode for view.

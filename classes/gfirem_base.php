@@ -98,4 +98,44 @@ class gfirem_base {
 	public function needs_upgrade() {
 		return ( $this->is_free || $this->is_start ) && ! $this->is_professional;
 	}
+	
+	/**
+	 * Echo the correct input, take in count extra tags and plan
+	 *
+	 * @param $setting
+	 * @param string $type
+	 * @param string $option_domain
+	 * @param array $args
+	 * @param string $plan
+	 */
+	public function get_view_for( $setting, $type = "text", $option_domain = 'gfirem_options', $args = array(), $plan = 'free' ) {
+		$general_option = get_option( $option_domain );
+		$data           = '';
+		if ( ! empty( $general_option[ $setting ] ) ) {
+			$data = $general_option[ $setting ];
+		}
+		
+		$disable_for_plan = '';
+		$field_loaded = gfirem_manager::$fields_loaded;
+		foreach ( $field_loaded[ $this->get_plan()  ] as $loaded_key => $loaded_field ) {
+			if ( $setting != 'enabled_' . $loaded_key ) {
+				$disable_for_plan = $this->disable_input_tag( $type, $plan );
+			}
+		}
+		
+		switch ( $type ) {
+			case "checkbox":
+				$value = checked( $data, 1, false ) . " value='1' ";
+				break;
+			default:
+				$value = "value='" . $data . "'";
+		}
+		$args_txt = '';
+		if ( ! empty( $args ) ) {
+			foreach ( $args as $arg_key => $arg_val ) {
+				$args_txt .= $arg_key . '="' . $arg_val . '"';
+			}
+		}
+		echo "<input $disable_for_plan name='" . $option_domain . "[" . $setting . "]' id='gfirem_" . $setting . "' type='" . $type . "' " . $value . " " . $args_txt . " />";
+	}
 }

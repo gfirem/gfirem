@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 class gfirem_admin extends gfirem_base {
@@ -63,6 +63,7 @@ class gfirem_admin extends gfirem_base {
 			if ( ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields ) ) {
 				register_setting( $global_settings_tab_key, $global_settings_tab_key );
 				add_settings_section( 'section_' . $global_settings_tab_key, '', array( $this, 'tab_content' ), $global_settings_tab_key );
+				add_settings_section( 'save_data_' . $global_settings_tab_key, '', array( $this, "save_data" ), $global_settings_tab_key );
 			}
 		}
 	}
@@ -101,45 +102,6 @@ class gfirem_admin extends gfirem_base {
 	}
 	
 	/**
-	 * Echo the correct input, take in count extra tags and plan
-	 *
-	 * @param $setting
-	 * @param string $type
-	 * @param string $domain
-	 * @param array $args
-	 * @param string $plan
-	 */
-	private function get_view_for( $setting, $type = "text", $domain = 'gfirem_options', $args = array(), $plan = 'free' ) {
-		$general_option = get_option( $domain );
-		$data           = '';
-		if ( ! empty( $general_option[ $setting ] ) ) {
-			$data = $general_option[ $setting ];
-		}
-		
-		$disable_for_plan = '';
-		foreach ( gfirem_manager::$fields_loaded[ $this->get_plan() ] as $loaded_key => $loaded_field ) {
-			if ( $setting != 'enabled_' . $loaded_key ) {
-				$disable_for_plan = $this->disable_input_tag( $type, $plan );
-			}
-		}
-		
-		switch ( $type ) {
-			case "checkbox":
-				$value = checked( $data, 1, false ) . " value='1' ";
-				break;
-			default:
-				$value = "value='" . $data . "'";
-		}
-		$args_txt = '';
-		if ( ! empty( $args ) ) {
-			foreach ( $args as $arg_key => $arg_val ) {
-				$args_txt .= $arg_key . '="' . $arg_val . '"';
-			}
-		}
-		echo "<input $disable_for_plan name='" . $domain . "[" . $setting . "]' id='gfirem_" . $setting . "' type='" . $type . "' " . $value . " " . $args_txt . " />";
-	}
-	
-	/**
 	 * Show the content inside the tab of field when it need a globals options
 	 */
 	public function tab_content() {
@@ -160,8 +122,8 @@ class gfirem_admin extends gfirem_base {
 	 *
 	 * @param $hook
 	 */
-	public function enqueue_style($hook) {
-		if($hook == 'toplevel_page_gfirem') {
+	public function enqueue_style( $hook ) {
+		if ( $hook == 'toplevel_page_gfirem' ) {
 			wp_enqueue_style( 'jquery' );
 			wp_enqueue_style( 'gfirem', GFIREM_CSS_PATH . 'gfirem.css', array(), gfirem_manager::get_version() );
 		}
