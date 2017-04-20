@@ -100,6 +100,18 @@ jQuery(document).ready(function ($) {
 
 				}
 			});
+			mediaUploader.on('open', function () {
+				if (gfirem_select_image['upload_as_default_tab'] && gfirem_select_image['upload_as_default_tab'] === '1' &&
+					gfirem_select_image['upload_file_tab_string'] && gfirem_select_image['upload_image_tab_string']) {
+					jQuery(".media-frame-router").find('a.media-menu-item').each(function () {
+						var current = jQuery(this);
+						if (current.text().trim() === gfirem_select_image['upload_file_tab_string'] || current.text().trim() === gfirem_select_image['upload_image_tab_string']) {
+							current.click();
+							return;
+						}
+					});
+				}
+			});
 			// Open the uploader dialog
 			mediaUploader.open();
 		});

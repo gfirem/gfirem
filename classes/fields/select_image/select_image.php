@@ -14,6 +14,8 @@ class select_image extends gfirem_field_base {
 	public $version = '2.0.0';
 	private $load_script = false;
 	private $base_url;
+	private $upload_file_tab_string;
+	private $upload_image_tab_string;
 	
 	public function __construct() {
 		parent::__construct( 'select_image', gfirem_manager::translate( 'Select Image' ),
@@ -30,11 +32,19 @@ class select_image extends gfirem_field_base {
 		);
 		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		add_filter( 'ajax_query_attachments_args', array( $this, 'show_current_user_attachments' ) );
+		add_filter( 'media_view_strings', array( $this, 'media_view_strings' ), 10, 2 );
+	}
+	
+	public function media_view_strings( $strings, $post ) {
+		$this->upload_file_tab_string  = $strings['uploadFilesTitle'];
+		$this->upload_image_tab_string = $strings['uploadImagesTitle'];
+		
+		return $strings;
 	}
 	
 	public function show_current_user_attachments( $query ) {
-		$is_active = get_option( $this->slug );
-		if ( ! empty( $is_active[ 'enabled_' . $this->slug . '_tweak_belong_image' ] ) && $is_active[ 'enabled_' . $this->slug . '_tweak_belong_image' ] == '1' ) {
+		$field_global_options = get_option( $this->slug );
+		if ( ! empty( $field_global_options[ 'enabled_' . $this->slug . '_tweak_belong_image' ] ) && $field_global_options[ 'enabled_' . $this->slug . '_tweak_belong_image' ] == '1' ) {
 			$user_id = get_current_user_id(); // get current user ID
 			if ( $user_id && ! current_user_can( 'manage_options' ) ) {  // if we have a current user ID (they're logged in) and the current user is not an administrator
 				$query['author'] = $user_id; // add author filter, ensures only the current users images are displayed
@@ -47,12 +57,20 @@ class select_image extends gfirem_field_base {
 	public function global_tab() {
 		global $wp_settings_sections;
 		add_settings_field( 'section_select_image', __( 'Owner Image', 'gfirem-locale' ), array( $this, 'owner_image' ), 'select_image', 'section_select_image' );
+		add_settings_field( 'section_select_image_upload_as_default_tab', __( 'Upload as default Tab', 'gfirem-locale' ), array( $this, 'upload_as_default_tab' ), 'select_image', 'section_select_image' );
 	}
 	
 	public function owner_image() {
 		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$starter ) . '>';
 		$this->get_view_for( 'enabled_' . $this->slug . '_tweak_belong_image', 'checkbox', 'select_image', array(), gfirem_fs::$starter );
 		_e( ' This option enforce media library to only show the image to the owners.', 'gfirem-locale' );
+		echo '</p>';
+	}
+	
+	public function upload_as_default_tab() {
+		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$starter ) . '>';
+		$this->get_view_for( 'enabled_' . $this->slug . '_upload_as_default_tab', 'checkbox', 'select_image', array(), gfirem_fs::$starter );
+		_e( ' Set Upload tab as default when open the media library.', 'gfirem-locale' );
 		echo '</p>';
 	}
 	
@@ -95,6 +113,14 @@ class select_image extends gfirem_field_base {
 				}
 				if ( ! empty( $_GET['frm_action'] ) ) {
 					$params['action'] = FrmAppHelper::get_param( 'frm_action' );
+				}
+				if ( ! empty( $this->upload_file_tab_string ) && ! empty( $this->upload_image_tab_string ) ) {
+					$params['upload_file_tab_string']  = $this->upload_file_tab_string;
+					$params['upload_image_tab_string'] = $this->upload_image_tab_string;
+				}
+				$field_global_options = get_option( $this->slug );
+				if ( ! empty( $field_global_options[ 'enabled_' . $this->slug . '_upload_as_default_tab' ] ) && $field_global_options[ 'enabled_' . $this->slug . '_upload_as_default_tab' ] == '1' ) {
+					$params['upload_as_default_tab'] = $field_global_options[ 'enabled_' . $this->slug . '_upload_as_default_tab' ];
 				}
 				wp_localize_script( 'gfirem_select_image', 'gfirem_select_image', $params );
 			}
