@@ -41,6 +41,7 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 
 = 1.1.2 =
 Adding a tweak to the Pro level for filter the entries inside of dynamic fields. I will add more tweaks for other fields.
+Adding an option to select image field to auto select the upload tab by default.
 
 = 1.1.1 =
 Adding tweak to the select image to only show the image belong to the current user.
