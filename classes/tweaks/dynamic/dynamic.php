@@ -75,7 +75,8 @@ class dynamic extends gfirem_field_base {
 				$temp['form_select'] = $dynamic_field_target;
 				$field2_opts         = FrmProDynamicFieldsController::get_independent_options( $temp, $field );
 				foreach ( $values['options'] as $id => $v ) {
-					if ( isset( $field2_opts[ $id ] ) && ( $v == '' || $field2_opts[ $id ] == $dynamic_field_target_value ) ) {//Only include values where filtering field equals Yes
+					$content = $this->replace_shortcode(null, $dynamic_field_target_value);
+					if ( isset( $field2_opts[ $id ] ) && ( $v == '' || $field2_opts[ $id ] == $content ) ) {//Only include values where filtering field equals Yes
 						continue;
 					}
 					unset( $values['options'][ $id ] );

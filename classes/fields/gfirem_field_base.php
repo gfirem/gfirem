@@ -370,4 +370,18 @@ class gfirem_field_base extends gfirem_base {
 	public function getSlug() {
 		return $this->slug;
 	}
+	
+	protected function replace_shortcode( $entry, $value, $form_id = '' ) {
+		if ( ! empty( $entry ) ) {
+			$form_id = $entry->form_id;
+			$shortCodes = FrmFieldsHelper::get_shortcodes( $value, $form_id );
+			$content    = apply_filters( 'frm_replace_content_shortcodes', $value, $entry, $shortCodes );
+		}
+		else{
+			$content = $value;
+		}
+		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $content );
+		
+		return do_shortcode( $content );
+	}
 }
