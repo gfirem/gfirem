@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
 Requires at least: 4
 Tested up to: 4.7.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
@@ -39,11 +39,14 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 
 == Changelog ==
 
+= 1.1.2 =
+Adding a tweak to the Pro level for filter the entries inside of dynamic fields. I will add more tweaks for other fields.
+
 = 1.1.1 =
-Adding tweak to the select image to only show the image belong to the current user
+Adding tweak to the select image to only show the image belong to the current user.
 
 = 1.1.0 =
-Adding zoom to the select image field. With options to enable it, also enable the scroll zoom
+Adding zoom to the select image field. With options to enable it, also enable the scroll zoom.
 
 = 1.0.0 =
-Start
+Start.

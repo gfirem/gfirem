@@ -7,7 +7,7 @@
  * @wordpress-plugin
  * Plugin Name:       GFireM Fields
  * Description:       Add a set of extra fields to formidable to improve your work
- * Version:           1.1.1
+ * Version:           1.1.2
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/
@@ -58,6 +58,7 @@ if ( ! class_exists( 'gfirem' ) ) {
 			define( 'GFIREM_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );
 			define( 'GFIREM_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
 			define( 'GFIREM_FIELDS_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR );
+			define( 'GFIREM_TWEAKS_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'tweaks' . DIRECTORY_SEPARATOR );
 			define( 'GFIREM_TEMPLATES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR );
 		}
 		
