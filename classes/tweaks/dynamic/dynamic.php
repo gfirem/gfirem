@@ -67,7 +67,7 @@ class dynamic extends gfirem_field_base {
 	
 	
 	public function filter_dynamic_options__premium_only( $values, $field ) {
-		if ( $field->type == 'data' && ! empty( $values['options'] ) ) {
+		if ( $field->type == 'data' && ! empty( $values['options'] ) && ! current_user_can( 'manage_options' ) ) {
 			$dynamic_field_target       = FrmField::get_option( $field, 'dynamic_field_target' );
 			$dynamic_field_target_value = FrmField::get_option( $field, 'dynamic_field_target_value' );
 			if ( ! empty( $dynamic_field_target ) && ! empty( $dynamic_field_target_value ) ) {
@@ -75,7 +75,7 @@ class dynamic extends gfirem_field_base {
 				$temp['form_select'] = $dynamic_field_target;
 				$field2_opts         = FrmProDynamicFieldsController::get_independent_options( $temp, $field );
 				foreach ( $values['options'] as $id => $v ) {
-					$content = $this->replace_shortcode(null, $dynamic_field_target_value);
+					$content = $this->replace_shortcode( null, $dynamic_field_target_value );
 					if ( isset( $field2_opts[ $id ] ) && ( $v == '' || $field2_opts[ $id ] == $content ) ) {//Only include values where filtering field equals Yes
 						continue;
 					}

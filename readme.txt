@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
 Requires at least: 4
 Tested up to: 4.7.3
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
