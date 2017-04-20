@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class gfirem_check_requirements extends gfirem_requirements {
+class gfirem_check_requirements extends WP_Requirement {
 	
 	public function __construct( $text_domain = 'gfirem_requirements' ) {
 		parent::__construct( $text_domain );

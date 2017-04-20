@@ -34,9 +34,6 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'gfirem' ) ) {
 	
-	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_fs.php';
-	gfirem_fs::get_instance();
-	
 	class gfirem {
 		
 		/**
@@ -52,16 +49,8 @@ if ( ! class_exists( 'gfirem' ) ) {
 		private function __construct() {
 			$this->constants();
 			$this->load_plugin_textdomain();
-			require_once GFIREM_CLASSES_PATH . '/include/WP_Requirements.php';
-			require_once GFIREM_CLASSES_PATH . 'gfirem_check_requirements.php';
-			$this->requirements = new gfirem_check_requirements( 'gfirem-locale' );
-			if ( $this->requirements->satisfied() ) {
-				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
-				new gfirem_manager();
-			} else {
-				$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $this->requirements->getResults() );
-				$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
-			}
+			require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
+			new gfirem_manager();
 		}
 		
 		private function constants() {
@@ -94,5 +83,17 @@ if ( ! class_exists( 'gfirem' ) ) {
 		}
 	}
 	
-	add_action( 'plugins_loaded', array( 'gfirem', 'get_instance' ), 1 );
+	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'WP_Requirements.php';
+	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_check_requirements.php';
+	$gfirem_fields_requirements = new gfirem_check_requirements( 'gfirem-locale' );
+	if ( $gfirem_fields_requirements->satisfied() ) {
+		require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_fs.php';
+		gfirem_fs::get_instance();
+		add_action( 'plugins_loaded', array( 'gfirem', 'get_instance' ), 1 );
+	} else {
+		$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $gfirem_fields_requirements->getResults() );
+		$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
+	}
+	
+	
 }
