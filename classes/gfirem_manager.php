@@ -24,6 +24,7 @@ class gfirem_manager {
 		self::$version = self::$version = '1.1.1';
 		
 		require_once GFIREM_CLASSES_PATH . 'gfirem_log.php';
+		new gfirem_log();
 		
 		try {
 			if ( self::is_formidable_active() ) {
