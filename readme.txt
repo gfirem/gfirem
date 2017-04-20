@@ -39,6 +39,9 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 
 == Changelog ==
 
+= 1.1.3 =
+Adding support for shortcode inside the value to tweak the dynamic filter of entries.
+
 = 1.1.2 =
 Adding a tweak to the Pro level for filter the entries inside of dynamic fields. I will add more tweaks for other fields.
 Adding an option to select image field to auto select the upload tab by default.
