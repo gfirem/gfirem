@@ -94,7 +94,7 @@ class dynamic extends gfirem_field_base {
 	
 	public function filter_entries() {
 		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$professional ) . '>';
-		$this->get_view_for( 'enabled_' . $this->slug . '_filter_entries', 'checkbox', 'dynamic', array(), gfirem_fs::$starter );
+		$this->get_view_for( 'enabled_' . $this->slug . '_filter_entries', 'checkbox', 'dynamic', array(), gfirem_fs::$professional );
 		_e( 'If tick this you get a new options inside the dynamic field to filter the entries.', 'gfirem-locale' );
 		echo '</p>';
 	}

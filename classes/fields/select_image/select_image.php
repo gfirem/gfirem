@@ -34,7 +34,20 @@ class select_image extends gfirem_field_base {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 			add_filter( 'ajax_query_attachments_args', array( $this, 'show_current_user_attachments__premium_only' ) );
 			add_filter( 'media_view_strings', array( $this, 'media_view_strings__premium_only' ), 10, 2 );
+			add_filter( 'frm_field_classes', array( $this, 'add_input_class' ), 10, 2 );
 		}
+	}
+	
+	public static function get_assets_url() {
+		return plugin_dir_url( __FILE__ ) . 'assets/';
+	}
+	
+	public function add_input_class( $classes, $field ) {
+		if ( $field['type'] == 'file' ) {
+			$classes .= ' gfirem_select_image_preview';
+		}
+		
+		return $classes;
 	}
 	
 	public function media_view_strings__premium_only( $strings, $post ) {
@@ -129,6 +142,7 @@ class select_image extends gfirem_field_base {
 			}
 		}
 	}
+	
 	
 	/**
 	 * Add the HTML for the field on the front end

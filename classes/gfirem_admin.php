@@ -73,10 +73,16 @@ class gfirem_admin extends gfirem_base {
 	 */
 	public function general_tab() {
 		gfirem_manager::echo_translated( '<i>Select witch field will be active in your system.</i>' );
+		/**
+		 * @var string $global_settings_tab_key
+		 * @var gfirem_field_base $global_settings_tab_data
+		 */
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
-			add_settings_field( 'enabled_field' . $global_settings_tab_key, $global_settings_tab_data->name, function () use ( $global_settings_tab_data ) {
-				$this->enabled_field( $global_settings_tab_data );
-			}, 'gfirem_options', 'section_general' );
+			if ( ! $global_settings_tab_data->is_tweak ) {
+				add_settings_field( 'enabled_field' . $global_settings_tab_key, $global_settings_tab_data->name, function () use ( $global_settings_tab_data ) {
+					$this->enabled_field( $global_settings_tab_data );
+				}, 'gfirem_options', 'section_general' );
+			}
 			
 		}
 	}

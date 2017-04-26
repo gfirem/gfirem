@@ -1,11 +1,11 @@
 <?php
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 
@@ -22,6 +22,7 @@ class gfirem_field_base extends gfirem_base {
 	public $global_options = array();
 	public $plan = 'free';
 	public $form_id;
+	public $is_tweak;
 	
 	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array(), $plan = 'free', $is_tweak = false ) {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
@@ -37,6 +38,7 @@ class gfirem_field_base extends gfirem_base {
 			$this->defaults       = $defaults;
 			$this->global_options = $global_options;
 			$this->plan           = $plan;
+			$this->is_tweak       = $is_tweak;
 			
 			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
 			
@@ -343,7 +345,7 @@ class gfirem_field_base extends gfirem_base {
 	 */
 	public function process_replace_value_in_mail( $value, $meta, $entry ) {
 		if ( $meta->field_type == $this->getSlug() ) {
-			return $this->replace_value_in_mail($value, $meta, $entry);
+			return $this->replace_value_in_mail( $value, $meta, $entry );
 		}
 		
 		return $value;
@@ -373,11 +375,10 @@ class gfirem_field_base extends gfirem_base {
 	
 	protected function replace_shortcode( $entry, $value, $form_id = '' ) {
 		if ( ! empty( $entry ) ) {
-			$form_id = $entry->form_id;
+			$form_id    = $entry->form_id;
 			$shortCodes = FrmFieldsHelper::get_shortcodes( $value, $form_id );
 			$content    = apply_filters( 'frm_replace_content_shortcodes', $value, $entry, $shortCodes );
-		}
-		else{
+		} else {
 			$content = $value;
 		}
 		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $content );

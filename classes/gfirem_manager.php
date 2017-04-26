@@ -32,11 +32,11 @@ class gfirem_manager {
 				include GFIREM_CLASSES_PATH . 'gfirem_base.php';
 				include GFIREM_CLASSES_PATH . 'gfirem_admin.php';
 				require_once GFIREM_FIELDS_PATH . 'gfirem_field_base.php';
+				
 				$this->fields                = apply_filters( 'gfirem_fields_array',
 					array(
 						'user_list' => '',//The empty value is to load from the default place
 						'signature' => '',
-					
 					)
 				);
 				self::$fields_loaded['free'] = $this->fields;
@@ -59,9 +59,10 @@ class gfirem_manager {
 						'autocomplete'    => '',
 						'role_list'       => '',
 						'dynamic'         => '',//pro tweak
+						'upload'         => '',//pro tweak
 					) );
 					
-					self::$tweaks = apply_filters( 'gfirem_tweaks_array', array( 'dynamic' => '' ) );
+					self::$tweaks = apply_filters( 'gfirem_tweaks_array', array( 'dynamic' => '', 'upload' => '' ) );
 					foreach ( self::$tweaks as $tweak_key => $tweak_path ) {
 						$path = GFIREM_TWEAKS_PATH . $tweak_key . DIRECTORY_SEPARATOR . $tweak_key . '.php';
 						if ( ! empty( $tweak_path ) ) {
