@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @package WordPress
+ * @package    WordPress
  * @subpackage Formidable, gfirem
- * @author GFireM
- * @copyright 2017
- * @link http://www.gfirem.com
- * @license http://www.apache.org/licenses/
+ * @author     GFireM
+ * @copyright  2017
+ * @link       http://www.gfirem.com
+ * @license    http://www.apache.org/licenses/
  *
  */
 class autocomplete extends gfirem_field_base {
@@ -28,6 +28,7 @@ class autocomplete extends gfirem_field_base {
 				'autocomplete_target_field'        => '0',
 				'autocomplete_target_filter'       => '0',
 				'autocomplete_target_filter_group' => '0',
+				'autocomplete_placeholder'         => '',
 			),
 			gfirem_manager::translate( 'Show a text field with autocomplete.' ),
 			array(), gfirem_fs::$professional
@@ -95,6 +96,11 @@ class autocomplete extends gfirem_field_base {
 			if ( $field['autocomplete_target_filter_group'] == "1" ) {
 				$field_filter_group = $field['autocomplete_target_filter_group'];
 			}
+			$placeholder      = '';
+			$placeholder_text = $field['autocomplete_placeholder'];
+			if ( ! empty( $field['autocomplete_placeholder'] ) ) {
+				$placeholder = ' placeholder="' . esc_attr( $field['autocomplete_placeholder'] ) . '" ';
+			}
 			
 			wp_enqueue_script( 'formidable_autocomplete_field', $base_url . 'js/formidable_autocomplete_field.js', array( "jquery.autocomplete" ), true );
 			wp_localize_script( "formidable_autocomplete_field", "formidable_autocomplete_field", array(
@@ -109,14 +115,14 @@ class autocomplete extends gfirem_field_base {
 	}
 	
 	protected function display_options( $display ) {
-		$display['unique']         = false;
+		$display['unique']         = true;
 		$display['required']       = true;
 		$display['read_only']      = true;
 		$display['description']    = true;
 		$display['options']        = true;
 		$display['label_position'] = true;
 		$display['css']            = true;
-		$display['conf_field']     = false;
+		$display['conf_field']     = true;
 		$display['invalid']        = true;
 		$display['default_value']  = true;
 		$display['visibility']     = true;
@@ -178,6 +184,7 @@ class autocomplete extends gfirem_field_base {
 				}
 			}
 		}
+		
 		return $errors;
 	}
 	
