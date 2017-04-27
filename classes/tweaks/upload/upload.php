@@ -33,6 +33,8 @@ class upload extends gfirem_field_base {
 				add_action( 'frm_form_fields', array( $this, 'show_formidable_field_front_field' ), 10, 2 );
 				add_action( "wp_ajax_nopriv_upload_tweak_attachment", array( $this, "upload_tweak_attachment" ) );
 				add_action( "wp_ajax_upload_tweak_attachment", array( $this, "upload_tweak_attachment" ) );
+				add_action( 'wp_footer', array( $this, 'load_script' ), 10 );
+				add_action( 'admin_footer', array( $this, 'load_script' ), 10 );
 			}
 		}
 	}
@@ -73,14 +75,16 @@ class upload extends gfirem_field_base {
 		if ( $field['type'] != 'file' ) {
 			return;
 		}
-		$this->load_script();
+		$this->load_script = true;
 	}
 	
 	public function load_script() {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			wp_enqueue_style( 'upload_tweak', $this->base_url . 'css/upload_tweak.css', array(), $this->version );
-			wp_enqueue_script( 'jquery.elevateZoom', select_image::get_assets_url() . 'js/jquery.elevateZoom-3.0.8.min.js', array( "jquery" ), $this->version, true );
-			wp_enqueue_script( 'upload_tweak', $this->base_url . 'js/upload_tweak.js', array( "jquery" ), $this->version, true );
+			if ( $this->load_script ) {
+				wp_enqueue_style( 'upload_tweak', $this->base_url . 'css/upload_tweak.css', array(), $this->version );
+				wp_enqueue_script( 'jquery.elevateZoom', select_image::get_assets_url() . 'js/jquery.elevateZoom-3.0.8.min.js', array( "jquery" ), $this->version, true );
+				wp_enqueue_script( 'upload_tweak', $this->base_url . 'js/upload_tweak.js', array( "jquery" ), $this->version, true );
+			}
 		}
 	}
 	
