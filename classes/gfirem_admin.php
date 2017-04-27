@@ -129,7 +129,7 @@ class gfirem_admin extends gfirem_base {
 	 * @param $hook
 	 */
 	public function enqueue_style( $hook ) {
-		if ( $hook == 'toplevel_page_gfirem' ) {
+		if ( $hook == 'toplevel_page_gfirem' || $hook == 'toplevel_page_formidable' ) {
 			wp_enqueue_style( 'jquery' );
 			wp_enqueue_style( 'gfirem', GFIREM_CSS_PATH . 'gfirem.css', array(), gfirem_manager::get_version() );
 		}

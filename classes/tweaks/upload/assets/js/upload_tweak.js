@@ -42,8 +42,11 @@ jQuery(document).ready(function ($) {
 		}
 
 		var form = field.closest('form');
-		var submitButton = form.find('input[type="submit"], .frm_submit input[type="button"]');
-		var loading = form.find('.frm_ajax_loading');
+		var formID = '#' + form.attr('id');
+		if (formID == '#undefined') {
+			// use a class if there is not id for WooCommerce
+			formID = 'form.' + form.attr('class').replace(' ', '.');
+		}
 
 		field.dropzone({
 			url: frm_js.ajax_url,
@@ -52,6 +55,7 @@ jQuery(document).ready(function ($) {
 			maxFilesize: uploadFields[i].maxFilesize,
 			maxFiles: max,
 			uploadMultiple: uploadFields[i].uploadMultiple,
+			hiddenInputContainer: formID,
 			dictDefaultMessage: uploadFields[i].defaultMessage,
 			dictFallbackMessage: uploadFields[i].fallbackMessage,
 			dictFallbackText: uploadFields[i].fallbackText,
@@ -68,15 +72,26 @@ jQuery(document).ready(function ($) {
 			},
 			init: function () {
 				this.on('sending', function (file, xhr, formData) {
-					formData.append('action', 'frm_submit_dropzone');
-					formData.append('field_id', uploadFields[i].fieldID);
-					formData.append('form_id', uploadFields[i].formID);
+
+					if (isSpam()) {
+						this.removeFile(file);
+						alert('Oops. That file looks like Spam.');
+						return false;
+					} else {
+						formData.append('action', 'frm_submit_dropzone');
+						formData.append('field_id', uploadFields[i].fieldID);
+						formData.append('form_id', uploadFields[i].formID);
+						formData.append('nonce', frm_js.nonce);
+					}
 				});
 
 				this.on('success', function (file, response) {
 					var mediaIDs = jQuery.parseJSON(response);
-					if (uploadFields[i].uploadMultiple !== true) {
-						request_attachment_url(mediaIDs, fieldName, false);
+					for (var m = 0; m < mediaIDs.length; m++) {
+						if (uploadFields[i].uploadMultiple !== true) {
+							jQuery('input[name="' + fieldName + '"]').val(mediaIDs[m]);
+							request_attachment_url(mediaIDs, fieldName, false);
+						}
 					}
 				});
 
@@ -93,6 +108,7 @@ jQuery(document).ready(function ($) {
 						if (uploadFields[i].uploadMultiple) {
 							jQuery(file.previewElement).append(getHiddenUploadHTML(uploadFields[i], file.mediaID, fieldName));
 						}
+
 						// Add download link to the file
 						var fileName = file.previewElement.querySelectorAll('[data-dz-name]');
 						for (var _i = 0, _len = fileName.length; _i < _len; _i++) {
@@ -102,20 +118,88 @@ jQuery(document).ready(function ($) {
 					}
 				});
 
+				this.on('addedfile', function () {
+					showSubmitLoading(form);
+				});
+
+				this.on('queuecomplete', function () {
+					removeSubmitLoading(form, 'enable');
+				});
+
 				this.on('removedfile', function (file) {
 					if (file.accepted !== false && uploadFields[i].uploadMultiple !== true) {
 						jQuery('input[name="' + fieldName + '"]').val('');
 						$('.zoomContainer').remove();
 						$('input[name="' + fieldName + '"]').removeData('elevateZoom').removeData('zoomImage');
 					}
+
 					if (file.accepted !== false && typeof file.mediaID !== 'undefined') {
 						jQuery(file.previewElement).remove();
 						var fileCount = this.files.length;
 						this.options.maxFiles = uploadFields[i].maxFiles - fileCount;
 					}
 				});
+
+				if (typeof uploadFields[i].mockFiles !== 'undefined') {
+					for (var f = 0; f < uploadFields[i].mockFiles.length; f++) {
+						var mockFile = {
+							name: uploadFields[i].mockFiles[f].name,
+							size: uploadFields[i].mockFiles[f].size,
+							url: uploadFields[i].mockFiles[f].file_url,
+							mediaID: uploadFields[i].mockFiles[f].id
+						};
+
+						this.emit('addedfile', mockFile);
+						this.emit('thumbnail', mockFile, uploadFields[i].mockFiles[f].url);
+						this.emit('complete', mockFile);
+						this.files.push(mockFile);
+					}
+				}
 			}
 		});
+	}
+
+	function isSpam() {
+		var val = document.getElementById('frm_verify').value;
+		if ( val !== '' || isHeadless() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function isHeadless() {
+		return (
+			window._phantom || window.callPhantom || //phantomjs
+			window.__phantomas || //PhantomJS-based web perf metrics
+			window.Buffer || //nodejs
+			window.emit || //couchjs
+			window.spawn  //rhino
+		);
+	}
+	
+	function disableSubmitButton($form) {
+		$form.find('input[type="submit"], input[type="button"], button[type="submit"]').attr('disabled', 'disabled');
+	}
+
+	function enableSubmitButton($form) {
+		$form.find('input[type="submit"], input[type="button"], button[type="submit"]').removeAttr('disabled');
+	}
+
+	function showSubmitLoading(object) {
+		if (!object.hasClass('frm_loading_form')) {
+			object.addClass('frm_loading_form');
+		}
+
+		disableSubmitButton(object);
+	}
+
+	function removeSubmitLoading(object, enable) {
+		object.removeClass('frm_loading_form');
+
+		if (enable == 'enable') {
+			enableSubmitButton(object);
+		}
 	}
 
 	function request_attachment_url(media_ids, fieldName, uploadMultiple) {

@@ -22,7 +22,7 @@ class gfirem_manager {
 	public static $fields_loaded = array();
 	
 	public function __construct() {
-		self::$version = self::$version = '1.1.3';
+		self::$version = self::$version = '1.1.4';
 		
 		require_once GFIREM_CLASSES_PATH . 'gfirem_log.php';
 		new gfirem_log();

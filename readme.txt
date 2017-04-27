@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
 Requires at least: 4
 Tested up to: 4.7.3
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
@@ -31,6 +31,13 @@ Turn your site visitors IP addresses into people you 'know'. There are 3 levels 
  * DateTimePicker - you can either pick a date or a time or both and set the format and language.
  * Autocomplete - already saved data from other forms can be applied and combined with other fields of the same kind to create cascade filters from different forms data.
  * Roles List - Show list of roles which you can select from the frontend. It integrates with the Formidable registration.
+ * All tweaks
+
+### TWEAKS FOR PRO
+ * Filter Dynamic field entries.
+ * Zoom to preview image in the upload field.
+ * Show only the image belong to the current user in the media uploader, this is global for WP, but is related to Select Image field.
+ * Upload tab as default when using the Select Image field.
 
 == Installation ==
 Upload the entire gfirem folder to the /wp-content/plugins/ directory or install the plugin through the WordPress plugins screen directly.
@@ -38,6 +45,10 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settings
 
 == Changelog ==
+
+= 1.1.4 =
+Adding a new tweak to use zoom into the formidable upload field.
+Adding a placeholder into the autocomplete field
 
 = 1.1.3 =
 Adding support for shortcode inside the value to tweak the dynamic filter of entries.

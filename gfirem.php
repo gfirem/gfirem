@@ -6,8 +6,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       GFireM Fields
- * Description:       Add a set of extra fields to formidable to improve your work
- * Version:           1.1.3
+ * Description:       Add a set of extra fields to formidable and tweaks to improve your work
+ * Version:           1.1.4
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/
@@ -95,6 +95,4 @@ if ( ! class_exists( 'gfirem' ) ) {
 		$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $gfirem_fields_requirements->getResults() );
 		$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
 	}
-	
-	
 }
