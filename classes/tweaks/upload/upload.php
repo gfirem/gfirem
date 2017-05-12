@@ -52,8 +52,9 @@ class upload extends gfirem_field_base {
 				foreach ( $_GET['media_is'] as $media_id ) {
 					$url = wp_get_attachment_image_url( $media_id, 'full' );
 					if ( is_string( $url ) ) {
-						$result[ $i ]['url'] = $url;
-						$result[ $i ]['id']  = $media_id;
+						$result[ $i ]['file_url'] = $url;
+						$result[ $i ]['id']       = $media_id;
+						$result[ $i ]['name']     = get_the_title($media_id);
 						$i ++;
 					}
 				}
