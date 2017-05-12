@@ -23,6 +23,8 @@ class switch_button extends gfirem_field_base {
 				'button_width'     => 25,
 				'width'            => 50,
 				'height'           => 20,
+				'oncolor'          => '#81d742',
+				'offcolor'         => '#dd3333'
 			
 			),
 			gfirem_manager::translate( 'Show a Switch Button.' ), array(), gfirem_fs::$starter
@@ -88,6 +90,10 @@ class switch_button extends gfirem_field_base {
 	 * @param $values
 	 */
 	protected function inside_field_options( $field, $display, $values ) {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+		wp_enqueue_script( 'switch_button_options', $base_url . 'js/switch_button_options.js', array( 'jquery', 'wp-color-picker' ), $this->version, true );
 		$label_placement_option = array(
 			'both'  => gfirem_manager::translate( 'Both' ),
 			'left'  => gfirem_manager::translate( 'Left' ),

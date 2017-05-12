@@ -60,4 +60,20 @@ if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ):
         </td>
 
     </tr>
+	<tr>
+		<td><label for="oncolor_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "On Color" ) ?></label></td>
+		<td>
+			<label for="oncolor_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( gfirem_manager::translate( "Select background color when the button is on. Can be any color format accepted by context.fillStyle. Defaults to 'green'" ) ) ?></label>
+
+			<input type="text" name="field_options[oncolor_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr($field['oncolor'])?>" class="on-color-field" id="oncolor_<?php echo esc_attr( $field['id'] ) ?>">
+		</td>
+	</tr>
+	<tr>
+		<td><label for="offcolor_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "Off Color" ) ?></label></td>
+		<td>
+			<label for="offcolor_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( gfirem_manager::translate( "Select background color when the button is off. Can be any color format accepted by context.fillStyle. Defaults to 'red'" ) ) ?></label>
+			<input type="hidden" name="offcolor_<?php echo esc_attr( $field['id'] ) ?>" id="color_value"/>
+			<input type="text" name="field_options[offcolor_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr($field['offcolor'])?>" class="off-color-field" id="offcolor_<?php echo esc_attr( $field['id'] ) ?>">
+		</td>
+	</tr>
 <?php endif; ?>
