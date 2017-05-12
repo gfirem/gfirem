@@ -8,15 +8,13 @@
  *
  */
 jQuery(document).ready(function ($) {
-	$(".gfirem_switch_button").each(function () {
+	$(".gfirem_switch_button").each(function (index, value) {
 		var current = $(this),
 			id = current.attr('id'),
 			checked = false;
-
 		if (current.val() && current.val() == gfirem_switch_button.config[id].on_label) {
 			checked = true;
 		}
-
 		var switch_options = {
 			checked: checked,
 			width: gfirem_switch_button.config[id].width,
@@ -29,5 +27,17 @@ jQuery(document).ready(function ($) {
 		};
 
 		current.switchButton(switch_options);
+		var identifier = id.split('_')[1];
+		if (checked) {
+			jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].oncolor);
+		}
+		else {
+			jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].offcolor);
+		}
+
+
 	});
+
+
 });
+
