@@ -23,21 +23,17 @@ jQuery(document).ready(function ($) {
 			show_labels: gfirem_switch_button.config[id].width,
 			labels_placement: gfirem_switch_button.config[id].labels_placement,
 			on_label: gfirem_switch_button.config[id].on_label,
-			off_label: gfirem_switch_button.config[id].off_label
+			off_label: gfirem_switch_button.config[id].off_label,
 		};
 
 		current.switchButton(switch_options);
 		var identifier = id.split('_')[1];
 		if (checked) {
-			jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].oncolor);
+			jQuery("#switch_" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].oncolor);
 		}
 		else {
-			jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].offcolor);
+			jQuery("#switch_" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].offcolor);
 		}
-
-
 	});
-
-
 });
 

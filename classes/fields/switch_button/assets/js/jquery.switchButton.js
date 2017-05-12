@@ -254,7 +254,7 @@
 				// this.element.prop("checked", true);
 				this.element.prop("value", gfirem_switch_button.config[this.element.prop('id')].on_label); //modified by @gfirem
 				var identifier = this.element.prop('id').split('_')[1];//modified by @gfirem
-				jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[this.element.prop('id')].oncolor);	//modified by @gfirem
+				jQuery("#switch_" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[this.element.prop('id')].oncolor);	//modified by @gfirem
 				this.element.change();
 				var dLeft = this.options.width - this.options.button_width;
 				newLeft = "+=" + dLeft;
@@ -277,7 +277,7 @@
 				// this.element.prop("checked", false);
 				this.element.prop("value", gfirem_switch_button.config[this.element.prop('id')].off_label);//modified by @gfirem
 				var identifier = this.element.prop('id').split('_')[1];//modified by @gfirem
-				jQuery("#field__" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[this.element.prop('id')].offcolor);	//modified by @gfirem
+				jQuery("#switch_" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[this.element.prop('id')].offcolor);	//modified by @gfirem
 				this.element.change();
 				newLeft = "-1px";
 

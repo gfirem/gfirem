@@ -142,7 +142,7 @@ class switch_button extends gfirem_field_base {
 		$display['invalid']        = true;
 		$display['default_value']  = true;
 		$display['visibility']     = true;
-		$display['size']           = true;
+		$display['size']           = false;
 		
 		return $display;
 	}
