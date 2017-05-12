@@ -42,7 +42,7 @@ class gfirem_field_base extends gfirem_base {
 			
 			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
 			
-			if ( ! gfirem_manager::is_enabled( $this->slug ) ) {
+			if ( ! gfirem_manager::is_enabled( $this->slug ) || $this->is_tweak ) {
 				return;
 			}
 			
