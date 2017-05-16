@@ -61,6 +61,7 @@ jQuery(document).ready(function ($) {
                     if (field_filter) {
                         var start_field = $("[name='item_meta[" + field_filter + "]']").attr("target_field_data_target");                        
                         query["start_field"] =start_field;
+						query["parent_field"] =$("[name='item_meta[" + field_filter + "]']").attr("target_field");
                         query["field_filter"] = $("[name='item_meta[" + field_filter + "]']").val();
                     }
                     if (field_filter_group == "1") {
