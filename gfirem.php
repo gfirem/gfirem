@@ -7,7 +7,7 @@
  * @wordpress-plugin
  * Plugin Name:       GFireM Fields
  * Description:       Add a set of extra fields to formidable and tweaks to improve your work
- * Version:           1.1.4
+ * Version:           1.1.5
  * Author:            gfirem
  * License:           Apache License 2.0
  * License URI:       http://www.apache.org/licenses/

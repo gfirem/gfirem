@@ -16,14 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class gfirem_manager {
 	
 	private static $plugin_slug = 'gfirem';
-	protected static $version;
+	protected static $version = '1.1.5';
 	private static $tweaks = array();
 	private $fields = array();
 	public static $fields_loaded = array();
 	
 	public function __construct() {
-		self::$version = self::$version = '1.1.4';
-		
 		require_once GFIREM_CLASSES_PATH . 'gfirem_log.php';
 		new gfirem_log();
 		

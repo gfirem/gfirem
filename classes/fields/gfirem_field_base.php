@@ -58,8 +58,6 @@ class gfirem_field_base extends gfirem_base {
 			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
 			add_filter( 'frm_email_value', array( $this, 'process_replace_value_in_mail' ), 15, 3 );
-		} else {
-			//TODO show admin notice it need formidable pro
 		}
 	}
 	

@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
 Requires at least: 4
 Tested up to: 4.7.3
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
@@ -45,6 +45,12 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settings
 
 == Changelog ==
+
+= 1.1.5 =
+Fixing the autocomplete field.
+Improve over the zoom to use in the formidable upload fields.
+Add options to the datetime field.
+Adding background color for the switch button.
 
 = 1.1.4 =
 Adding a new tweak to use zoom into the formidable upload field.
