@@ -15,7 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class gfirem_check_requirements extends WP_Requirement {
 	
+	private $text_domain;
+	
 	public function __construct( $text_domain = 'gfirem_requirements' ) {
+		$this->text_domain = $text_domain;
 		parent::__construct( $text_domain );
 	}
 	
@@ -35,6 +38,11 @@ class gfirem_check_requirements extends WP_Requirement {
 		$requirement          = new WP_Plugins_Requirement();
 		$requirement->plugins = array(
 			array( 'id' => 'formidable/formidable.php', 'name' => 'Formidable', 'min_version' => '2.0.0' )
+		);
+		array_push( $requirements, $requirement );
+		$requirement          = new WP_Class_Requirement();
+		$requirement->class = array(
+			 'FrmProAppController' => __('Need Formidable Pro0', $this->text_domain),
 		);
 		array_push( $requirements, $requirement );
 		
