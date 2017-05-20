@@ -57,7 +57,7 @@ class gfirem_manager {
 						'autocomplete'    => '',
 						'role_list'       => '',
 						'dynamic'         => '',//pro tweak
-						'upload'         => '',//pro tweak
+						'upload'          => '',//pro tweak
 					) );
 					
 					self::$tweaks = apply_filters( 'gfirem_tweaks_array', array( 'dynamic' => '', 'upload' => '' ) );
@@ -173,7 +173,10 @@ class gfirem_manager {
 		$key     = 'enabled_' . $slug;
 		$plan    = gfirem_fs::get_current_plan();
 		$loaded  = gfirem_manager::$fields_loaded;
-		if ( ( ! empty( $options[ $key ] ) || array_key_exists( $slug, self::$tweaks ) ) && array_key_exists( $slug, $loaded[ $plan ] ) ) {
+		if ( ! empty( $options[ $key ] ) ||
+		     ( ! empty( self::$tweaks ) && array_key_exists( $slug, self::$tweaks ) ) &&
+		     ( ! empty( $loaded[ $plan ] ) && array_key_exists( $slug, $loaded[ $plan ] ) )
+		) {
 			return true;
 		}
 		

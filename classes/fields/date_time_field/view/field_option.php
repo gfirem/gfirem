@@ -7,7 +7,7 @@
  * @link http://www.gfirem.com
  * @license http://www.apache.org/licenses/
  */
-?>
+ if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ): ?>
 <tr>
 	<td><label for="inputFormat_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "Input Format" ) ?></label></td>
 	<td>
@@ -56,3 +56,4 @@
 	</td>
 
 </tr>
+ <?php endif; ?>

@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+    /* <fs_premium_only> */
     $(".autocomplete_get_target").change(function () {
         var fieldID = this.id.replace('autocomplete_target_form_', '');
         var fieldSelect = document.getElementById('autocomplete_target_field_' + fieldID);
@@ -142,4 +143,5 @@ jQuery(document).ready(function ($) {
 
         return false;
     }
+	/* </fs_premium_only> */
 });

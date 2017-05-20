@@ -7,7 +7,7 @@
  * @license http://www.apache.org/licenses/
  *
  */
-
+/* <fs_premium_only> */
 var wrappers = document.getElementsByClassName("date_time_field_container");
 [].forEach.call(wrappers, process_fields);
 function process_fields(item, index) {
@@ -22,6 +22,5 @@ function process_fields(item, index) {
 		defaultTime: date_time_field.now_time
 	});
 	jQuery.datetimepicker.setLocale(date_time_field.config[id].datetimepicker_lang);
-
-
 }
+/* </fs_premium_only> */

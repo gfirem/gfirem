@@ -38,22 +38,23 @@ class role_list extends gfirem_field_base {
 	}
 	
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
-		$internal_attr = shortcode_atts( array(
-			'show' => 'id',
-		), $attr );
-		
-		if ( $internal_attr['show'] == 'id' ) {
-			return $replace_with;
-		}
-		
-		$user = get_userdata( $replace_with );
-		if ( ! empty( $user ) ) {
-			$user_field = $internal_attr['show'];
-			if ( property_exists( $user->data, $user_field ) ) {
-				return esc_html( $user->$user_field );
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+			$internal_attr = shortcode_atts( array(
+				'show' => 'id',
+			), $attr );
+			
+			if ( $internal_attr['show'] == 'id' ) {
+				return $replace_with;
+			}
+			
+			$user = get_userdata( $replace_with );
+			if ( ! empty( $user ) ) {
+				$user_field = $internal_attr['show'];
+				if ( property_exists( $user->data, $user_field ) ) {
+					return esc_html( $user->$user_field );
+				}
 			}
 		}
-		
 		return $replace_with;
 	}
 }

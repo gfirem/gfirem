@@ -9,6 +9,7 @@
  */
 
 jQuery(document).ready(function ($) {
+    /* <fs_premium_only> */
     $(".fma_field").each(function () {
         var current = $(this),
             target_form = current.attr("target_form"),
@@ -722,4 +723,5 @@ jQuery(document).ready(function ($) {
         var fieldNameParts = fieldName.split( '][' );
         return fieldNameParts.length >= 3;
     }
+    /* </fs_premium_only> */
 });

@@ -8,6 +8,7 @@
  *
  */
 jQuery(document).ready(function ($) {
+	/* <fs_premium_only> */
 	function load_dropzone_zoom() {
 		var uploadFields = __frmDropzone;
 		if (typeof uploadFields === 'undefined') {
@@ -174,4 +175,5 @@ jQuery(document).ready(function ($) {
 		if (!results[2]) return '';
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	}
+	/* </fs_premium_only> */
 });

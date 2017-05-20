@@ -8,6 +8,7 @@
  *
  */
 jQuery(document).ready(function ($) {
+	/* <fs_premium_only> */
 	var mediaUploader;
 
 	$('.gfirem_select_image').each(function () {
@@ -116,4 +117,5 @@ jQuery(document).ready(function ($) {
 			mediaUploader.open();
 		});
 	});
+	/* </fs_premium_only> */
 });

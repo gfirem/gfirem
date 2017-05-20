@@ -8,6 +8,7 @@
  *
  */
 jQuery(document).ready(function ($) {
+	/* <fs_premium_only> */
 	$(".gfirem_switch_button").each(function (index, value) {
 		var current = $(this),
 			id = current.attr('id'),
@@ -35,5 +36,6 @@ jQuery(document).ready(function ($) {
 			jQuery("#switch_" + identifier + " .switch-button-background").css("background", gfirem_switch_button.config[id].offcolor);
 		}
 	});
+	/* </fs_premium_only> */
 });
 

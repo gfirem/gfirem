@@ -40,7 +40,7 @@ class gfirem_admin extends gfirem_base {
 		}
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
 			if ( ! empty( $active_tab ) && $active_tab != 'generic' && ! empty( $global_settings_tab_data->global_options )
-			     && $global_settings_tab_key == $active_tab && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
+			     && $global_settings_tab_key == $active_tab && ! empty( $this->loaded_fields ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
 			) {
 				$option = $global_settings_tab_key;
 				break;
@@ -60,7 +60,7 @@ class gfirem_admin extends gfirem_base {
 		add_settings_section( 'save_data', '', array( $this, "save_data" ), 'gfirem_options' );
 		
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
-			if ( ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields ) ) {
+			if ( ! empty( $global_settings_tab_data->global_options ) && ! empty( $this->loaded_fields ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields ) ) {
 				register_setting( $global_settings_tab_key, $global_settings_tab_key );
 				add_settings_section( 'section_' . $global_settings_tab_key, '', array( $this, 'tab_content' ), $global_settings_tab_key );
 				add_settings_section( 'save_data_' . $global_settings_tab_key, '', array( $this, "save_data" ), $global_settings_tab_key );
@@ -114,7 +114,7 @@ class gfirem_admin extends gfirem_base {
 		foreach ( $this->fields as $global_settings_tab_key => $global_settings_tab_data ) {
 			$active_tab = esc_attr( $_GET['tab'] );
 			if ( ! empty( $active_tab ) && $active_tab != 'generic' && $global_settings_tab_key == $active_tab
-			     && ! empty( $global_settings_tab_data->global_options ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
+			     && ! empty( $global_settings_tab_data->global_options ) && ! empty( $this->loaded_fields ) && array_key_exists( $global_settings_tab_key, $this->loaded_fields )
 			     && gfirem_manager::is_enabled( $global_settings_tab_key )
 			) {
 				$view_fnc = $global_settings_tab_data->global_options['view'][1];
