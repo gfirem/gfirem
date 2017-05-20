@@ -44,4 +44,15 @@ if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional )
 			<?php endif; ?>
         </td>
     </tr>
+	<?php if ( $field['type'] == 'data' ): ?>
+        <tr>
+            <td>
+                <label for="field_options[dynamic_field_unique_filter_<?php echo esc_attr( $field['id'] ) ?>]"><?php gfirem_manager::echo_translated( "Filter Unique" ); ?></label>
+            </td>
+            <td>
+                <input type="checkbox" <?php echo $show_filter_unique ?> name="field_options[dynamic_field_unique_filter_<?php echo esc_attr( $field['id'] ) ?>]" id="field_options[dynamic_field_unique_filter_<?php echo esc_attr( $field['id'] ) ?>]" value="1"/>
+				<?php gfirem_manager::echo_translated( "This option trim all duplicates options" ); ?>
+            </td>
+        </tr>
+	<?php endif; ?>
 <?php endif; ?>
