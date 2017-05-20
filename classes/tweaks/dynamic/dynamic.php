@@ -18,7 +18,7 @@ class dynamic extends gfirem_field_base {
 				'dynamic_field_target_value' => '',
 			),
 			__( 'New options to tweak your dynamic fields', 'gfirem-locale' ),
-			array( 'name' => 'Dynamic Field Tweaks', 'view' => array( $this, 'global_tab' ) ),
+			array( 'name' => 'Dynamic/Lookup Field Tweaks', 'view' => array( $this, 'global_tab' ) ),
 			gfirem_fs::$professional, true
 		);
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
@@ -34,7 +34,7 @@ class dynamic extends gfirem_field_base {
 	}
 	
 	public function field_option_form__premium_only( $field, $display, $values ) {
-		if ( $field['type'] != 'data' ) {
+		if ( $field['type'] != 'data' && $field['type'] != 'lookup' ) {
 			return;
 		}
 		
@@ -49,12 +49,15 @@ class dynamic extends gfirem_field_base {
 			$form_target       = FrmField::get_type( $field['form_select'], 'form_id' );
 			$fields_for_filter = FrmField::get_all_for_form( $form_target );
 		}
+		if ( ! empty( $field['get_values_form'] ) ) {
+			$fields_for_filter = FrmField::get_all_for_form( $field['get_values_form'] );
+		}
 		
 		include dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'dynamic_options.php';
 	}
 	
 	public function field_options__premium_only( $field_options, $field, $values ) {
-		if ( $field->type != 'data' ) {
+		if ( $field->type != 'data' && $field->type != 'lookup' ) {
 			return $field_options;
 		}
 		
@@ -67,13 +70,25 @@ class dynamic extends gfirem_field_base {
 	
 	
 	public function filter_dynamic_options__premium_only( $values, $field ) {
-		if ( $field->type == 'data' && ! empty( $values['options'] ) && ! current_user_can( 'manage_options' ) ) {
+		$field_global_options = get_option( $this->slug );
+		if ( ! empty( $field_global_options[ 'enabled_' . $this->slug . '_admin_filter' ] ) && $field_global_options[ 'enabled_' . $this->slug . '_admin_filter' ] == '1' && current_user_can( 'manage_options' ) ) {
+			return $values;
+		}
+		if ( ( $field->type == 'data' || $field->type == 'lookup' ) && ! empty( $values['options'] ) ) {
 			$dynamic_field_target       = FrmField::get_option( $field, 'dynamic_field_target' );
 			$dynamic_field_target_value = FrmField::get_option( $field, 'dynamic_field_target_value' );
 			if ( ! empty( $dynamic_field_target ) && ! empty( $dynamic_field_target_value ) ) {
-				$temp                = $values;
-				$temp['form_select'] = $dynamic_field_target;
-				$field2_opts         = FrmProDynamicFieldsController::get_independent_options( $temp, $field );
+				$temp = null;
+				if($field->type == 'data') {
+					$temp                = $values;
+					$temp['form_select'] = $dynamic_field_target;
+					$field2_opts         = FrmProDynamicFieldsController::get_independent_options( $temp, $field );
+				}
+				if($field->type == 'lookup') {
+					$temp = $field;
+					$temp->field_options['get_values_field'] = $dynamic_field_target;
+					$field2_opts = FrmProLookupFieldsController::get_lookup_field_values_for_conditional_logic( $temp );
+				}
 				foreach ( $values['options'] as $id => $v ) {
 					$content = $this->replace_shortcode( null, $dynamic_field_target_value );
 					if ( isset( $field2_opts[ $id ] ) && ( $v == '' || $field2_opts[ $id ] == $content ) ) {//Only include values where filtering field equals Yes
@@ -90,12 +105,20 @@ class dynamic extends gfirem_field_base {
 	
 	public function global_tab() {
 		add_settings_field( 'section_dynamic', __( 'Filter Entries', 'gfirem-locale' ), array( $this, 'filter_entries' ), 'dynamic', 'section_dynamic' );
+		add_settings_field( 'section_dynamic_admin', __( 'Admin Filter', 'gfirem-locale' ), array( $this, 'admin_filter' ), 'dynamic', 'section_dynamic' );
 	}
 	
 	public function filter_entries() {
 		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$professional ) . '>';
 		$this->get_view_for( 'enabled_' . $this->slug . '_filter_entries', 'checkbox', 'dynamic', array(), gfirem_fs::$professional );
-		_e( 'If tick this you get a new options inside the dynamic field to filter the entries.', 'gfirem-locale' );
+		_e( 'If tick this you get a new options inside the dynamic/lookup field to filter the entries.', 'gfirem-locale' );
+		echo '</p>';
+	}
+	
+	public function admin_filter() {
+		echo '<p ' . $this->disable_class_tag( 'p', gfirem_fs::$professional ) . '>';
+		$this->get_view_for( 'enabled_' . $this->slug . '_admin_filter', 'checkbox', 'dynamic', array(), gfirem_fs::$professional );
+		_e( 'If tick this the admin can avoid the above filter.', 'gfirem-locale' );
 		echo '</p>';
 	}
 }

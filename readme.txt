@@ -34,7 +34,7 @@ Turn your site visitors IP addresses into people you 'know'. There are 3 levels 
  * All tweaks
 
 ### TWEAKS FOR PRO
- * Filter Dynamic field entries.
+ * Filter Dynamic/Lookup field entries.
  * Zoom to preview image in the upload field.
  * Show only the image belong to the current user in the media uploader, this is global for WP, but is related to Select Image field.
  * Upload tab as default when using the Select Image field.
@@ -51,6 +51,7 @@ Fixing the autocomplete field.
 Improve over the zoom to use in the formidable upload fields.
 Add options to the datetime field.
 Adding background color for the switch button.
+Adding filter entries for Lookup field.
 
 = 1.1.4 =
 Adding a new tweak to use zoom into the formidable upload field.

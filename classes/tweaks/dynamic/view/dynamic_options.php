@@ -26,10 +26,15 @@ if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional )
                     <option value="">&mdash; <?php gfirem_manager::echo_translated( 'Select a Field to use as filter' ) ?> &mdash;</option>
 					<?php
 					foreach ( $fields_for_filter as $fields ) {
-						if ( $fields->id != $field["form_select"] ) {
-							?>
-                            <option value="<?php echo esc_attr( absint( $fields->id ) ) ?>"<?php selected( $fields->id, $field['dynamic_field_target'] ) ?>><?php echo FrmAppHelper::truncate( $fields->name, 30 ) ?></option>
-						<?php }
+						if ( ! empty( $field["form_select"] ) && $fields->id == $field["form_select"] ) {
+							continue;
+						}
+						if ( ! empty( $field["get_values_field"] ) && $fields->id == $field["get_values_field"] ) {
+							continue;
+						}
+						?>
+                        <option value="<?php echo esc_attr( absint( $fields->id ) ) ?>"<?php selected( $fields->id, $field['dynamic_field_target'] ) ?>><?php echo FrmAppHelper::truncate( $fields->name, 30 ) ?></option>
+						<?php
 					} ?>
                 </select>
                 &ndash;&ndash;
