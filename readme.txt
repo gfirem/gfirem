@@ -3,7 +3,7 @@ Contributors: gfirem
 Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
 Requires at least: 4
 Tested up to: 4.7.3
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
@@ -35,6 +35,7 @@ Turn your site visitors IP addresses into people you 'know'. There are 3 levels 
 
 ### TWEAKS FOR PRO
  * Filter Dynamic/Lookup field entries, with an option to bypass for admin.
+ * Filter Dynamic field for unique values.
  * Zoom to preview image in the upload field.
  * Show only the image belong to the current user in the media uploader, this is global for WP, but is related to Select Image field.
  * Upload tab as default when using the Select Image field.
@@ -45,6 +46,9 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settings
 
 == Changelog ==
+
+= 1.1.6 =
+Adding a tweak to filter unique values into the dynamic fields.
 
 = 1.1.5 =
 Fixing the autocomplete field.

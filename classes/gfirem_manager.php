@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class gfirem_manager {
 	
 	private static $plugin_slug = 'gfirem';
-	protected static $version = '1.1.5';
+	protected static $version = '1.1.6';
 	private static $tweaks = array();
 	private $fields = array();
 	public static $fields_loaded = array();
