@@ -71,27 +71,37 @@ class autocomplete_admin {
 			if ( ! check_ajax_referer( 'fac_load_suggestion' ) ) {
 				$this->print_result( $result );
 			}
-			
+
+			$field_filter = false;
+			$start_field = false;
+			$target_field = false;
+			$parent_field = false;
+			$filter = false;
+			$group = false;
+
 			if ( ! empty( $_GET["target_form"] ) && ! empty( $_GET["target_field"] ) && ! empty( $_GET["target_field_type"] ) && ! empty( $_GET["target_field_data_target"] ) ) {
-				$field_filter = false;
-				$start_field  = $_GET["start_field"];
-				$target_field = $_GET["target_field"];
-				$parent_field = $_GET["parent_field"];
+				
+				$start_field  = isset($_GET["start_field"]) ? sanitize_text_field($_GET["start_field"]) : false;
+				$target_field = isset($_GET["target_field"]) ? sanitize_text_field($_GET["target_field"]) : false;
+				$parent_field = isset($_GET["parent_field"])  ? sanitize_text_field($_GET["parent_field"]) : false;
 				if ( $_GET["target_field_type"] == "data" && $_GET["target_field_data_target"] > 0 ) {
-					$target_field = $_GET["target_field_data_target"];
-				}
-				$filter = false;
-				if ( ! empty( $_GET["field_filter"] ) && $_GET["field_filter"] != "false" ) {
-					$filter = $_GET["field_filter"];
+					$target_field = sanitize_text_field($_GET["target_field_data_target"]);
 				}
 				
-				$group = false;
+				if ( ! empty( $_GET["field_filter"] ) && $_GET["field_filter"] != "false" ) {
+
+					$filter =sanitize_text_field($_GET["field_filter"]);
+				}
+				
+				
 				if ( ! empty( $_GET["field_filter_group"] ) && $_GET["field_filter_group"] == "true" ) {
 					$group = true;
 				}
 				
 				$result                = array();
-				$result["suggestions"] = $this->get_result( $target_field, $_GET["query"], $_GET["target_field_type"], $filter, $group, $start_field,$parent_field );
+				$search = sanitize_text_field( $_GET["query"]);
+				$target_field_type = sanitize_text_field($_GET["target_field_type"]);
+				$result["suggestions"] = $this->get_result( $target_field, $search,$target_field_type , $filter, $group, $start_field,$parent_field );
 			}
 			$this->print_result( $result );
 		}
