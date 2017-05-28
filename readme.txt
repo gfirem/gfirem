@@ -47,6 +47,9 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 
 == Changelog ==
 
+= 1.1.7 =
+Cleaning and refactoring the code.
+
 = 1.1.6 =
 Adding a tweak to filter unique values into the dynamic fields.
 
