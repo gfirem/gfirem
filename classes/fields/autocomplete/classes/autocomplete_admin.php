@@ -71,26 +71,26 @@ class autocomplete_admin {
 			if ( ! check_ajax_referer( 'fac_load_suggestion' ) ) {
 				$this->print_result( $result );
 			}
-
+			
 			$field_filter = false;
-			$start_field = false;
+			$start_field  = false;
 			$target_field = false;
 			$parent_field = false;
-			$filter = false;
-			$group = false;
-
+			$filter       = false;
+			$group        = false;
+			
 			if ( ! empty( $_GET["target_form"] ) && ! empty( $_GET["target_field"] ) && ! empty( $_GET["target_field_type"] ) && ! empty( $_GET["target_field_data_target"] ) ) {
 				
-				$start_field  = isset($_GET["start_field"]) ? sanitize_text_field($_GET["start_field"]) : false;
-				$target_field = isset($_GET["target_field"]) ? sanitize_text_field($_GET["target_field"]) : false;
-				$parent_field = isset($_GET["parent_field"])  ? sanitize_text_field($_GET["parent_field"]) : false;
+				$start_field  = isset( $_GET["start_field"] ) ? sanitize_text_field( $_GET["start_field"] ) : false;
+				$target_field = isset( $_GET["target_field"] ) ? sanitize_text_field( $_GET["target_field"] ) : false;
+				$parent_field = isset( $_GET["parent_field"] ) ? sanitize_text_field( $_GET["parent_field"] ) : false;
 				if ( $_GET["target_field_type"] == "data" && $_GET["target_field_data_target"] > 0 ) {
-					$target_field = sanitize_text_field($_GET["target_field_data_target"]);
+					$target_field = sanitize_text_field( $_GET["target_field_data_target"] );
 				}
 				
 				if ( ! empty( $_GET["field_filter"] ) && $_GET["field_filter"] != "false" ) {
-
-					$filter =sanitize_text_field($_GET["field_filter"]);
+					
+					$filter = sanitize_text_field( $_GET["field_filter"] );
 				}
 				
 				
@@ -99,9 +99,9 @@ class autocomplete_admin {
 				}
 				
 				$result                = array();
-				$search = sanitize_text_field( $_GET["query"]);
-				$target_field_type = sanitize_text_field($_GET["target_field_type"]);
-				$result["suggestions"] = $this->get_result( $target_field, $search,$target_field_type , $filter, $group, $start_field,$parent_field );
+				$search                = sanitize_text_field( $_GET["query"] );
+				$target_field_type     = sanitize_text_field( $_GET["target_field_type"] );
+				$result["suggestions"] = $this->get_result( $target_field, $search, $target_field_type, $filter, $group, $start_field, $parent_field );
 			}
 			$this->print_result( $result );
 		}
@@ -113,7 +113,7 @@ class autocomplete_admin {
 		wp_die();
 	}
 	
-	private function get_result( $field_id, $search, $target_field_type, $field_filter = false, $group = false, $start_field,$parent_field, $limit = - 1 ) {
+	private function get_result( $field_id, $search, $target_field_type, $field_filter = false, $group = false, $start_field, $parent_field, $limit = - 1 ) {
 		$suggestions = array();
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
 			global $wpdb;
@@ -134,9 +134,9 @@ class autocomplete_admin {
 							$getStartValue    = "SELECT em.item_id from " . $wpdb->prefix . "frm_item_metas em where em.meta_value LIKE '%" . $field_filter . "%' and em.field_id =" . $start_field;
 							$db_getStartValue = $wpdb->get_results( $getStartValue );
 							$start_filter     = $db_getStartValue[0]->item_id;
-							$sql              = "SELECT em.meta_value, em.item_id id " . $group_sql . " FROM " . $wpdb->prefix . "frm_item_metas em  WHERE em.field_id= ".$field_id." AND em.meta_value LIKE '%" . $search . "%'  and em.item_id in  (Select item_id from " . $wpdb->prefix . "frm_item_metas where item_id = em.item_id and meta_value LIKE '%" . $start_filter . "%' and field_id =".$parent_field.")";
+							$sql              = "SELECT em.meta_value, em.item_id id " . $group_sql . " FROM " . $wpdb->prefix . "frm_item_metas em  WHERE em.field_id= " . $field_id . " AND em.meta_value LIKE '%" . $search . "%'  and em.item_id in  (Select item_id from " . $wpdb->prefix . "frm_item_metas where item_id = em.item_id and meta_value LIKE '%" . $start_filter . "%' and field_id =" . $parent_field . ")";
 						} else {
-							$sql = "SELECT em.meta_value, em.item_id id " . $group_sql . " FROM " . $wpdb->prefix . "frm_item_metas em  WHERE em.field_id= ".$field_id." AND em.meta_value LIKE '%" . $search . "%'  and em.item_id in  (Select item_id from " . $wpdb->prefix . "frm_item_metas where item_id = em.item_id and meta_value LIKE '%" . $field_filter . "%' and field_id =".$parent_field.")";
+							$sql = "SELECT em.meta_value, em.item_id id " . $group_sql . " FROM " . $wpdb->prefix . "frm_item_metas em  WHERE em.field_id= " . $field_id . " AND em.meta_value LIKE '%" . $search . "%'  and em.item_id in  (Select item_id from " . $wpdb->prefix . "frm_item_metas where item_id = em.item_id and meta_value LIKE '%" . $field_filter . "%' and field_id =" . $parent_field . ")";
 						}
 						//$sql = $sql . " AND (" . $sub_query . ") LIKE '%" . $field_filter . "%'";
 					} else {
@@ -147,10 +147,10 @@ class autocomplete_admin {
 			}
 			
 			if ( ! empty( $search ) ) {
-				if(empty( $field_filter )){
+				if ( empty( $field_filter ) ) {
 					$sql = $sql . " AND em.meta_value LIKE '%" . $search . "%'";
 				}
-
+				
 			}
 			
 			/*if ( ! empty( $field_filter ) ) {
@@ -187,6 +187,7 @@ class autocomplete_admin {
 			}
 			//echo json_encode($suggestions);
 		}
+		
 		return $suggestions;
 	}
 	
@@ -310,6 +311,7 @@ class autocomplete_admin {
 			$parent_form_id = isset( $field['parent_form_id'] ) ? $field['parent_form_id'] : $field['form_id'];
 			$lookup_fields  = self::get_limited_lookup_fields_in_form( $parent_form_id, $field['form_id'] );
 		}
+		
 		return $lookup_fields;
 	}
 	
@@ -328,6 +330,7 @@ class autocomplete_admin {
 			
 			
 		}
+		
 		return $lookup_fields;
 	}
 	
