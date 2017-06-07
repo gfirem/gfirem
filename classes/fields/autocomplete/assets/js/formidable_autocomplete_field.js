@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
             fieldId = current.attr("id"),
             autocomplete_config = {
                 serviceUrl: formidable_autocomplete_field.ajaxurl,
-                noCache: true,
+                noCache: formidable_autocomplete_field.config[fieldId].autocomplete_cache,
                 showNoSuggestionNotice: true,
                 noSuggestionNotice: formidable_autocomplete_field.config[fieldId].autocomplete_noResulText,
                 params: {'action': 'get_autocomplete_suggestions', '_ajax_nonce': formidable_autocomplete_field.ajaxnonce, 'target_form': target_form, 'target_field': target_field, 'target_field_type': target_field_type, 'target_field_data_target': target_field_data_target},

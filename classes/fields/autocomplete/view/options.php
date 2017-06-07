@@ -73,4 +73,18 @@
             <input type="text" name="field_options[autocomplete_noResulText_<?php echo esc_attr( $field['id'] ) ?>]" class="frm_long_input" id="field_options[autocomplete_noResulText_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr( $field['autocomplete_noResulText'] ) ?>"/>
         </td>
     </tr>
+    <tr>
+        <td><label for="datetimepicker_timepicker_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "No Cache" ) ?></label></td>
+        <td>
+
+
+            <select name="field_options[autocomplete_cache_<?php echo esc_attr( $field['id'] ) ?>]" id="autocomplete_cache_<?php echo esc_attr( $field['id'] ) ?>">
+
+                <option <?php selected( esc_attr( $field['autocomplete_cache'] ), 'true' ) ?> value="true"><?php gfirem_manager::echo_translated( "True" ) ?></option>
+                <option <?php selected( esc_attr( $field['autocomplete_cache'] ), 'false' ) ?> value="false"><?php gfirem_manager::echo_translated( "False" ) ?></option>
+
+            </select>
+        </td>
+
+    </tr>
 <?php endif; ?>
