@@ -19,11 +19,12 @@ jQuery(document).ready(function ($) {
             target_field_data_target = current.attr("target_field_data_target"),
             loading = $("#autocomplete_loading_" + current.attr("id")),
             target_field = current.attr("target_field"),
+            fieldId = current.attr("id"),
             autocomplete_config = {
                 serviceUrl: formidable_autocomplete_field.ajaxurl,
                 noCache: true,
                 showNoSuggestionNotice: true,
-                noSuggestionNotice: formidable_autocomplete_field.text_no_result,
+                noSuggestionNotice: formidable_autocomplete_field.config[fieldId].autocomplete_noResulText,
                 params: {'action': 'get_autocomplete_suggestions', '_ajax_nonce': formidable_autocomplete_field.ajaxnonce, 'target_form': target_form, 'target_field': target_field, 'target_field_type': target_field_type, 'target_field_data_target': target_field_data_target},
                 onSearchComplete: function (query, suggestions) {
                     loading.hide();
@@ -52,8 +53,8 @@ jQuery(document).ready(function ($) {
                     var parentRepeatArgs =  current[0].name.replace('item_meta[', '');
                      var name = parentRepeatArgs.replace(']','');
                      var actualVal =$("[name='item_meta[" + name + "]']").val();
-                     var fieldId = current.attr("id");
-                     var minChars =formidable_autocomplete_field.config[fieldId].autocomplete_minChars;
+                     var fieldIdentifier = current.attr("id");
+                     var minChars =formidable_autocomplete_field.config[fieldIdentifier].autocomplete_minChars;
                     if(query.query.length < minChars ){
                         return false;
                     }

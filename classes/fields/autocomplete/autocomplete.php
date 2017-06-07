@@ -31,7 +31,8 @@ class autocomplete extends gfirem_field_base
                 'autocomplete_target_filter' => '0',
                 'autocomplete_target_filter_group' => '0',
                 'autocomplete_placeholder' => '',
-                'autocomplete_minChars' => '1'
+                'autocomplete_minChars' => '1',
+                'autocomplete_noResulText' => 'No result'
             ),
             gfirem_manager::translate('Show a text field with autocomplete.'),
             array(), gfirem_fs::$professional
