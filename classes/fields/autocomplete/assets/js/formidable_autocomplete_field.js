@@ -52,7 +52,11 @@ jQuery(document).ready(function ($) {
                     var parentRepeatArgs =  current[0].name.replace('item_meta[', '');
                      var name = parentRepeatArgs.replace(']','');
                      var actualVal =$("[name='item_meta[" + name + "]']").val();
-                    
+                     var fieldId = current.attr("id");
+                     var minChars =formidable_autocomplete_field.config[fieldId].autocomplete_minChars;
+                    if(query.query.length < minChars ){
+                        return false;
+                    }
                     if(actualVal !=query.query)
                     {
                          clearChildren(name);

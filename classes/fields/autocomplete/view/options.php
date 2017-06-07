@@ -57,4 +57,12 @@
             <input type="text" name="field_options[autocomplete_placeholder_<?php echo esc_attr( $field['id'] ) ?>]" class="frm_long_input" id="field_options[autocomplete_placeholder_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr( $field['autocomplete_placeholder'] ) ?>"/>
         </td>
     </tr>
+    <tr>
+        <td>
+            <label for="field_options[autocomplete_minChars_<?php echo esc_attr( $field['id'] ) ?>]"><?php gfirem_manager::echo_translated( "Min Chars" ); ?></label>
+        </td>
+        <td>
+            <input type="number" name="field_options[autocomplete_minChars_<?php echo esc_attr( $field['id'] ) ?>]" class="frm_long_input" id="field_options[autocomplete_minChars_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr( $field['autocomplete_minChars'] ) ?>"/>
+        </td>
+    </tr>
 <?php endif; ?>
