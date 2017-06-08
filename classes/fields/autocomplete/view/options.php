@@ -74,7 +74,7 @@
         </td>
     </tr>
     <tr>
-        <td><label for="datetimepicker_timepicker_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "No Cache" ) ?></label></td>
+        <td><label for="autocomplete_cache__<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "No Cache" ) ?></label></td>
         <td>
 
 
@@ -82,6 +82,20 @@
 
                 <option <?php selected( esc_attr( $field['autocomplete_cache'] ), 'true' ) ?> value="true"><?php gfirem_manager::echo_translated( "True" ) ?></option>
                 <option <?php selected( esc_attr( $field['autocomplete_cache'] ), 'false' ) ?> value="false"><?php gfirem_manager::echo_translated( "False" ) ?></option>
+
+            </select>
+        </td>
+
+    </tr>
+    <tr>
+        <td><label for="autocomplete_validate_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "Validate Input" ) ?></label></td>
+        <td>
+
+
+            <select name="field_options[autocomplete_validate_<?php echo esc_attr( $field['id'] ) ?>]" id="autocomplete_validate_<?php echo esc_attr( $field['id'] ) ?>">
+
+                <option <?php selected( esc_attr( $field['autocomplete_validate'] ), 'true' ) ?> value="true"><?php gfirem_manager::echo_translated( "True" ) ?></option>
+                <option <?php selected( esc_attr( $field['autocomplete_validate'] ), 'false' ) ?> value="false"><?php gfirem_manager::echo_translated( "False" ) ?></option>
 
             </select>
         </td>

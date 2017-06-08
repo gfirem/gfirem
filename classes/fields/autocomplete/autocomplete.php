@@ -34,6 +34,7 @@ class autocomplete extends gfirem_field_base
                 'autocomplete_minChars' => '1',
                 'autocomplete_noResulText' => 'No result',
                 'autocomplete_cache' => 'true',
+                'autocomplete_validate' => 'true',
             ),
             gfirem_manager::translate('Show a text field with autocomplete.'),
             array(), gfirem_fs::$professional
@@ -211,16 +212,20 @@ class autocomplete extends gfirem_field_base
     protected function validate_frm_entry($errors, $posted_field, $posted_value)
     {
         if (gfirem_fs::getFreemius()->is_plan__premium_only(gfirem_fs::$professional)) {
-            if (!empty($_POST["item_meta"][$posted_field->id])) {
-                $autocomplete_target_field = FrmField::get_option($posted_field, "autocomplete_target_field");
-                if (!empty($autocomplete_target_field)) {
-                    $target_field = FrmField::getOne($autocomplete_target_field);
-                    if (!$this->exist_meta($posted_value, $autocomplete_target_field, $target_field->type)) {
-                        $msj = FrmFieldsHelper::get_error_msg($posted_field, 'invalid');
-                        $errors = array_merge($errors, array('field' . $posted_field->id => $msj));
+            $canValidate = $posted_field->field_options['autocomplete_validate'] == "true" ? true : false;
+            if ($canValidate) {
+                if (!empty($_POST["item_meta"][$posted_field->id])) {
+                    $autocomplete_target_field = FrmField::get_option($posted_field, "autocomplete_target_field");
+                    if (!empty($autocomplete_target_field)) {
+                        $target_field = FrmField::getOne($autocomplete_target_field);
+                        if (!$this->exist_meta($posted_value, $autocomplete_target_field, $target_field->type)) {
+                            $msj = FrmFieldsHelper::get_error_msg($posted_field, 'invalid');
+                            $errors = array_merge($errors, array('field' . $posted_field->id => $msj));
+                        }
                     }
                 }
             }
+
         }
 
         return $errors;
