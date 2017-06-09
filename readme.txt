@@ -51,7 +51,7 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 = 1.1.7 =
 Cleaning, refactoring the code and improving.
 New options inside the autocomplete field.
-Adding a PageBreak tweak. 
+Adding a PageBreak tweak.
 
 = 1.1.6 =
 Adding a tweak to filter unique values into the dynamic fields.
