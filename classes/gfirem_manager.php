@@ -58,9 +58,10 @@ class gfirem_manager {
 						'role_list'       => '',
 						'dynamic'         => '',//pro tweak
 						'upload'          => '',//pro tweak
+						'page_break'          => '',//pro tweak
 					) );
 					
-					self::$tweaks = apply_filters( 'gfirem_tweaks_array', array( 'dynamic' => '', 'upload' => '' ) );
+					self::$tweaks = apply_filters( 'gfirem_tweaks_array', array( 'dynamic' => '', 'upload' => '', 'page_break' => '' ) );
 					foreach ( self::$tweaks as $tweak_key => $tweak_path ) {
 						$path = GFIREM_TWEAKS_PATH . $tweak_key . DIRECTORY_SEPARATOR . $tweak_key . '.php';
 						if ( ! empty( $tweak_path ) ) {
