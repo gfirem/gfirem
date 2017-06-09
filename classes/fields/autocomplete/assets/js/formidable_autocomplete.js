@@ -140,7 +140,6 @@ function gfirem_autocomplete_admin(){
 	return{
 		init: function(){
 			if (document.getElementById('frm_build_form') !== null) {
-				var this_form_id = jQuery(document.getElementById('form_id')).val();
 				var $newFields = jQuery(document.getElementById('new_fields'));
 				$newFields.on('change', '.fac_autopopulate_value', hideOrShowAutopopulateValue);
 				$newFields.on('change', '.fac_frm_get_values_form', updateGetValueFieldSelection);

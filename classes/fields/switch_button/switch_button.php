@@ -31,6 +31,7 @@ class switch_button extends gfirem_field_base {
 		);
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
 		add_action( 'wp_footer', array( $this, 'add_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_js' ) );
 	}
 	
 	/**
@@ -91,16 +92,27 @@ class switch_button extends gfirem_field_base {
 	 */
 	protected function inside_field_options( $field, $display, $values ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
-			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker' );
-			$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-			wp_enqueue_script( 'switch_button_options', $base_url . 'js/switch_button_options.js', array( 'jquery', 'wp-color-picker' ), $this->version, true );
+			
 			$label_placement_option = array(
 				'both'  => gfirem_manager::translate( 'Both' ),
 				'left'  => gfirem_manager::translate( 'Left' ),
 				'right' => gfirem_manager::translate( 'Right' ),
 			);
 			include dirname( __FILE__ ) . '/view/field_option.php';
+		}
+	}
+	
+	/**
+	 * Include script
+	 */
+	public function enqueue_js( $hook ) {
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			if ( ! empty( $hook ) && 'toplevel_page_formidable' === $hook ) {
+				wp_enqueue_style( 'wp-color-picker' );
+				wp_enqueue_script( 'wp-color-picker' );
+				$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+				wp_enqueue_script( 'switch_button_options', $base_url . 'js/switch_button_options.js', array( 'jquery', 'wp-color-picker' ), $this->version, true );
+			}
 		}
 	}
 	

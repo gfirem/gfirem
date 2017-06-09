@@ -41,7 +41,7 @@ class autocomplete_admin {
 	 */
 	public function front_enqueue_style( $hook ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			if ( 'toplevel_page_formidable' === $hook ) {
+			if (!empty($hook) && 'toplevel_page_formidable' === $hook ) {
 				wp_enqueue_style( 'formidable_autocomplete', $this->base_url . 'css/formidable_autocomplete.css' );
 			}
 		}
@@ -52,7 +52,7 @@ class autocomplete_admin {
 	 */
 	public function enqueue_js( $hook ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			if ( 'toplevel_page_formidable' === $hook ) {
+			if (!empty($hook) && 'toplevel_page_formidable' === $hook ) {
 				wp_register_script( 'formidable_autocomplete', $this->base_url . 'js/formidable_autocomplete.js', array( "jquery" ), true );
 				wp_enqueue_script( 'formidable_autocomplete' );
 			}
