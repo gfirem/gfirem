@@ -39,21 +39,23 @@ class autocomplete_admin {
 	/**
 	 * Include styles
 	 */
-	public function front_enqueue_style() {
+	public function front_enqueue_style( $hook ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			//TODO esto solo se debe incluir en los lugares correctos no en todas las paginas
-			wp_enqueue_style( 'formidable_autocomplete', $this->base_url . 'css/formidable_autocomplete.css' );
+			if ( 'toplevel_page_formidable' === $hook ) {
+				wp_enqueue_style( 'formidable_autocomplete', $this->base_url . 'css/formidable_autocomplete.css' );
+			}
 		}
 	}
 	
 	/**
 	 * Include script
 	 */
-	public function enqueue_js() {
+	public function enqueue_js( $hook ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			//TODO esto solo se debe incluir en los lugares correctos no en todas las paginas
-			wp_register_script( 'formidable_autocomplete', $this->base_url . 'js/formidable_autocomplete.js', array( "jquery" ), true );
-			wp_enqueue_script( 'formidable_autocomplete' );
+			if ( 'toplevel_page_formidable' === $hook ) {
+				wp_register_script( 'formidable_autocomplete', $this->base_url . 'js/formidable_autocomplete.js', array( "jquery" ), true );
+				wp_enqueue_script( 'formidable_autocomplete' );
+			}
 		}
 	}
 	
