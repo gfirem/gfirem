@@ -36,12 +36,21 @@ class page_break extends gfirem_field_base {
 				add_action( 'frm_get_field_scripts', array( $this, 'add_script_for_field' ), 10, 3 );
 				add_action( 'wp_footer', array( $this, 'load_script' ), 10 );
 				add_action( 'admin_footer', array( $this, 'load_script' ), 10 );
-				add_filter('frm_success_filter', array($this, 'success_filter'),10, 3);
+//				add_filter( 'frm_success_filter', array( $this, 'success_filter' ), 10, 3 );
+				add_filter( 'frm_continue_to_create', array( $this, 'continue_to_create' ), 999, 2 );
 			}
 		}
 	}
 	
-	public function success_filter($trigger, $form, $action){
+	public function continue_to_create( $flag, $form_id ) {
+		if ( ! empty( $_POST['save_now_page'] ) && ! empty( $_POST['form_id'] ) && $form_id == $_POST['form_id'] ) {
+			$flag = true;
+		}
+		
+		return $flag;
+	}
+	
+	public function success_filter( $trigger, $form, $action ) {
 		if ( ! empty( $_POST['save_now_page'] ) && ! empty( $_POST['form_id'] ) ) {
 			$trigger = 'redirect';
 		}
@@ -74,6 +83,7 @@ class page_break extends gfirem_field_base {
 					
 					unset( $f, $k );
 				}
+				
 				$last_page = 0;
 				if ( ! empty( $page_numbers['page_breaks'] ) && array_key_exists( $save_page_now, $page_numbers['page_breaks'] ) ) {
 					$keys             = array_keys( $page_numbers['page_breaks'] );
@@ -82,8 +92,12 @@ class page_break extends gfirem_field_base {
 						$last_page = isset( $keys[ $current_position - 1 ] ) ? $keys[ $current_position - 1 ] : 0;
 					}
 				}
-//				$_GET[ 'frm_page_order_' . $form_id ]  = $last_page;
-//				$_POST[ 'frm_page_order_' . $form_id ] = $last_page;
+				
+				if ( defined( 'DOING_AJAX' ) ) {
+					
+					$_GET[ 'frm_page_order_' . $form_id ]  = $last_page;
+					$_POST[ 'frm_page_order_' . $form_id ] = $last_page;
+				}
 			}
 			
 		}

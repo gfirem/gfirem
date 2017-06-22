@@ -115,13 +115,7 @@ class autocomplete extends gfirem_field_base
             }
 
             $this->load_scripts($print_value, $html_id, $dependant_fields);
-            /*wp_enqueue_script( 'formidable_autocomplete_field', $base_url . 'js/formidable_autocomplete_field.js', array( "jquery.autocomplete" ), true );
-            wp_localize_script( "formidable_autocomplete_field", "formidable_autocomplete_field", array(
-                "ajaxurl"          => admin_url( 'admin-ajax.php' ),
-                "ajaxnonce"        => wp_create_nonce( 'fac_load_suggestion' ),
-                "dependant_fields" => $dependant_fields,
-                "text_no_result"   => gfirem_manager::translate( 'No result' ),
-            ) );*/
+            $loading_url = apply_filters('gfirem_fields_autocomplete_loading_url', home_url() .'/wp-content/plugins/formidable/images/ajax_loader.gif');
 
             include($this->view_path . 'field.php');
         }
