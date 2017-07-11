@@ -39,7 +39,6 @@ Turn your site visitors IP addresses into people you 'know'. There are 3 levels 
  * Zoom to preview image in the upload field.
  * Show only the image belong to the current user in the media uploader, this is global for WP, but is related to Select Image field.
  * Upload tab as default when using the Select Image field.
- * Tweak the Page Break, to add a "Save Now" option inside it.
 
 == Installation ==
 Upload the entire gfirem folder to the /wp-content/plugins/ directory or install the plugin through the WordPress plugins screen directly.
@@ -51,7 +50,6 @@ Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settin
 = 1.1.7 =
 Cleaning, refactoring the code and improving.
 New options inside the autocomplete field.
-Adding a PageBreak tweak.
 
 = 1.1.6 =
 Adding a tweak to filter unique values into the dynamic fields.
