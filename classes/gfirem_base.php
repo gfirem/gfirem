@@ -121,6 +121,10 @@ class gfirem_base {
 			if ( $setting != 'enabled_' . $loaded_key ) {
 				$disable_for_plan = $this->disable_input_tag( $type, $plan );
 			}
+			else{
+                $disable_for_plan = '';
+			    break;
+            }
 		}
 		
 		switch ( $type ) {
