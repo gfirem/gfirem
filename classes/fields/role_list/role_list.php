@@ -31,8 +31,23 @@ class role_list extends gfirem_field_base {
 		$field['value'] = stripslashes_deep( $field['value'] );
 		$field['default_role'] = stripslashes_deep( $field['default_role'] );
 		
-		$roles = get_editable_roles();
+		$roles = $this->get_wp_editable_roles();
 		include dirname( __FILE__ ) . '/view/field_front_view.php';
+	}
+
+	public function get_wp_editable_roles(){
+		$all_roles = wp_roles()->roles;
+
+		/**
+		 * Filters the list of editable roles.
+		 *
+		 * @since 2.8.0
+		 *
+		 * @param array $all_roles List of roles.
+		 */
+		$editable_roles = apply_filters( 'editable_roles', $all_roles );
+
+		return $editable_roles;
 	}
 	
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
