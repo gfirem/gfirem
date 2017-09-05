@@ -70,9 +70,7 @@ class webcam extends gfirem_field_base {
 						require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
 						$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 						wp_update_attachment_metadata( $attachment_id, $attachment_data );
-						$decoded_value['url']          = $upload_file['url'];
-						$decoded_value['id']           = $attachment_id;
-						$value                         = json_encode( $decoded_value );
+						$value                         = $attachment_id;
 						$fields_collections[ $key ]    = $value;
 						$_POST['item_meta'][ $key ]    = $value;//Used to update the current request
 						$_REQUEST['item_meta'][ $key ] = $value;//Used to update the current request
@@ -154,17 +152,9 @@ class webcam extends gfirem_field_base {
 		return $value;
 	}
 
-	private function getMicroImage( $value ) {
-		$result       = '';
-		$id           = '';
-		$src          = '';
-		$decode_value = json_decode( $value );
-		if ( isset( $decode_value->id ) ) {
-			$id = $decode_value->id;
-		}
-		if ( isset( $decode_value->url ) ) {
-			$src = $decode_value->url;
-		}
+	private function getMicroImage( $id ) {
+		$result = '';
+		$src    = wp_get_attachment_url( $id );
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 			if ( ! empty( $id ) && ! empty( $src ) ) {
 				$result = wp_get_attachment_image( $id, array( 50, 50 ), true ) . " <a style='vertical-align: top;' target='_blank' href='" . $src . "'>" . gfirem_manager::translate( "Full Image" ) . "</a>";
@@ -174,29 +164,20 @@ class webcam extends gfirem_field_base {
 		return $result;
 	}
 
-	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
+	protected function process_short_code( $id, $tag, $attr, $field ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 			$internal_attr = shortcode_atts( array(
 				'output' => 'img',
 				'size'   => 'thumbnail',
 				'html'   => '0',
 			), $attr );
-			$id           = '';
-			$src          = '';
-			$decode_value = json_decode( $replace_with );
-			if ( isset( $decode_value->id ) ) {
-				$id = $decode_value->id;
-			}
-			if ( isset( $decode_value->url ) ) {
-				$src = $decode_value->url;
-			}
-			$result = wp_get_attachment_url($id );
+			$result        = wp_get_attachment_url( $id );
 			if ( $internal_attr['output'] == 'img' ) {
-				$result = wp_get_attachment_image($id  , $internal_attr['size'] );
+				$result = wp_get_attachment_image( $id, $internal_attr['size'] );
 			}
 
 			if ( $internal_attr['html'] == '1' ) {
-				$result = "<a style='vertical-align: top;' target='_blank'  href='" . wp_get_attachment_url( $id   ) . "' >" . $result . "</a>";
+				$result = "<a style='vertical-align: top;' target='_blank'  href='" . wp_get_attachment_url( $id ) . "' >" . $result . "</a>";
 			}
 			$replace_with = $result;
 		}
