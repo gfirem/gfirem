@@ -31,18 +31,13 @@ class webcam extends gfirem_field_base {
 		add_action( 'frm_before_destroy_entry', array( $this, 'process_destroy_entry' ), 10, 2 );
 	}
 
-	public function process_pre_update_entry( $values) {
-		$values['item_meta'] = $this->save_signature( $values['item_meta'], $values['form_id'], true );
-
-		return $values;
-	}
-	public function process_pre_create_entry( $values ) {
-		$values['item_meta'] = $this->save_signature( $values['item_meta'], $values['form_id'] );
+	public function process_pre_update_entry( $values ) {
+		$values['item_meta'] = $this->save_snapshot( $values['item_meta'], $values['form_id'], true );
 
 		return $values;
 	}
 
-	public function save_signature( $fields_collections, $form_id, $delete_before = false ) {
+	public function save_snapshot( $fields_collections, $form_id, $delete_before = false ) {
 		foreach ( $fields_collections as $key => $value ) {
 			$field_type = FrmField::get_type( $key );
 			if ( $field_type == 'webcam' && ! empty( $value ) ) {
@@ -75,7 +70,9 @@ class webcam extends gfirem_field_base {
 						require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
 						$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 						wp_update_attachment_metadata( $attachment_id, $attachment_data );
-						$value                         = json_encode(  $upload_file['url'] );
+						$decoded_value['url']          = $upload_file['url'];
+						$decoded_value['id']           = $attachment_id;
+						$value                         = json_encode( $decoded_value );
 						$fields_collections[ $key ]    = $value;
 						$_POST['item_meta'][ $key ]    = $value;//Used to update the current request
 						$_REQUEST['item_meta'][ $key ] = $value;//Used to update the current request
@@ -86,6 +83,12 @@ class webcam extends gfirem_field_base {
 		}
 
 		return $fields_collections;
+	}
+
+	public function process_pre_create_entry( $values ) {
+		$values['item_meta'] = $this->save_snapshot( $values['item_meta'], $values['form_id'] );
+
+		return $values;
 	}
 
 	/**
@@ -143,21 +146,59 @@ class webcam extends gfirem_field_base {
 
 	}
 
-	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
-		$internal_attr = shortcode_atts( array(
-			'show' => 'id',
-		), $attr );
-
-		if ( $internal_attr['show'] == 'id' ) {
-			return $replace_with;
+	protected function field_admin_view( $value, $field, $attr ) {
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			$value = $this->getMicroImage( $value );
 		}
 
-		$user = get_userdata( $replace_with );
-		if ( ! empty( $user ) ) {
-			$user_field = $internal_attr['show'];
-			if ( property_exists( $user->data, $user_field ) ) {
-				return esc_html( $user->$user_field );
+		return $value;
+	}
+
+	private function getMicroImage( $value ) {
+		$result       = '';
+		$id           = '';
+		$src          = '';
+		$decode_value = json_decode( $value );
+		if ( isset( $decode_value->id ) ) {
+			$id = $decode_value->id;
+		}
+		if ( isset( $decode_value->url ) ) {
+			$src = $decode_value->url;
+		}
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			if ( ! empty( $id ) && ! empty( $src ) ) {
+				$result = wp_get_attachment_image( $id, array( 50, 50 ), true ) . " <a style='vertical-align: top;' target='_blank' href='" . $src . "'>" . gfirem_manager::translate( "Full Image" ) . "</a>";
 			}
+		}
+
+		return $result;
+	}
+
+	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
+		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
+			$internal_attr = shortcode_atts( array(
+				'output' => 'img',
+				'size'   => 'thumbnail',
+				'html'   => '0',
+			), $attr );
+			$id           = '';
+			$src          = '';
+			$decode_value = json_decode( $replace_with );
+			if ( isset( $decode_value->id ) ) {
+				$id = $decode_value->id;
+			}
+			if ( isset( $decode_value->url ) ) {
+				$src = $decode_value->url;
+			}
+			$result = wp_get_attachment_url($id );
+			if ( $internal_attr['output'] == 'img' ) {
+				$result = wp_get_attachment_image($id  , $internal_attr['size'] );
+			}
+
+			if ( $internal_attr['html'] == '1' ) {
+				$result = "<a style='vertical-align: top;' target='_blank'  href='" . wp_get_attachment_url( $id   ) . "' >" . $result . "</a>";
+			}
+			$replace_with = $result;
 		}
 
 		return $replace_with;
