@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package    WordPress
  * @subpackage Formidable, gfirem
@@ -10,7 +9,6 @@
  *
  */
 class select_image extends gfirem_field_base {
-	
 	public $version = '2.0.0';
 	private $load_script = false;
 	private $base_url;
@@ -18,18 +16,14 @@ class select_image extends gfirem_field_base {
 	private $upload_image_tab_string;
 	
 	public function __construct() {
-		parent::__construct( 'select_image', gfirem_manager::translate( 'Select Image' ),
-			array(
-				'library_title'        => gfirem_manager::translate( 'Choose Image' ),
-				'library_button_title' => gfirem_manager::translate( 'Choose Image' ),
-				'button_title'         => gfirem_manager::translate( 'Select Image' ),
-				'button_css'           => '',
-				'activate_zoom'        => 'true',
-				'scroll_zoom'          => 'false',
-			),
-			gfirem_manager::translate( 'Show a field to select image from WP Media library.' ),
-			array( 'name' => 'Select Image Tweaks', 'view' => array( $this, 'global_tab' ) ), gfirem_fs::$starter
-		);
+		parent::__construct( 'select_image', gfirem_manager::translate( 'Select Image' ), array(
+			'library_title'        => gfirem_manager::translate( 'Choose Image' ),
+			'library_button_title' => gfirem_manager::translate( 'Choose Image' ),
+			'button_title'         => gfirem_manager::translate( 'Select Image' ),
+			'button_css'           => '',
+			'activate_zoom'        => 'true',
+			'scroll_zoom'          => 'false',
+		), gfirem_manager::translate( 'Show a field to select image from WP Media library.' ), array( 'name' => 'Select Image Tweaks', 'view' => array( $this, 'global_tab' ) ), gfirem_fs::$starter );
 		$this->base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 			add_filter( 'ajax_query_attachments_args', array( $this, 'show_current_user_attachments__premium_only' ) );
@@ -108,8 +102,9 @@ class select_image extends gfirem_field_base {
 	 *
 	 * @param string $hook
 	 * @param string $image_url
+	 * @param string $field_name
 	 */
-	public function add_script( $hook = '', $image_url = '' ) {
+	public function add_script( $hook = '', $image_url = '', $field_name ) {
 		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 			if ( $this->load_script ) {
 				wp_enqueue_style( 'select_image', $this->base_url . 'css/select_image.css', array(), $this->version );
@@ -120,8 +115,8 @@ class select_image extends gfirem_field_base {
 				$fields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
 				foreach ( $fields as $key => $field ) {
 					foreach ( $this->defaults as $def_key => $def_val ) {
-						$opt                                                             = FrmField::get_option( $field, $def_key );
-						$params['config'][ 'item_meta[' . $field->id . ']' ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
+						$opt                                         = FrmField::get_option( $field, $def_key );
+						$params['config'][ $field_name ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
 					}
 					if ( ! empty( $image_url ) ) {
 						$params['config'][ 'item_meta[' . $field->id . ']' ]['image_url'] = $image_url;
@@ -143,7 +138,6 @@ class select_image extends gfirem_field_base {
 		}
 	}
 	
-	
 	/**
 	 * Add the HTML for the field on the front end
 	 *
@@ -159,22 +153,18 @@ class select_image extends gfirem_field_base {
 			if ( ! empty( $field['value'] ) ) {
 				$print_value = $field['value'];
 			}
-			
 			$showContainer = '';
 			if ( empty( $field['value'] ) ) {
 				$showContainer = 'style = "display:none;"';
 			}
-			$imageUrl         = wp_get_attachment_image_url( $field['value'] );
-			$full_image_url   = wp_get_attachment_image_src( $field['value'], 'full' );
-			$imageFullUrl     = wp_get_attachment_url( $field['value'] );
-			$attachment_title = basename( get_attached_file( $field['value'] ) );
-			
-			$button_name    = FrmField::get_option( $field, 'button_title' );
-			$button_classes = FrmField::get_option( $field, 'button_css' );
-			
+			$imageUrl          = wp_get_attachment_image_url( $field['value'] );
+			$full_image_url    = wp_get_attachment_image_src( $field['value'], 'full' );
+			$imageFullUrl      = wp_get_attachment_url( $field['value'] );
+			$attachment_title  = basename( get_attached_file( $field['value'] ) );
+			$button_name       = FrmField::get_option( $field, 'button_title' );
+			$button_classes    = FrmField::get_option( $field, 'button_css' );
 			$this->load_script = true;
-			$this->add_script( '', $imageUrl );
-			
+			$this->add_script( '', $imageUrl, $field_name );
 			include dirname( __FILE__ ) . '/view/field_select_image.php';
 		}
 	}
@@ -214,7 +204,6 @@ class select_image extends gfirem_field_base {
 		return $value;
 	}
 	
-	
 	/**
 	 * Process shortcode for view.
 	 *
@@ -232,12 +221,10 @@ class select_image extends gfirem_field_base {
 				'size'   => 'thumbnail',
 				'html'   => '0',
 			), $attr );
-			
-			$result = wp_get_attachment_url( $replace_with );
+			$result        = wp_get_attachment_url( $replace_with );
 			if ( $internal_attr['output'] == 'img' ) {
 				$result = wp_get_attachment_image( $replace_with, $internal_attr['size'] );
 			}
-			
 			if ( $internal_attr['html'] == '1' ) {
 				$result = "<a style='vertical-align: top;' target='_blank'  href='" . wp_get_attachment_url( $replace_with ) . "' >" . $result . "</a>";
 			}
