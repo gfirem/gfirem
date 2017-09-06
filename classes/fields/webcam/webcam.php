@@ -97,7 +97,7 @@ class webcam extends gfirem_field_base {
 	public function add_script( $hook ) {
 
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
-		wp_enqueue_script( 'webcam', $base_url . 'webcam.min.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( 'webcam', $base_url . 'webcam.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( 'gfirem_webcam', $base_url . 'camera.js', array( "jquery" ), $this->version, true );
 		$params          = array();
 		$signatureFields = FrmField::get_all_types_in_form( $this->form_id, $this->slug );
