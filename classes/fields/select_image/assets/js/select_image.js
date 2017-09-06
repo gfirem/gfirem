@@ -12,6 +12,12 @@ jQuery(document).ready(function ($) {
 	var mediaUploader;
 
 	$('.gfirem_select_image').each(function () {
+		var element_id = undefined;
+		if ($(this).attr('field_id') === 'data-sectionid') {
+			element_id = $(this).attr('field_id')
+		} else {
+			element_id = $(this).attr('field_id');
+		}
 		var id = $(this).attr('field_id'),
 			old_full_size,
 			elevateZoomConfig = {scrollZoom: false, cursor: 'pointer'};
