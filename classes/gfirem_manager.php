@@ -44,7 +44,6 @@ class gfirem_manager {
 					'date_time_field' => '',
 					'autocomplete'    => '',
 					'role_list'       => '',
-					'webcam'       => '',
 				) );
 				if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$starter ) ) {
 					self::$fields_loaded[ gfirem_fs::$starter ] = array_merge( self::$fields_loaded['free'], array(
