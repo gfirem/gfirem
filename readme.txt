@@ -1,13 +1,13 @@
 === GFireM Fields ===
 Contributors: gfirem
-Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image
+Tags: formidable, formidable fields, formidable field autocomplete, formidable field date time picker, formidable field switch button, formidable field role list, formidable field select image, autocomplete, select image, datetime picker
 Requires at least: 4
-Tested up to: 4.7.3
-Stable tag: 1.1.6
+Tested up to: 4.8.1
+Stable tag: 1.1.8
 License: Apache License 2.0
 License URI: http://www.apache.org/licenses/
 
-Add a set of extra fields to formidable to improve your work
+Add a set of extra fields to formidable to improve your work!
 
 == Description ==
 ---
@@ -46,6 +46,10 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 Head to the 'GFireM Fields' menu item in your admin sidebar to adjust the settings
 
 == Changelog ==
+
+= 1.1.8 =
+Fixing the select image field to work inside the repeatable sections.
+Updating freemius.
 
 = 1.1.7 =
 Cleaning, refactoring the code and improving.
