@@ -1,8 +1,8 @@
 #!/bin/bash
 wd=$PWD
 pluginfolder=$wd
-originalfoldername="gfirem"
-packagename="gfirem"
+originalfoldername=$(basename "$pluginfolder"| awk -F'-' '{print $1}')
+packagename=$originalfoldername
 
 fileroot="$packagename.php"
 
