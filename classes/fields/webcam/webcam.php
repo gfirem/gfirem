@@ -21,8 +21,8 @@ class webcam extends gfirem_field_base {
 				'activate_zoom' => 'true',
 				'scroll_zoom'   => 'false',
 			),
-			gfirem_manager::translate( 'Take a Snapshot whit the webcam.' )
-
+			gfirem_manager::translate( 'Take a Snapshot whit the webcam.' ), array(),
+			gfirem_fs::$professional
 		);
 		add_action( 'admin_footer', array( $this, 'add_script' ) );
 		add_action( 'wp_footer', array( $this, 'add_script' ) );
