@@ -31,13 +31,30 @@ class webcam extends gfirem_field_base {
 		add_action( 'frm_before_destroy_entry', array( $this, 'process_destroy_entry' ), 10, 2 );
 	}
 
-	public function process_pre_update_entry( $values ) {
+	/**
+	 * Destroy the attached image to the entry
+	 *
+	 * @param $id
+	 * @param $entry
+	 */
+	public function process_destroy_entry( $id, $entry ) {
+		$entry_with_meta = FrmEntry::getOne( $id, true );
+		foreach ( $entry_with_meta->metas as $key => $value ) {
+			$field_type = FrmField::get_type( $key );
+			if ( $field_type == 'webcam' && ! empty( $value ) ) {
+				wp_delete_attachment( $value, true );
+			}
+		}
+	}
+
+	public function process_pre_update_entry( $values, $entry_id ) {
 		$values['item_meta'] = $this->save_snapshot( $values['item_meta'], $values['form_id'], true );
 
 		return $values;
 	}
 
 	public function save_snapshot( $fields_collections, $form_id, $delete_before = false ) {
+		$params          = array();
 		foreach ( $fields_collections as $key => $value ) {
 			$field_type = FrmField::get_type( $key );
 			if ( $field_type == 'webcam' && ! empty( $value ) ) {
@@ -74,12 +91,13 @@ class webcam extends gfirem_field_base {
 						$fields_collections[ $key ]    = $value;
 						$_POST['item_meta'][ $key ]    = $value;//Used to update the current request
 						$_REQUEST['item_meta'][ $key ] = $value;//Used to update the current request
+						$params['item_meta'][$key] = wp_get_attachment_url($attachment_id );
 					}
 				}
 
 			}
 		}
-
+		wp_localize_script( 'gfirem_webcam', 'snap_url', $params );
 		return $fields_collections;
 	}
 
@@ -139,7 +157,6 @@ class webcam extends gfirem_field_base {
 		}
 
 		$button_name = FrmField::get_option( $field, 'button_title' );
-
 		include dirname( __FILE__ ) . '/view/field_webcam.php';
 
 	}

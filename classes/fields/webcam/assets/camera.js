@@ -22,11 +22,25 @@ jQuery(document).ready(function ($) {
 		Webcam.attach('#my_camera_' + id);
 		$('#webcam_button_' + id).click(function (e) {
 
+
 			Webcam.snap(function (data_uri) {
 				// display results in page
 				$('#field_' + id).val(data_uri);
-				$('#my_snapshot_' + id).attr('src', data_uri);
 			});
+			// freeze camera so user can preview pic
+			Webcam.freeze();
+			// swap button sets
+			document.getElementById('pre_take_buttons').style.display = 'none';
+			document.getElementById('post_take_buttons').style.display = '';
+		});
+		$('#webcam_take_another_' + id).click(function (e) {
+
+			// cancel preview freeze and return to live camera feed
+			Webcam.unfreeze();
+
+			// swap buttons back
+			document.getElementById('pre_take_buttons').style.display = '';
+			document.getElementById('post_take_buttons').style.display = 'none';
 		});
 
 	});
