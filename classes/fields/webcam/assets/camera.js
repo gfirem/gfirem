@@ -20,8 +20,15 @@ jQuery(document).ready(function ($) {
 			jpeg_quality: 90
 		});
 		Webcam.attach('#my_camera_' + id);
+		if (gfirem_webcam.action && (gfirem_webcam.action === 'edit' || gfirem_webcam.action === 'update')) {
+			$('#my_camera_' + id).hide();
+		}
 		$('#webcam_button_' + id).click(function (e) {
 
+			if (gfirem_webcam.action && (gfirem_webcam.action === 'edit' || gfirem_webcam.action === 'update')) {
+				$('#snap_container_'+id).hide();
+				$('#my_camera_' + id).show();
+			}
 
 			Webcam.snap(function (data_uri) {
 				// display results in page
@@ -30,6 +37,7 @@ jQuery(document).ready(function ($) {
 			// freeze camera so user can preview pic
 			Webcam.freeze();
 			// swap button sets
+
 			document.getElementById('pre_take_buttons').style.display = 'none';
 			document.getElementById('post_take_buttons').style.display = '';
 		});

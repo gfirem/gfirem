@@ -24,8 +24,6 @@ class webcam extends gfirem_field_base {
 			gfirem_manager::translate( 'Take a Snapshot whit the webcam.' ), array(),
 			gfirem_fs::$professional
 		);
-		add_action( 'admin_footer', array( $this, 'add_script' ) );
-		add_action( 'wp_footer', array( $this, 'add_script' ) );
 		add_filter( 'frm_pre_create_entry', array( $this, 'process_pre_create_entry' ), 10, 1 );
 		add_filter( 'frm_pre_update_entry', array( $this, 'process_pre_update_entry' ), 10, 2 );
 		add_action( 'frm_before_destroy_entry', array( $this, 'process_destroy_entry' ), 10, 2 );
@@ -91,13 +89,11 @@ class webcam extends gfirem_field_base {
 						$fields_collections[ $key ]    = $value;
 						$_POST['item_meta'][ $key ]    = $value;//Used to update the current request
 						$_REQUEST['item_meta'][ $key ] = $value;//Used to update the current request
-						$params['item_meta'][$key] = wp_get_attachment_url($attachment_id );
 					}
 				}
 
 			}
 		}
-		wp_localize_script( 'gfirem_webcam', 'snap_url', $params );
 		return $fields_collections;
 	}
 
@@ -112,7 +108,7 @@ class webcam extends gfirem_field_base {
 	 *
 	 * @param $hook
 	 */
-	public function add_script( $hook ) {
+	public function add_script( $hook = '', $image_url = '', $field_name ) {
 
 		$base_url = plugin_dir_url( __FILE__ ) . 'assets/';
 		wp_enqueue_script( 'webcam', $base_url . 'webcam.js', array( 'jquery' ), $this->version, true );
@@ -124,6 +120,12 @@ class webcam extends gfirem_field_base {
 				$opt                                                          = FrmField::get_option( $field, $def_key );
 				$params['config'][ 'field_' . $field->field_key ][ $def_key ] = ( ! empty( $opt ) ) ? $opt : $def_val;
 			}
+			if ( ! empty( $image_url ) ) {
+				$params['config'][ 'item_meta[' . $field->id . ']' ]['image_url'] = $image_url;
+			}
+		}
+		if ( ! empty( $_GET['frm_action'] ) ) {
+			$params['action'] = FrmAppHelper::get_param( 'frm_action' );
 		}
 		wp_localize_script( 'gfirem_webcam', 'gfirem_webcam', $params );
 
@@ -155,8 +157,12 @@ class webcam extends gfirem_field_base {
 		if ( empty( $field['value'] ) ) {
 			$showContainer = 'style = "display:none;"';
 		}
-
+		$imageUrl          = wp_get_attachment_image_url( $field['value'] );
+		$full_image_url    = wp_get_attachment_image_src( $field['value'], 'full' );
+		$imageFullUrl      = wp_get_attachment_url( $field['value'] );
+		$attachment_title  = basename( get_attached_file( $field['value'] ) );
 		$button_name = FrmField::get_option( $field, 'button_title' );
+		$this->add_script( '', $imageUrl, $field_name );
 		include dirname( __FILE__ ) . '/view/field_webcam.php';
 
 	}
