@@ -9,13 +9,15 @@
  */
 jQuery(document).ready(function ($) {
 
+
     $('.gfirem_qr').each(function () {
 
         var field_container = $(this).find("[data-action=store-qr]"),
             identifier = field_container.attr('id');
             id = identifier.replace('field_', '');
+             $('#qr_loader_'+id).hide();
              $('#generate_qr_button_' + id).click(function (e) {
-
+                 $('#qr_loader_'+id).show();
                  $('#qr_code_result_'+id).hide();
                  var message = $('#qr_string_'+id).val();
                  jQuery.ajax({
@@ -27,6 +29,7 @@ jQuery(document).ready(function ($) {
                          key:id
                      },
                      success: function (fields) {
+                         $('#qr_loader_'+id).hide();
 
                          if (fields=="") {
                              console.log("Error");

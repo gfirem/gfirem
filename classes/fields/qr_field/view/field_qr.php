@@ -4,6 +4,7 @@
     <div align="left" id="my_qr_<?php echo esc_attr( $html_id ) ?>">
        <div style="display: inline-block; width: 250px;"> <input type="text" width="250" id="qr_string_<?php echo esc_attr( $html_id ) ?>"></div>
         <div style="display: inline-block"><input field_id="<?php echo esc_attr( $field_name ) ?>" id="generate_qr_button_<?php echo esc_attr( $html_id ) ?>" name="<?php echo esc_attr( $field_name ) ?>" type="button" class="select-image-btn btn btn-default" value="<?php echo esc_html( $button_name ) ?>"/></div>
+        <div class="loader" style="display: none;" id="qr_loader_<?php echo esc_attr( $html_id ) ?>"></div>
     </div>
     <div style="margin-top: 10px;">
         <img id="qr_code_result_<?php echo esc_attr( $html_id ) ?>"></img>

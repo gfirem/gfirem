@@ -71,6 +71,8 @@ class qr_field extends gfirem_field_base {
      */
     public function add_script( $hook = '', $image_url = '', $field_name ) {
         $base_url = plugin_dir_url( __FILE__ ) . 'assets/';
+        wp_register_style( 'wpdocsPluginStylesheet',$base_url . 'qr.css' );
+        wp_enqueue_style( 'wpdocsPluginStylesheet' );
 
         wp_enqueue_script( 'gfirem_qr', $base_url . 'qrcode.js', array( "jquery" ), $this->version, true );
         $params = array(
