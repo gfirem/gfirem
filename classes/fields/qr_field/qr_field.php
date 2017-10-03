@@ -19,9 +19,28 @@ class qr_field extends gfirem_field_base {
             gfirem_manager::translate( 'Generate QR Code.' )
 
         );
+
+        add_action( 'frm_before_destroy_entry', array( $this, 'process_destroy_entry' ), 10, 2 );
         add_action( "wp_ajax_generate_qr_code", array( $this, "generate_qr_code" ) );
 
     }
+
+    /**
+     * Destroy the attached image to the entry
+     *
+     * @param $id
+     * @param $entry
+     */
+    public function process_destroy_entry( $id, $entry ) {
+        $entry_with_meta = FrmEntry::getOne( $id, true );
+        foreach ( $entry_with_meta->metas as $key => $value ) {
+            $field_type = FrmField::get_type( $key );
+            if ( $field_type == 'webcam' && ! empty( $value ) ) {
+                wp_delete_attachment( $value, true );
+            }
+        }
+    }
+
 
 
 

@@ -19,6 +19,10 @@ jQuery(document).ready(function ($) {
              $('#generate_qr_button_' + id).click(function (e) {
                  $('#qr_loader_'+id).show();
                  $('#qr_code_result_'+id).hide();
+                 if (gfirem_qr.action && (gfirem_qr.action === 'edit' || gfirem_qr.action === 'update')) {
+                     $('#qr_container_'+id).hide();
+
+                 }
                  var message = $('#qr_string_'+id).val();
                  jQuery.ajax({
                      type: 'POST', url: gfirem_qr.ajaxurl,
