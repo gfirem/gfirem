@@ -40,11 +40,15 @@ function gfirem_autocomplete_admin(){
 
 	function addWatchLookupRow() {
 		var id = jQuery(this).closest('li.form-field').data('fid');
-		var form_id = this_form_id;
+		var form_id = id;
 		var row_key = 0;
 		var lookupBlockRows = document.getElementById('fac_frm_watch_lookup_block_' + id).childNodes;
+
 		if (lookupBlockRows.length > 0) {
-			var lastRowId = lookupBlockRows[lookupBlockRows.length - 1].id;
+			var index = lookupBlockRows.length - 2;
+			var aux = lookupBlockRows[index];
+			var tt = aux.id;
+			var lastRowId = lookupBlockRows[index].id;
 			row_key = 1 + parseInt(lastRowId.replace('fac_frm_watch_lookup_' + id + '_', ''));
 		}
 
