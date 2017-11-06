@@ -44,34 +44,48 @@ if ( ! class_exists( 'gfirem' ) ) {
 		 * @var object
 		 */
 		protected static $instance = null;
-		
+
+		public static $assets;
+		public static $view;
+		public static $classes;
+		public static $fields;
+		public static $tweaks;
+		public static $templates;
+
 		/**
 		 * Initialize the plugin.
 		 */
 		private function __construct() {
-				require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'WP_Requirements.php';
-				require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_check_requirements.php';
-				$gfirem_fields_requirements = new gfirem_check_requirements( 'gfirem-locale' );
-				if ( $gfirem_fields_requirements->satisfied() ) {
-					$this->constants();
-					$this->load_plugin_textdomain();
-					require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
-					new gfirem_manager();
-				} else {
-					$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $gfirem_fields_requirements->getResults() );
-					$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
-				}
-			
-			
+			self::$assets    = plugin_dir_url( __FILE__ ) . 'assets/css/';
+			self::$view      = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
+			self::$classes   = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR;
+			self::$fields    = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR;
+			self::$tweaks    = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'tweaks' . DIRECTORY_SEPARATOR;
+			self::$templates = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+			require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'WP_Requirements.php';
+			require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_check_requirements.php';
+			$gfirem_fields_requirements = new gfirem_check_requirements( 'gfirem-locale' );
+			if ( $gfirem_fields_requirements->satisfied() ) {
+				$this->constants();
+				do_action( 'gfirem_fs_loaded' );
+				$this->load_plugin_textdomain();
+				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
+				new gfirem_manager();
+			} else {
+				$fauxPlugin = new WP_Faux_Plugin( 'GFireM Fields', $gfirem_fields_requirements->getResults() );
+				$fauxPlugin->show_result( plugin_basename( __FILE__ ) );
+			}
+
+
 		}
 		
 		private function constants() {
-			define( 'GFIREM_CSS_PATH', plugin_dir_url( __FILE__ ) . 'assets/css/' );
-			define( 'GFIREM_VIEW_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR );
-			define( 'GFIREM_CLASSES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR );
-			define( 'GFIREM_FIELDS_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'fields' . DIRECTORY_SEPARATOR );
-			define( 'GFIREM_TWEAKS_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'tweaks' . DIRECTORY_SEPARATOR );
-			define( 'GFIREM_TEMPLATES_PATH', dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR );
+			define( 'GFIREM_CSS_PATH', self::$assets );
+			define( 'GFIREM_VIEW_PATH', self::$view );
+			define( 'GFIREM_CLASSES_PATH', self::$classes );
+			define( 'GFIREM_FIELDS_PATH',self::$fields);
+			define( 'GFIREM_TWEAKS_PATH', self::$tweaks);
+			define( 'GFIREM_TEMPLATES_PATH', self::$templates );
 		}
 		
 		/**
