@@ -40,16 +40,19 @@ function gfirem_autocomplete_admin(){
 
 	function addWatchLookupRow() {
 		var id = jQuery(this).closest('li.form-field').data('fid');
-		var form_id = id;
+		var form_id = jQuery(this).closest('li.form-field').data('formid')
 		var row_key = 0;
 		var lookupBlockRows = document.getElementById('fac_frm_watch_lookup_block_' + id).childNodes;
 
 		if (lookupBlockRows.length > 0) {
-			var index = lookupBlockRows.length - 2;
+			var index = 1;
 			var aux = lookupBlockRows[index];
 			var tt = aux.id;
 			var lastRowId = lookupBlockRows[index].id;
-			row_key = 1 + parseInt(lastRowId.replace('fac_frm_watch_lookup_' + id + '_', ''));
+			if(lastRowId!= undefined){
+                row_key = 1 + parseInt(lastRowId.replace('fac_frm_watch_lookup_' + id + '_', ''));
+			}
+
 		}
 
 		jQuery.ajax({
@@ -108,7 +111,7 @@ function gfirem_autocomplete_admin(){
 			var action = jQuery(this).closest('.frm_form_action_settings');
 			if (typeof action !== 'undefined') {
 				var type = jQuery(this).closest('.frm_form_action_settings').find('.frm_action_name').val();
-				checkActiveAction(type);
+				//checkActiveAction(type);
 			}
 		});
 		if (show !== '')
