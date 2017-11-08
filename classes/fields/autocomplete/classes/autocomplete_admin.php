@@ -287,23 +287,61 @@ class autocomplete_admin {
 			wp_die();
 		}
 	}
-	
-	public function get_autocomplete_row() {
-		if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
-			check_ajax_referer( 'frm_ajax', 'nonce' );
-			
-			$row_key  = FrmAppHelper::get_post_param( 'row_key', '', 'absint' );
-			$field_id = FrmAppHelper::get_post_param( 'field_id', '', 'absint' );
-			$form_id  = FrmAppHelper::get_post_param( 'form_id', '', 'absint' );
-			
-			$selected_field = '';
-			$current_field  = FrmField::getOne( $field_id );// Maybe (for efficiency) change this to a specific database call
-			$lookup_fields  = self::get_limited_lookup_fields_in_form( $form_id, $current_field->form_id );
-			
-			include( dirname( __FILE__ ) . '../view/watch-row.php' );
-			wp_die();
-		}
-	}
+
+    public function get_autocomplete_row() {
+        if ( gfirem_fs::getFreemius()->is_plan__premium_only( gfirem_fs::$professional ) ) {
+            check_ajax_referer( 'frm_ajax', 'nonce' );
+
+            $row_key  = FrmAppHelper::get_post_param( 'row_key', '', 'absint' );
+            $field_id = FrmAppHelper::get_post_param( 'field_id', '', 'absint' );
+            $form_id  = FrmAppHelper::get_post_param( 'form_id', '', 'absint' );
+
+            $selected_field = '';
+            $current_field  = FrmField::getOne( $field_id );// Maybe (for efficiency) change this to a specific database call
+            $lookup_fields  = self::get_limited_lookup_fields_in_form( $form_id, $current_field->form_id );
+
+            $all_field_saved = true;
+            foreach ( $lookup_fields as $field_option ) {
+                $option_exist = $this->field_option_exist($current_field->field_options['fac_watch_lookup'],$field_option->id);
+                //If at least one field have not been saved, then add the dropdown.
+                if (!$option_exist){
+                    $all_field_saved = false;
+                    break;
+                }
+            }
+            //If there are fields avaliable, then show the dropdown with the avaliable options.
+            if (!$all_field_saved){
+                echo "<div id=\"fac_frm_watch_lookup_".$field_id . '_' . $row_key."\">";
+                echo " <select name=\"field_options[fac_watch_lookup_".$field_id."][]\">";
+                echo "<option value=\"\">&mdash; Select Field &mdash;</option>  ";
+                foreach ( $lookup_fields as $field_option ) {
+                    $option_exist = $this->field_option_exist($current_field->field_options['fac_watch_lookup'],$field_option->id);
+                    //If the field is already saved in the options do not add it again in the dropdown, avoid duplicate options.
+                    if ($option_exist){
+                        continue;
+                    }
+                    $selected = ( $field_option->id == $selected_field ) ? ' selected="selected"' : '';
+                    echo "<option value=\"$field_option->id\" $selected > $field_option->name</option>";
+                }
+                echo "</select>";
+                echo " <a href=\"javascript:void(0)\" class=\"fac_frm_remove_tag frm_icon_font\" data-removeid=\"fac_frm_watch_lookup_".$field_id . '_' . $row_key."\" data-fieldid=\"".$field_id."\"></a>";
+                echo "<a href=\"javascript:void(0)\" class=\"fac_frm_add_tag frm_icon_font fac_frm_add_watch_lookup_row\"></a>";
+                echo "</div>";
+            }
+            wp_die();
+        }
+    }
+    //Look if the form field is already saved in the options.
+    function field_option_exist($field_options,$lookup_field_id ){
+
+        foreach ($field_options as $value){
+            // If the field is already saved in the options.
+            if ($lookup_field_id == $value){
+                return true;
+            }
+        }
+        return false;
+    }
 	
 	public static function get_lookup_fields_for_watch_row( $field ) {
 		$lookup_fields = false;

@@ -38,29 +38,36 @@ function gfirem_autocomplete_admin(){
 		}
 	}
 
-	function addWatchLookupRow() {
-		var id = jQuery(this).closest('li.form-field').data('fid');
-		var form_id = this_form_id;
-		var row_key = 0;
-		var lookupBlockRows = document.getElementById('fac_frm_watch_lookup_block_' + id).childNodes;
-		if (lookupBlockRows.length > 0) {
-			var lastRowId = lookupBlockRows[lookupBlockRows.length - 1].id;
-			row_key = 1 + parseInt(lastRowId.replace('fac_frm_watch_lookup_' + id + '_', ''));
-		}
+    function addWatchLookupRow() {
+        var id = jQuery(this).closest('li.form-field').data('fid');
+        var form_id = jQuery(this).closest('li.form-field').data('formid')
+        var row_key = 0;
+        var lookupBlockRows = document.getElementById('fac_frm_watch_lookup_block_' + id).childNodes;
 
-		jQuery.ajax({
-			type: 'POST', url: ajaxurl,
-			data: {action: 'get_autocomplete_row', form_id: form_id, field_id: id, row_key: row_key, nonce: frmGlobal.nonce},
-			success: function (newRow) {
-				jQuery(document.getElementById('frm_add_watch_lookup_link_' + id)).fadeOut('slow', function () {
-					var watchRowBlock = jQuery(document.getElementById('fac_frm_watch_lookup_block_' + id));
-					watchRowBlock.append(newRow);
-					watchRowBlock.fadeIn('slow');
-				});
-			}
-		});
-		return false;
-	}
+        if (lookupBlockRows.length > 0) {
+            var index = 1;
+            var aux = lookupBlockRows[index];
+            var tt = aux.id;
+            var lastRowId = lookupBlockRows[index].id;
+            if(lastRowId!= undefined){
+                row_key = 1 + parseInt(lastRowId.replace('fac_frm_watch_lookup_' + id + '_', ''));
+            }
+
+        }
+
+        jQuery.ajax({
+            type: 'POST', url: ajaxurl,
+            data: {action: 'get_autocomplete_row', form_id: form_id, field_id: id, row_key: row_key, nonce: frmGlobal.nonce},
+            success: function (newRow) {
+                jQuery(document.getElementById('frm_add_watch_lookup_link_' + id)).fadeOut('slow', function () {
+                    var watchRowBlock = jQuery(document.getElementById('fac_frm_watch_lookup_block_' + id));
+                    watchRowBlock.append(newRow);
+                    watchRowBlock.fadeIn('slow');
+                });
+            }
+        });
+        return false;
+    }
 
 	// Clear the Watch Fields option when Lookup field switches to "Text" option
 	function maybeClearWatchFields() {
@@ -104,7 +111,7 @@ function gfirem_autocomplete_admin(){
 			var action = jQuery(this).closest('.frm_form_action_settings');
 			if (typeof action !== 'undefined') {
 				var type = jQuery(this).closest('.frm_form_action_settings').find('.frm_action_name').val();
-				checkActiveAction(type);
+				//checkActiveAction(type);
 			}
 		});
 		if (show !== '')
