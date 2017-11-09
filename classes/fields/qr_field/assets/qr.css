@@ -11,3 +11,21 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.qrfield-container{
+    width: 340px;
+    border: 1px solid #a9a9a9;
+    float: left;
+}
+.qrfield-container input:focus, .input-container input:active {
+    outline: none;
+}
+.qrfield-container input {
+    width: 80%;
+    float: left;
+    border: none;
+}
+
+.qrfield-container button {
+    float: right;
+}
