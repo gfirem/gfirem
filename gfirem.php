@@ -33,11 +33,12 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 if ( ! class_exists( 'gfirem' ) ) {
-	
-	require_once dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'gfirem_fs.php';
-	gfirem_fs::get_instance();
+	$classes_path = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR;
+	require_once $classes_path . 'gfirem_fs.php';
+	gfirem_fs::get_instance( $classes_path );
+
 	class gfirem {
-		
+
 		/**
 		 * Instance of this class.
 		 *
@@ -67,7 +68,6 @@ if ( ! class_exists( 'gfirem' ) ) {
 			$gfirem_fields_requirements = new gfirem_check_requirements( 'gfirem-locale' );
 			if ( $gfirem_fields_requirements->satisfied() ) {
 				$this->constants();
-				do_action( 'gfirem_fs_loaded' );
 				$this->load_plugin_textdomain();
 				require_once GFIREM_CLASSES_PATH . 'gfirem_manager.php';
 				new gfirem_manager();
@@ -78,16 +78,16 @@ if ( ! class_exists( 'gfirem' ) ) {
 
 
 		}
-		
+
 		private function constants() {
 			define( 'GFIREM_CSS_PATH', self::$assets );
 			define( 'GFIREM_VIEW_PATH', self::$view );
 			define( 'GFIREM_CLASSES_PATH', self::$classes );
-			define( 'GFIREM_FIELDS_PATH',self::$fields);
-			define( 'GFIREM_TWEAKS_PATH', self::$tweaks);
+			define( 'GFIREM_FIELDS_PATH', self::$fields );
+			define( 'GFIREM_TWEAKS_PATH', self::$tweaks );
 			define( 'GFIREM_TEMPLATES_PATH', self::$templates );
 		}
-		
+
 		/**
 		 * Return an instance of this class.
 		 *
@@ -98,10 +98,10 @@ if ( ! class_exists( 'gfirem' ) ) {
 			if ( null == self::$instance ) {
 				self::$instance = new self;
 			}
-			
+
 			return self::$instance;
 		}
-		
+
 		/**
 		 * Load the plugin text domain for translation.
 		 */
@@ -109,6 +109,6 @@ if ( ! class_exists( 'gfirem' ) ) {
 			load_plugin_textdomain( 'gfirem-locale', false, basename( dirname( __FILE__ ) ) . '/languages' );
 		}
 	}
-	
+
 	add_action( 'plugins_loaded', array( 'gfirem', 'get_instance' ), 1 );
 }

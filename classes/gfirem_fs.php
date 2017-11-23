@@ -24,9 +24,11 @@ class gfirem_fs {
 	public static $free = 0;
 	public static $starter = 'starter';
 	public static $professional = 'professional';
-	
-	public function __construct() {
+	public static $classes;
+
+	public function __construct($classes) {
 		$this->gfirem_fs();
+		self::$classes = $classes;
 	}
 	
 	/**
@@ -52,8 +54,7 @@ class gfirem_fs {
 				'type'                => 'plugin',
 				'public_key'          => 'pk_47201a0d3289152f576cfa93e7159',
 				'is_premium'          => true,
-				'has_premium_version' => true,
-				'has_addons'          => false,
+				'has_addons'          => true,
 				'has_paid_plans'      => true,
 				'is_org_compliant'    => false,
 				'menu'                => array(
@@ -66,19 +67,21 @@ class gfirem_fs {
 				'secret_key'          => 'sk_r~jmr--.4&!Q@<Neu>y1>UV)PB.?n',
 			) );
 		}
-		
+		do_action( 'gfirem_fs_loaded' );
 		return $gfirem_fs;
 	}
-	
+
 	/**
 	 * Return an instance of this class.
 	 *
+	 * @param $classes
+	 *
 	 * @return object A single instance of this class.
 	 */
-	public static function get_instance() {
+	public static function get_instance($classes) {
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
-			self::$instance = new self;
+			self::$instance = new self($classes);
 		}
 		
 		return self::$instance;
