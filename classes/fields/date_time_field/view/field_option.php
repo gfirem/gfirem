@@ -12,7 +12,6 @@
 	<td><label for="inputFormat_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "Input Format" ) ?></label></td>
 	<td>
 		<label for="inputFormat_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( gfirem_manager::translate( "Input Format of the TimePicker, by default 'Y/m/d H:i'. " ) ) ?></label>
-
 		<input type="text" name="field_options[inputFormat_<?php echo esc_attr( $field['id'] ) ?>]" value="<?php echo esc_attr( $field['inputFormat'] ) ?>" id="inputFormat_<?php echo esc_attr( $field['id'] ) ?>">
 	</td>
 
@@ -23,13 +22,10 @@
 	<td>
 		<label for="datetimepicker_inline_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( gfirem_manager::translate( "Inline Mode for TimePicker, by default 'False'. " ) ) ?></label>
 		<select name="field_options[datetimepicker_inline_<?php echo esc_attr( $field['id'] ) ?>]" id="datetimepicker_inline_<?php echo esc_attr( $field['id'] ) ?>">
-			<option value="false"><?php gfirem_manager::echo_translated( "False" ) ?></option>
-			<option value="true"><?php gfirem_manager::echo_translated( "True" ) ?></option>
-
-		</select>
-
+			<option <?php selected( esc_attr( $field['datetimepicker_inline'] ), 'true' ) ?> value="true"><?php gfirem_manager::echo_translated( "True" ) ?></option>
+            <option <?php selected( esc_attr( $field['datetimepicker_inline'] ), 'false' ) ?> value="false"><?php gfirem_manager::echo_translated( "False" ) ?></option>
+        </select>
 	</td>
-
 </tr>
 <tr>
 	<td><label for="datetimepicker_timepicker_<?php echo esc_attr( $field['id'] ) ?>"><?php gfirem_manager::echo_translated( "Enable Time Picker" ) ?></label></td>
@@ -49,11 +45,10 @@
 		<label for="datetimepicker_lang_<?php echo esc_attr( $field['id'] ) ?>" class="howto"><?php echo esc_attr( gfirem_manager::translate( "Language for Time Picker, by default is 'English'. " ) ) ?></label>
 
 		<select name="field_options[datetimepicker_lang_<?php echo esc_attr( $field['id'] ) ?>]" id="datetimepicker_lang_<?php echo esc_attr( $field['id'] ) ?>">
-			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'true' ) ?> value="en"><?php gfirem_manager::echo_translated( "English" ) ?></option>
-			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'false' ) ?> value="es"><?php gfirem_manager::echo_translated( "Spanish" ) ?></option>
-			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'false' ) ?> value="fr"><?php gfirem_manager::echo_translated( "French" ) ?></option>
+			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'en' ) ?> value="en"><?php gfirem_manager::echo_translated( "English" ) ?></option>
+			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'es' ) ?> value="es"><?php gfirem_manager::echo_translated( "Spanish" ) ?></option>
+			<option <?php selected( esc_attr( $field['datetimepicker_lang'] ), 'fr' ) ?> value="fr"><?php gfirem_manager::echo_translated( "French" ) ?></option>
 		</select>
 	</td>
-
 </tr>
  <?php endif; ?>
