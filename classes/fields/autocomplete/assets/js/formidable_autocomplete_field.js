@@ -69,6 +69,7 @@ jQuery(document).ready(function ($) {
 				},
 				onSelect: function (suggestion) {
 					checkFieldsWatchingLookup(current.attr("id"), current, 'value change');
+					$('#'+current.attr("id")).change();
 				}
 			};
 
