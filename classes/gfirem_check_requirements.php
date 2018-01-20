@@ -40,10 +40,10 @@ class gfirem_check_requirements extends WP_Requirement {
 			array( 'id' => 'formidable/formidable.php', 'name' => 'Formidable', 'min_version' => '2.0.0' )
 		);
 		array_push( $requirements, $requirement );
-		$requirement          = new WP_Class_Requirement();
-		$requirement->class = array(
-			 'FrmProAppController' => __('Need Formidable Pro0', $this->text_domain),
-		);
+//		$requirement          = new WP_Class_Requirement();
+//		$requirement->class = array(
+//			 'FrmProAppController' => __('Need Formidable Pro', $this->text_domain),
+//		);
 		array_push( $requirements, $requirement );
 		
 		return $requirements;
