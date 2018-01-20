@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class gfirem_field_base extends gfirem_base {
-	
+
 	public $slug;
 	public $name;
 	public $description;
@@ -23,15 +23,14 @@ class gfirem_field_base extends gfirem_base {
 	public $plan = 'free';
 	public $form_id;
 	public $is_tweak;
-	
+
 	public function __construct( $slug, $name, $defaults, $description = '', $global_options = array(), $plan = 'free', $is_tweak = false ) {
 		if ( empty( $slug ) || empty( $name ) || empty( $defaults ) || ! is_array( $defaults ) ) {
 			throw new InvalidArgumentException();
 		}
-		
 		parent::__construct();
-		
-//		if ( class_exists( "FrmProAppController" ) ) {
+
+		if ( function_exists( "frm_pro_forms_autoloader" ) ) {
 			$this->slug           = $slug;
 			$this->name           = $name;
 			$this->description    = $description;
@@ -39,13 +38,13 @@ class gfirem_field_base extends gfirem_base {
 			$this->global_options = $global_options;
 			$this->plan           = $plan;
 			$this->is_tweak       = $is_tweak;
-			
+
 			add_filter( 'gfirem_register_field', array( $this, 'gfirem_register' ) );
-			
+
 			if ( ! gfirem_manager::is_enabled( $this->slug ) || $this->is_tweak ) {
 				return;
 			}
-			
+
 			add_action( 'frm_pro_available_fields', array( $this, 'add_formidable_field' ) );
 			add_action( 'frm_before_field_created', array( $this, 'set_formidable_field_options' ) );
 			add_action( 'frm_display_added_fields', array( $this, 'show_formidable_field_admin_field' ) );
@@ -58,13 +57,13 @@ class gfirem_field_base extends gfirem_base {
 			add_filter( "frm_validate_field_entry", array( $this, "process_validate_frm_entry" ), 10, 3 );
 			add_filter( 'frm_field_classes', array( $this, 'process_fields_class' ), 10, 2 );
 			add_filter( 'frm_email_value', array( $this, 'process_replace_value_in_mail' ), 15, 3 );
-//		}
+		}
 	}
-	
+
 	public function gfirem_register( $fields ) {
 		return array_merge( $fields, array( $this->slug => $this ) );
 	}
-	
+
 	/**
 	 * Add new field to formidable list of fields
 	 *
@@ -73,28 +72,28 @@ class gfirem_field_base extends gfirem_base {
 	 * @return mixed
 	 */
 	public function add_formidable_field( $fields ) {
-		$fields[ $this->slug ] = array('name'=>esc_html( $this->name ), 'icon' => 'gfirem_field frm_icon_font frm_location_icon');
-		
+		$fields[ $this->slug ] = array( 'name' => esc_html( $this->name ), 'icon' => 'gfirem_field frm_icon_font frm_location_icon' );
+
 		return $fields;
 	}
-	
+
 	/**
 	 * @see $this->set_field_options
 	 */
 	public function set_formidable_field_options( $fieldData ) {
 		if ( $fieldData['type'] == $this->getSlug() ) {
 			$fieldData['name'] = esc_attr( $this->name );
-			
+
 			foreach ( $this->defaults as $k => $v ) {
 				$fieldData['field_options'][ $k ] = $v;
 			}
-			
+
 			$this->set_field_options( $fieldData );
 		}
-		
+
 		return $fieldData;
 	}
-	
+
 	/**
 	 * Set the default options for the field
 	 *
@@ -103,10 +102,10 @@ class gfirem_field_base extends gfirem_base {
 	 * @return mixed
 	 */
 	protected function set_field_options( $fieldData ) {
-		
+
 		return $fieldData;
 	}
-	
+
 	/**
 	 * @see $this->placeholder_admin_field
 	 */
@@ -117,7 +116,7 @@ class gfirem_field_base extends gfirem_base {
 		$description = ( ! empty( $this->description ) ) ? $this->description : gfirem_manager::translate( "Default placeholder to show into the admin." );
 		$this->placeholder_admin_field( $field, $description );
 	}
-	
+
 	/**
 	 * Show the field placeholder in the admin area
 	 *
@@ -128,7 +127,7 @@ class gfirem_field_base extends gfirem_base {
 		$path = gfirem_manager::load_field_template( 'field_admin_place_holder' );
 		include $path;
 	}
-	
+
 	/**
 	 * @see $this->field_option_form
 	 */
@@ -136,16 +135,16 @@ class gfirem_field_base extends gfirem_base {
 		if ( $field['type'] != $this->getSlug() ) {
 			return;
 		}
-		
+
 		foreach ( $this->defaults as $k => $v ) {
 			if ( ! isset( $field[ $k ] ) ) {
 				$field[ $k ] = $v;
 			}
 		}
-		
+
 		$this->inside_field_options( $field, $display, $values );
 	}
-	
+
 	/**
 	 * Display the additional options for the new field
 	 *
@@ -157,7 +156,7 @@ class gfirem_field_base extends gfirem_base {
 		$path = gfirem_manager::load_field_template( 'field_option' );
 		include $path;
 	}
-	
+
 	/**
 	 * @see $this->update_field_options
 	 */
@@ -165,10 +164,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $field->type != $this->getSlug() ) {
 			return $field_options;
 		}
-		
+
 		return $this->update_inside_field_options( $field_options, $field, $values );
 	}
-	
+
 	/**
 	 * Update the field options from the admin area
 	 *
@@ -182,10 +181,10 @@ class gfirem_field_base extends gfirem_base {
 		foreach ( $this->defaults as $opt => $default ) {
 			$field_options[ $opt ] = isset( $values['field_options'][ $opt . '_' . $field->id ] ) ? $values['field_options'][ $opt . '_' . $field->id ] : $default;
 		}
-		
+
 		return $field_options;
 	}
-	
+
 	/**
 	 * @see $this->front_view_field
 	 */
@@ -198,7 +197,7 @@ class gfirem_field_base extends gfirem_base {
 		$this->form_id  = $field['form_id'];
 		$this->field_front_view( $field, $field_name, $html_id );
 	}
-	
+
 	/**
 	 * Add the HTML for the field on the front end
 	 *
@@ -214,7 +213,7 @@ class gfirem_field_base extends gfirem_base {
 		$path = gfirem_manager::load_field_template( 'field_front_place_holder' );
 		include $path;
 	}
-	
+
 	/**
 	 * @see $this->admin_view_field
 	 */
@@ -222,10 +221,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $field->type != $this->getSlug() ) {
 			return $value;
 		}
-		
+
 		return $this->field_admin_view( $value, $field, $attr );
 	}
-	
+
 	/**
 	 * Add the HTML to display the field in the admin area
 	 *
@@ -239,10 +238,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( empty( $value ) ) {
 			return $value;
 		}
-		
+
 		return $value;
 	}
-	
+
 	/**
 	 * @see $this->display_options
 	 */
@@ -250,10 +249,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $display['type'] == $this->getSlug() ) {
 			return $this->display_options( $display );
 		}
-		
+
 		return $display;
 	}
-	
+
 	/**
 	 * Set display option for the field
 	 *
@@ -264,8 +263,8 @@ class gfirem_field_base extends gfirem_base {
 	protected function display_options( $display ) {
 		return $display;
 	}
-	
-	
+
+
 	/**
 	 * @see $this->process_short_code
 	 */
@@ -273,10 +272,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $field->type != $this->getSlug() ) {
 			return $replace_with;
 		}
-		
+
 		return $this->process_short_code( $replace_with, $tag, $attr, $field );
 	}
-	
+
 	/**
 	 * Add custom shortcode
 	 *
@@ -290,7 +289,7 @@ class gfirem_field_base extends gfirem_base {
 	protected function process_short_code( $replace_with, $tag, $attr, $field ) {
 		return $replace_with;
 	}
-	
+
 	/**
 	 * @see $this->validate_frm_entry
 	 */
@@ -298,10 +297,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $posted_field->type != $this->getSlug() ) {
 			return $errors;
 		}
-		
+
 		return $this->validate_frm_entry( $errors, $posted_field, $posted_value );
 	}
-	
+
 	/**
 	 * Validate if exist the key in the form target
 	 *
@@ -314,7 +313,7 @@ class gfirem_field_base extends gfirem_base {
 	protected function validate_frm_entry( $errors, $posted_field, $posted_value ) {
 		return $errors;
 	}
-	
+
 	/**
 	 * @see $this->fields_class
 	 */
@@ -322,10 +321,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $field["type"] == $this->getSlug() ) {
 			$classes .= $this->fields_class( $classes, $field );
 		}
-		
+
 		return $classes;
 	}
-	
+
 	/**
 	 * Add class to the field
 	 *
@@ -337,7 +336,7 @@ class gfirem_field_base extends gfirem_base {
 	protected function fields_class( $classes, $field ) {
 		return $classes;
 	}
-	
+
 	/**
 	 * @see $this->replace_value_in_mail
 	 */
@@ -345,10 +344,10 @@ class gfirem_field_base extends gfirem_base {
 		if ( $meta->field_type == $this->getSlug() ) {
 			return $this->replace_value_in_mail( $value, $meta, $entry );
 		}
-		
+
 		return $value;
 	}
-	
+
 	/**
 	 * Replace value in email notifications
 	 *
@@ -361,7 +360,7 @@ class gfirem_field_base extends gfirem_base {
 	public function replace_value_in_mail( $value, $meta, $entry ) {
 		return $value;
 	}
-	
+
 	/**
 	 * Get the slug of the current field
 	 *
@@ -370,7 +369,7 @@ class gfirem_field_base extends gfirem_base {
 	public function getSlug() {
 		return $this->slug;
 	}
-	
+
 	protected function replace_shortcode( $entry, $value, $form_id = '' ) {
 		if ( ! empty( $entry ) ) {
 			$form_id    = $entry->form_id;
@@ -380,7 +379,7 @@ class gfirem_field_base extends gfirem_base {
 			$content = $value;
 		}
 		FrmProFieldsHelper::replace_non_standard_formidable_shortcodes( array(), $content );
-		
+
 		return do_shortcode( $content );
 	}
 }

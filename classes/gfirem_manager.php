@@ -94,6 +94,8 @@ class gfirem_manager {
 					}
 				}
 				new gfirem_admin( self::$fields_loaded );
+			} else {
+				//Add notice if formidable is not installed
 			}
 		} catch ( Exception $ex ) {
 			gfirem_log::log( array(
